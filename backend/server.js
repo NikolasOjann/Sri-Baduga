@@ -12,6 +12,11 @@ app.use(express.json());
 // Akses: http://localhost:3001/images/{kategori}/{filename}.jpg
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
+// Serve file model 3D (.glb / .gltf) sebagai static files
+// Akses: http://localhost:3001/models/{filename}.glb
+app.use('/models', express.static(path.join(__dirname, 'public', 'models')));
+
+
 // ============================================================
 // Routes
 // ============================================================

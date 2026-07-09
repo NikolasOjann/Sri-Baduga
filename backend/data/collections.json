@@ -1023,7 +1023,8 @@
     "acuan": "",
     "keterangan": "p.bilah: 37 cm , p.gagang : 12  cm, p.sarung:  47,5 cm, p.dalam : 47,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
     "gambar": "http://localhost:3001/images/etno/etno-038.jpg",
-    "id": 39
+    "id": 39,
+    "model_3d": "/models/keris_berluk_13.glb"
   },
   {
     "no_registrasi": "7018",

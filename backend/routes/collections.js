@@ -73,6 +73,20 @@ router.get('/', (req, res) => {
 });
 
 // ============================================================
+// GET /api/collections/stats/counts
+// ============================================================
+router.get('/stats/counts', (req, res) => {
+  const data = loadCollections();
+  const counts = {};
+  data.forEach(item => {
+    let k = (item.klasifikasi || 'Lainnya').trim();
+    if (k.toLowerCase() === 'etnografi') k = 'Etnografika';
+    counts[k] = (counts[k] || 0) + 1;
+  });
+  res.json(counts);
+});
+
+// ============================================================
 // GET /api/collections/kategori/:nama
 // Contoh: /api/collections/kategori/Etnografika
 // ============================================================
@@ -80,9 +94,11 @@ router.get('/kategori/:nama', (req, res) => {
   const data = loadCollections();
   const { nama } = req.params;
 
-  const filtered = data.filter(
-    item => item.klasifikasi.toLowerCase() === nama.toLowerCase()
-  );
+  const filtered = data.filter(item => {
+    const k = (item.klasifikasi || '').toLowerCase();
+    const target = nama.toLowerCase();
+    return k === target || (target === 'etnografika' && k === 'etnografi');
+  });
 
   res.json({
     kategori: nama,
@@ -97,14 +113,16 @@ router.get('/kategori/:nama', (req, res) => {
 // ============================================================
 router.get('/:id', (req, res) => {
   const data = loadCollections();
-  const id   = parseInt(req.params.id);
+  const paramId = req.params.id;
+  const numId = parseInt(paramId);
 
-  const item = data.find(c => c.id === id);
+  const item = data.find(c => c.id === numId || String(c.id) === String(paramId));
   if (!item) {
-    return res.status(404).json({ error: `Artefak dengan id ${id} tidak ditemukan.` });
+    return res.status(404).json({ error: `Artefak dengan id ${paramId} tidak ditemukan.` });
   }
 
   res.json(item);
 });
 
 module.exports = router;
+

@@ -1,19 +1,51 @@
 import React, { Suspense, useState, useRef, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
-import { ArrowLeft, Info } from 'lucide-react';
+import { ArrowLeft, Info, Maximize2, ZoomIn, ZoomOut, RotateCcw, Box, Image as ImageIcon } from 'lucide-react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows, useGLTF, Center } from '@react-three/drei';
 import { useLanguage } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Dummy 3D Models
+// Dynamic GLTF Loader Component for Real 3D Assets (.glb / .gltf)
+function DynamicGLTFModel({ url }) {
+  const { scene } = useGLTF(url);
+  return (
+    <Center>
+      <primitive object={scene} scale={2.5} />
+    </Center>
+  );
+}
+
+class ModelErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.url !== this.props.url) {
+      this.setState({ hasError: false });
+    }
+  }
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || null;
+    }
+    return this.props.children;
+  }
+}
+
+// Dummy 3D Models fallback
 const CylinderModel = ({ color }) => (
   <mesh position={[0, 1, 0]} castShadow>
     <cylinderGeometry args={[0.5, 0.8, 2, 32]} />
     <meshStandardMaterial color={color} roughness={0.3} metalness={0.7} />
   </mesh>
 );
+
 
 const BoxModel = ({ color }) => (
   <mesh position={[0, 1, 0]} castShadow>
@@ -32,163 +64,198 @@ const SphereModel = ({ color }) => (
 const dummyArtifacts = [
   {
     id: '1',
-    titleKey: 'kujangTitle',
-    desc1Key: 'kujangDesc1',
-    desc2Key: 'kujangDesc2',
-    materialKey: 'materialValue',
-    eraKey: 'eraValue',
-    locationKey: 'locationValue',
+    titleKey: 'Kujang Pajajaran',
+    desc1Key: 'Senjata tradisional Jawa Barat yang bernilai sakral.',
+    desc2Key: 'Mencerminkan ketajaman budi dan perlindungan.',
+    materialKey: 'Besi Pamor & Kayu',
+    eraKey: 'Abad ke-14 Masehi',
+    locationKey: 'Jawa Barat',
     Model: CylinderModel,
     color: '#4a4a44',
     thumbnail: 'https://images.unsplash.com/photo-1590845947698-8924d7409b56?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: '2',
-    titleKey: 'Prasasti Batu',
-    desc1Key: 'Prasasti kuno peninggalan kerajaan Tarumanegara.',
-    desc2Key: 'Mencatat silsilah raja-raja dan kejadian penting masa itu.',
-    materialKey: 'Batu Andesit',
-    eraKey: 'Abad ke-5 Masehi',
-    locationKey: 'Bogor',
-    Model: BoxModel,
-    color: '#8b8c89',
-    thumbnail: 'https://images.unsplash.com/photo-1549429731-f11100236de9?auto=format&fit=crop&q=80&w=200'
-  },
-  {
-    id: '3',
-    titleKey: 'Mahkota Binokasih',
-    desc1Key: 'Mahkota emas peninggalan kerajaan Sunda.',
-    desc2Key: 'Simbol kekuasaan tertinggi yang diserahkan kepada Prabu Geusan Ulun.',
-    materialKey: 'Emas',
-    eraKey: 'Abad ke-16 Masehi',
-    locationKey: 'Sumedang',
-    Model: SphereModel,
-    color: '#d4af37',
-    thumbnail: 'https://images.unsplash.com/photo-1623126908029-58cb08a2b272?auto=format&fit=crop&q=80&w=200'
   }
 ];
 
+const API_BASE = 'http://localhost:3001';
+
 const InteractiveView = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { t } = useLanguage();
-  
-  const initialIndex = dummyArtifacts.findIndex(a => a.id === id);
-  const [activeIndex, setActiveIndex] = useState(initialIndex >= 0 ? initialIndex : 0);
+
+  const [item, setItem] = useState(null);
+  const [categoryItems, setCategoryItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState('image'); // 'image' | '3d'
+  const [imageScale, setImageScale] = useState(1);
   const [scrollDir, setScrollDir] = useState(1);
   const containerRef = useRef(null);
 
-  const activeArtifact = dummyArtifacts[activeIndex];
-  const ActiveModel = activeArtifact.Model;
-
   useEffect(() => {
-    const handleWheel = (e) => {
-      if (Math.abs(e.deltaY) > 30 || Math.abs(e.deltaX) > 30) {
-        if (e.deltaY > 0 || e.deltaX > 0) {
-          setScrollDir(1);
-          setActiveIndex(prev => Math.min(prev + 1, dummyArtifacts.length - 1));
-        } else {
-          setScrollDir(-1);
-          setActiveIndex(prev => Math.max(prev - 1, 0));
+    setLoading(true);
+    setImageScale(1);
+
+    fetch(`${API_BASE}/api/collections/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Not found');
+        return res.json();
+      })
+      .then(data => {
+        setItem(data);
+        setLoading(false);
+        // Fetch remaining items in same category
+        if (data.klasifikasi) {
+          fetch(`${API_BASE}/api/collections/kategori/${encodeURIComponent(data.klasifikasi)}`)
+            .then(res => res.json())
+            .then(catData => {
+              setCategoryItems(catData.data || []);
+            })
+            .catch(() => {});
         }
-      }
-    };
+      })
+      .catch(() => {
+        // Fallback if not found or dummy
+        setItem(null);
+        setLoading(false);
+      });
+  }, [id]);
 
-    let timeout;
-    const wheelListener = (e) => {
-      if (timeout) return;
-      handleWheel(e);
-      timeout = setTimeout(() => { timeout = null; }, 1000); 
-    };
+  const currentIndex = categoryItems.findIndex(x => String(x.id) === String(id));
+  const activeArtifact = item || dummyArtifacts[0];
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('wheel', wheelListener, { passive: true });
+  const handleNextItem = () => {
+    if (categoryItems.length > 0 && currentIndex >= 0 && currentIndex < categoryItems.length - 1) {
+      setScrollDir(1);
+      navigate(`/interactive/${categoryItems[currentIndex + 1].id}`);
     }
-    return () => {
-      if (container) {
-        container.removeEventListener('wheel', wheelListener);
-      }
-      clearTimeout(timeout);
-    };
-  }, []);
+  };
+
+  const handlePrevItem = () => {
+    if (categoryItems.length > 0 && currentIndex > 0) {
+      setScrollDir(-1);
+      navigate(`/interactive/${categoryItems[currentIndex - 1].id}`);
+    }
+  };
 
   const variants = {
     enter: (direction) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0,
-      scale: 0.95
+      x: direction > 0 ? 300 : -300,
+      opacity: 0
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
-      scale: 1,
       transition: {
-        x: { type: "spring", stiffness: 100, damping: 20 },
+        x: { type: "spring", stiffness: 120, damping: 20 },
         opacity: { duration: 0.4 }
       }
     },
     exit: (direction) => ({
       zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
+      x: direction < 0 ? 300 : -300,
       opacity: 0,
-      scale: 0.95,
       transition: {
-        x: { type: "spring", stiffness: 100, damping: 20 },
-        opacity: { duration: 0.4 }
+        x: { type: "spring", stiffness: 120, damping: 20 },
+        opacity: { duration: 0.3 }
       }
     })
   };
+
+  const ActiveModel = activeArtifact.Model || CylinderModel;
 
   return (
     <PageTransition style={{ height: '100vh', width: '100vw', display: 'flex', position: 'relative', overflow: 'hidden', backgroundColor: '#C2B280' }} ref={containerRef}>
 
       {/* Back Button Overlay */}
-      <div style={{ position: 'absolute', top: 0, left: 0, padding: '2rem 3rem', zIndex: 50 }}>
-        <button onClick={() => window.history.back()} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.1)', padding: '0.8rem 1.5rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.1)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.05)'}>
+      <div style={{ position: 'absolute', top: 0, left: 0, padding: '2rem 3rem', zIndex: 50, display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <button onClick={() => window.history.back()} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
           <ArrowLeft size={16} /> {t('back')}
         </button>
+
+        {/* Mode Toggle Button */}
+        <div style={{ display: 'flex', backgroundColor: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(10px)', borderRadius: '30px', padding: '3px', border: '1px solid rgba(0,0,0,0.1)' }}>
+          <button
+            onClick={() => setViewMode('image')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.4rem',
+              padding: '0.45rem 1rem', borderRadius: '25px', border: 'none',
+              backgroundColor: viewMode === 'image' ? '#1a1a1a' : 'transparent',
+              color: viewMode === 'image' ? '#fff' : '#1a1a1a',
+              cursor: 'pointer', fontSize: '0.82rem', fontWeight: 500, transition: 'all 0.3s'
+            }}
+          >
+            <ImageIcon size={14} /> Foto Artefak
+          </button>
+          <button
+            onClick={() => setViewMode('3d')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '0.4rem',
+              padding: '0.45rem 1rem', borderRadius: '25px', border: 'none',
+              backgroundColor: viewMode === '3d' ? '#1a1a1a' : 'transparent',
+              color: viewMode === '3d' ? '#fff' : '#1a1a1a',
+              cursor: 'pointer', fontSize: '0.82rem', fontWeight: 500, transition: 'all 0.3s'
+            }}
+          >
+            <Box size={14} /> Simulasi 3D
+            {activeArtifact.model_3d && (
+              <span style={{
+                backgroundColor: viewMode === '3d' ? '#4caf50' : '#2e7d32',
+                color: '#fff',
+                fontSize: '0.65rem',
+                padding: '1px 6px',
+                borderRadius: '10px',
+                fontWeight: 700
+              }}>ASLI</span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Progress/Thumbnails Bar (Bottom) */}
-      <div style={{ position: 'absolute', bottom: '40px', left: '50%', transform: 'translateX(-50%)', zIndex: 50, display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 2rem', backgroundColor: 'rgba(255,255,255,0.4)', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.05)' }}>
-        {dummyArtifacts.map((art, idx) => (
-          <div 
-            key={art.id} 
-            onClick={() => {
-              setScrollDir(idx > activeIndex ? 1 : -1);
-              setActiveIndex(idx);
-            }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              cursor: 'pointer',
-              opacity: activeIndex === idx ? 1 : 0.4,
-              transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-              transform: activeIndex === idx ? 'scale(1.1)' : 'scale(1)'
-            }}
-          >
-            <div style={{
-              width: '50px',
-              height: '35px',
-              borderRadius: '6px',
-              overflow: 'hidden',
-              boxShadow: activeIndex === idx ? '0 5px 15px rgba(0,0,0,0.2)' : 'none',
-              border: activeIndex === idx ? '1px solid rgba(0,0,0,0.3)' : '1px solid transparent',
-            }}>
-              <img src={art.thumbnail} alt={`Thumbnail ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            </div>
-            <span style={{ color: '#1a1a1a', fontWeight: activeIndex === idx ? 600 : 400, fontSize: '0.8rem', fontFamily: 'monospace' }}>
-              0{idx + 1}
-            </span>
-          </div>
-        ))}
-      </div>
+      {categoryItems.length > 0 && (
+        <div style={{ position: 'absolute', bottom: '25px', left: '50%', transform: 'translateX(-50%)', zIndex: 50, display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.7rem 1.5rem', backgroundColor: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.1)', maxWidth: '75vw', overflowX: 'auto' }}>
+          {categoryItems.slice(Math.max(0, currentIndex - 5), currentIndex + 6).map((art, idx) => {
+            const isSelected = String(art.id) === String(id);
+            return (
+              <Link 
+                key={art.id} 
+                to={`/interactive/${art.id}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  opacity: isSelected ? 1 : 0.5,
+                  transition: 'all 0.3s ease',
+                  transform: isSelected ? 'scale(1.08)' : 'scale(1)',
+                  textDecoration: 'none'
+                }}
+              >
+                <div style={{
+                  width: '45px',
+                  height: '32px',
+                  borderRadius: '6px',
+                  overflow: 'hidden',
+                  boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.25)' : 'none',
+                  border: isSelected ? '2px solid #1a1a1a' : '1px solid transparent',
+                  backgroundColor: '#ddd'
+                }}>
+                  <img 
+                    src={art.gambar || dummyArtifacts[0].thumbnail} 
+                    alt={art.nama_koleksi} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       <AnimatePresence initial={false} custom={scrollDir}>
         <motion.div
-          key={activeIndex}
+          key={id}
           custom={scrollDir}
           variants={variants}
           initial="enter"
@@ -196,66 +263,154 @@ const InteractiveView = () => {
           exit="exit"
           style={{ width: '100%', height: '100%', display: 'flex', position: 'absolute', top: 0, left: 0 }}
         >
-          {/* 3D Canvas (Left Side) */}
-          <div style={{ flex: '0 0 60%', height: '100%', position: 'relative' }}>
-            <Canvas shadows camera={{ position: [0, 2, 5], fov: 50 }}>
-              <color attach="background" args={['#C2B280']} />
-              <ambientLight intensity={0.5} />
-              <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
+          {/* Left Side: Interactive Image Viewer or 3D Stage */}
+          <div style={{ flex: '0 0 55%', height: '100%', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem' }}>
+            {viewMode === 'image' ? (
+              <div style={{ position: 'relative', width: '100%', height: '80%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {activeArtifact.gambar ? (
+                  <div style={{
+                    overflow: 'hidden',
+                    borderRadius: '20px',
+                    boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+                    maxHeight: '100%',
+                    maxWidth: '85%',
+                    position: 'relative',
+                    border: '4px solid rgba(255,255,255,0.3)',
+                    backgroundColor: '#1f1f1a'
+                  }}>
+                    <img
+                      src={activeArtifact.gambar}
+                      alt={activeArtifact.nama_koleksi}
+                      style={{
+                        maxHeight: '65vh',
+                        maxWidth: '100%',
+                        display: 'block',
+                        transform: `scale(${imageScale})`,
+                        transition: 'transform 0.3s ease',
+                        cursor: imageScale > 1 ? 'grab' : 'zoom-in'
+                      }}
+                      onClick={() => setImageScale(s => s === 1 ? 1.6 : 1)}
+                    />
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', color: '#4a4a44', fontFamily: 'Kalnia', fontSize: '1.5rem' }}>
+                    Foto koleksi tidak tersedia
+                  </div>
+                )}
 
-              <Suspense fallback={null}>
-                <ActiveModel color={activeArtifact.color} />
-                <Environment preset="city" />
-                <ContactShadows position={[0, 0, 0]} opacity={0.6} scale={15} blur={2.5} far={4} color="#000000" />
-              </Suspense>
+                {/* Image Zoom Controls Overlay */}
+                {activeArtifact.gambar && (
+                  <div style={{ position: 'absolute', bottom: '20px', right: '40px', display: 'flex', gap: '0.5rem', backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', padding: '0.4rem', borderRadius: '25px', border: '1px solid rgba(0,0,0,0.1)' }}>
+                    <button onClick={() => setImageScale(s => Math.min(s + 0.3, 3))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom In"><ZoomIn size={16} /></button>
+                    <button onClick={() => setImageScale(s => Math.max(s - 0.3, 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom Out"><ZoomOut size={16} /></button>
+                    <button onClick={() => setImageScale(1)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Reset Zoom"><RotateCcw size={16} /></button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* 3D Canvas Mode */
+              <>
+                <Canvas shadows camera={{ position: [0, 2, 5], fov: 50 }}>
+                  <color attach="background" args={['#C2B280']} />
+                  <ambientLight intensity={0.6} />
+                  <spotLight position={[10, 10, 10]} angle={0.2} penumbra={1} intensity={1} castShadow />
 
-              <OrbitControls
-                enablePan={false}
-                enableZoom={true}
-                minPolarAngle={Math.PI / 4}
-                maxPolarAngle={Math.PI / 1.5}
-                autoRotate
-                autoRotateSpeed={0.8}
-              />
-            </Canvas>
-            <div style={{ position: 'absolute', top: '30px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255, 255, 255, 0.3)', padding: '0.5rem 1rem', borderRadius: '30px', fontSize: '0.8rem', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.05)', letterSpacing: '1px' }}>
-              <Info size={14} /> {t('rotationInfo')}
-            </div>
+                  <Suspense fallback={null}>
+                    {activeArtifact.model_3d ? (
+                      <ModelErrorBoundary url={activeArtifact.model_3d} fallback={<ActiveModel color={activeArtifact.color || '#4a4a44'} />}>
+                        <DynamicGLTFModel url={activeArtifact.model_3d} />
+                      </ModelErrorBoundary>
+                    ) : (
+                      <ActiveModel color={activeArtifact.color || '#4a4a44'} />
+                    )}
+                    <Environment preset="city" />
+                    <ContactShadows position={[0, 0, 0]} opacity={0.6} scale={15} blur={2.5} far={4} color="#000000" />
+                  </Suspense>
+
+                  <OrbitControls
+                    enablePan={false}
+                    enableZoom={true}
+                    minPolarAngle={Math.PI / 4}
+                    maxPolarAngle={Math.PI / 1.5}
+                    autoRotate
+                    autoRotateSpeed={0.8}
+                  />
+                </Canvas>
+                <div style={{ position: 'absolute', top: '95px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255, 255, 255, 0.4)', padding: '0.4rem 1rem', borderRadius: '30px', fontSize: '0.78rem', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.05)', letterSpacing: '1px' }}>
+                  <Info size={14} /> Putar model 3D untuk melihat dari berbagai sudut
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Description (Right Side) */}
-          <div style={{ flex: '0 0 40%', height: '100%', backgroundColor: '#C2B280', padding: '6rem 4rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10 }}>
-            <div style={{ borderLeft: '1px solid rgba(0,0,0,0.1)', paddingLeft: '3rem', position: 'relative' }}>
+          {/* Right Side: Description & Metadata */}
+          <div style={{ flex: '0 0 45%', height: '100%', backgroundColor: '#C2B280', padding: '5rem 4rem 6rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto' }}>
+            <div style={{ borderLeft: '1px solid rgba(0,0,0,0.15)', paddingLeft: '2.5rem', position: 'relative' }}>
               
-              {/* Decorative line */}
-              <div style={{ position: 'absolute', left: '-1px', top: 0, width: '2px', height: '100px', backgroundColor: '#1a1a1a' }}></div>
+              <div style={{ position: 'absolute', left: '-1px', top: 0, width: '3px', height: '80px', backgroundColor: '#1a1a1a' }}></div>
 
-              <span style={{ textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.75rem', color: '#4a4a44', marginBottom: '1.5rem', display: 'block' }}>
-                {t('artifactCollection')} / 0{activeIndex + 1}
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
+                <span style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.75rem', color: '#4a4a44', fontWeight: 600 }}>
+                  {activeArtifact.klasifikasi || 'Koleksi Museum'}
+                </span>
+                {activeArtifact.kondisi && (
+                  <span style={{
+                    backgroundColor: activeArtifact.kondisi.toLowerCase() === 'baik' ? 'rgba(46, 125, 50, 0.2)' : 'rgba(245, 124, 0, 0.2)',
+                    color: activeArtifact.kondisi.toLowerCase() === 'baik' ? '#1b5e20' : '#e65100',
+                    padding: '0.15rem 0.6rem',
+                    borderRadius: '12px',
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase'
+                  }}>
+                    {activeArtifact.kondisi}
+                  </span>
+                )}
+              </div>
               
-              <h1 style={{ fontSize: '3.5rem', marginBottom: '2rem', lineHeight: '1.1', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
-                {t(activeArtifact.titleKey) !== activeArtifact.titleKey ? t(activeArtifact.titleKey) : activeArtifact.titleKey} {activeArtifact.id === '1' ? id : ''}
+              <h1 style={{ fontSize: '2.8rem', marginBottom: '1.5rem', lineHeight: '1.15', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
+                {activeArtifact.nama_koleksi || activeArtifact.titleKey}
               </h1>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', color: '#333', lineHeight: '1.8', fontSize: '1.1rem', fontWeight: 400 }}>
-                <p>{t(activeArtifact.desc1Key) !== activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : activeArtifact.desc1Key}</p>
-                <p>{t(activeArtifact.desc2Key) !== activeArtifact.desc2Key ? t(activeArtifact.desc2Key) : activeArtifact.desc2Key}</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
+                <p style={{ margin: 0 }}>{activeArtifact.deskripsi || activeArtifact.desc1Key}</p>
 
-                <div style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
-                  <div>
-                    <h4 style={{ color: '#1a1a1a', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>{t('material')}</h4>
-                    <p style={{ margin: 0, color: '#4a4a44', fontSize: '0.95rem' }}>{t(activeArtifact.materialKey) !== activeArtifact.materialKey ? t(activeArtifact.materialKey) : activeArtifact.materialKey}</p>
-                  </div>
-                  <div>
-                    <h4 style={{ color: '#1a1a1a', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>{t('era')}</h4>
-                    <p style={{ margin: 0, color: '#4a4a44', fontSize: '0.95rem' }}>{t(activeArtifact.eraKey) !== activeArtifact.eraKey ? t(activeArtifact.eraKey) : activeArtifact.eraKey}</p>
-                  </div>
-                  <div>
-                    <h4 style={{ color: '#1a1a1a', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.5rem' }}>{t('location')}</h4>
-                    <p style={{ margin: 0, color: '#4a4a44', fontSize: '0.95rem' }}>{t(activeArtifact.locationKey) !== activeArtifact.locationKey ? t(activeArtifact.locationKey) : activeArtifact.locationKey}</p>
-                  </div>
+                {/* Grid Metadata Lengkap */}
+                <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', backgroundColor: 'rgba(255,255,255,0.25)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                  {activeArtifact.no_inventarisasi && (
+                    <div>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>No. Inventarisasi</h4>
+                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600, fontFamily: 'monospace' }}>{activeArtifact.no_inventarisasi}</p>
+                    </div>
+                  )}
+
+                  {activeArtifact.dimensi && activeArtifact.dimensi.panjang && (
+                    <div>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>Dimensi</h4>
+                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.dimensi.panjang}</p>
+                    </div>
+                  )}
+
+                  {activeArtifact.tempat_penyimpanan && (
+                    <div>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>Tempat Penyimpanan</h4>
+                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tempat_penyimpanan}</p>
+                    </div>
+                  )}
+
+                  {activeArtifact.tanggal_pengamatan && (
+                    <div>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>Tanggal Pendataan</h4>
+                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tanggal_pengamatan}</p>
+                    </div>
+                  )}
                 </div>
+
+                {activeArtifact.keterangan && (
+                  <div style={{ marginTop: '0.5rem', fontSize: '0.82rem', color: '#555', fontStyle: 'italic' }}>
+                    Catatan: {activeArtifact.keterangan}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -267,3 +422,4 @@ const InteractiveView = () => {
 };
 
 export default InteractiveView;
+
