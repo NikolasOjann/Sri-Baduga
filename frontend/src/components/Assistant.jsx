@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Loader } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 
+const API_BASE = 'http://localhost:3001';
+
 const Assistant = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen]   = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const location = useLocation();
-  const { t } = useLanguage();
-  
+  const { t }    = useLanguage();
+  const messagesEndRef = useRef(null);
+
   const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
+  const [input, setInput]       = useState('');
 
   // Update greeting when language changes or initially
   useEffect(() => {
@@ -48,17 +52,38 @@ const Assistant = () => {
     }
   }, [location.pathname, t]);
 
-  const handleSend = (e) => {
+  // Auto-scroll ke pesan terbaru
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  const handleSend = async (e) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isSending) return;
 
-    setMessages(prev => [...prev, { text: input, sender: "user" }]);
-    setInput("");
+    const userMsg = input.trim();
+    setMessages(prev => [...prev, { text: userMsg, sender: 'user' }]);
+    setInput('');
+    setIsSending(true);
 
-    // Dummy RAG/LLM response
-    setTimeout(() => {
-      setMessages(prev => [...prev, { text: t('assistantResponse'), sender: "nyai" }]);
-    }, 1000);
+    try {
+      const res = await fetch(`${API_BASE}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMsg }),
+      });
+      const data = await res.json();
+      setMessages(prev => [...prev, { text: data.reply, sender: 'nyai' }]);
+    } catch {
+      setMessages(prev => [...prev, {
+        text: 'Maaf, saya sedang tidak dapat merespons. Pastikan server berjalan.',
+        sender: 'nyai'
+      }]);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -94,12 +119,12 @@ const Assistant = () => {
               </button>
             </div>
             
-            <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {messages.map((msg, idx) => (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  key={idx} 
+                  key={idx}
                   style={{
                     alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
                     backgroundColor: msg.sender === 'user' ? '#3b82f6' : 'rgba(255,255,255,0.1)',
@@ -109,21 +134,47 @@ const Assistant = () => {
                     borderBottomRightRadius: msg.sender === 'user' ? '4px' : '16px',
                     borderBottomLeftRadius: msg.sender === 'nyai' ? '4px' : '16px',
                     maxWidth: '85%',
-                    fontSize: '0.95rem',
-                    lineHeight: '1.5',
-                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                    fontSize: '0.9rem',
+                    lineHeight: '1.6',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                    whiteSpace: 'pre-wrap',
                   }}>
                   {msg.text}
                 </motion.div>
               ))}
+
+              {/* Loading indicator saat menunggu balasan */}
+              {isSending && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    alignSelf: 'flex-start',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    padding: '12px 16px',
+                    borderRadius: '16px',
+                    borderBottomLeftRadius: '4px',
+                    display: 'flex',
+                    gap: '6px',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0s' }} />
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0.2s' }} />
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0.4s' }} />
+                </motion.div>
+              )}
+
+              <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={handleSend} style={{ display: 'flex', padding: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.2)' }}>
+            <form onSubmit={handleSend} style={{ display: 'flex', padding: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.2)', gap: '10px' }}>
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t('askAssistant')}
+                disabled={isSending}
                 style={{
                   flex: 1,
                   background: 'rgba(255,255,255,0.05)',
@@ -132,12 +183,28 @@ const Assistant = () => {
                   outline: 'none',
                   padding: '10px 15px',
                   borderRadius: '20px',
-                  marginRight: '10px',
-                  fontSize: '0.95rem'
+                  fontSize: '0.9rem',
+                  opacity: isSending ? 0.5 : 1,
                 }}
               />
-              <button type="submit" style={{ background: '#3b82f6', color: '#fff', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.background = '#2563eb'} onMouseLeave={(e) => e.currentTarget.style.background = '#3b82f6'}>
-                <Send size={18} style={{ marginLeft: '2px' }} />
+              <button
+                type="submit"
+                disabled={isSending || !input.trim()}
+                style={{
+                  background: isSending ? '#6b7280' : '#3b82f6',
+                  color: '#fff', border: 'none', borderRadius: '50%',
+                  width: '40px', height: '40px', flexShrink: 0,
+                  display: 'flex', justifyContent: 'center', alignItems: 'center',
+                  cursor: isSending ? 'not-allowed' : 'pointer',
+                  transition: 'background 0.3s',
+                }}
+                onMouseEnter={(e) => { if (!isSending) e.currentTarget.style.background = '#2563eb'; }}
+                onMouseLeave={(e) => { if (!isSending) e.currentTarget.style.background = '#3b82f6'; }}
+              >
+                {isSending
+                  ? <Loader size={16} className="spin" />
+                  : <Send size={16} style={{ marginLeft: '2px' }} />
+                }
               </button>
             </form>
           </motion.div>
