@@ -1,31 +1,45 @@
 const express = require('express');
-const cors = require('cors');
+const cors    = require('cors');
+const path    = require('path');
 
-const app = express();
+const app  = express();
 const PORT = 3001;
 
 app.use(cors());
 app.use(express.json());
 
-// Dummy RAG / LLM endpoint
-app.post('/api/chat', (req, res) => {
-  const { message } = req.body;
-  
-  // Simulasi proses RAG dan inferensi LLM
-  setTimeout(() => {
-    let reply = "Menarik! Saat ini saya masih dalam tahap purwarupa, namun nantinya saya dapat menceritakan sejarah lengkap koleksi tersebut berdasarkan database museum.";
-    
-    if (message.toLowerCase().includes('kujang')) {
-      reply = "Kujang adalah senjata tradisional khas Jawa Barat. Di Museum Sri Baduga, kami memiliki koleksi kujang dari era Pajajaran yang dipamerkan di lantai dua.";
-    } else if (message.toLowerCase().includes('jam')) {
-      reply = "Museum Sri Baduga buka setiap hari Selasa hingga Minggu, dari pukul 08:00 hingga 16:00 WIB. Hari Senin dan hari libur nasional kami tutup.";
-    }
+// Serve gambar artefak sebagai static files
+// Akses: http://localhost:3001/images/{kategori}/{filename}.jpg
+app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
-    res.json({ reply });
-  }, 1000); // delay simulasi 1 detik
+// ============================================================
+// Routes
+// ============================================================
+app.use('/api/collections', require('./routes/collections'));
+app.use('/api/chat',        require('./routes/chat'));
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// 404 fallback
+app.use((req, res) => {
+  res.status(404).json({ error: `Route ${req.method} ${req.path} tidak ditemukan.` });
+});
+
+// ============================================================
+// Start server
+// ============================================================
 app.listen(PORT, () => {
-  console.log(`Dummy Backend Server berjalan di http://localhost:${PORT}`);
-  console.log(`Endpoint RAG Chatbot: POST http://localhost:${PORT}/api/chat`);
+  console.log(`\n=== Museum Sri Baduga Backend ===`);
+  console.log(`Server berjalan di  : http://localhost:${PORT}`);
+  console.log(`\nEndpoints tersedia:`);
+  console.log(`  GET  /api/health`);
+  console.log(`  GET  /api/collections`);
+  console.log(`  GET  /api/collections/:id`);
+  console.log(`  GET  /api/collections/kategori/:nama`);
+  console.log(`  POST /api/chat`);
+  console.log(`\nTips: Jalankan "npm run extract" untuk mengekstrak PDF ke JSON`);
+  console.log('================================\n');
 });
