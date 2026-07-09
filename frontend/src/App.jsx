@@ -4,7 +4,6 @@ import { AnimatePresence } from 'framer-motion';
 
 // Pages
 import Home from './pages/Home';
-import About from './pages/About';
 import Catalog from './pages/Catalog';
 import CollectionImages from './pages/CollectionImages';
 import InteractiveView from './pages/InteractiveView';
@@ -20,7 +19,6 @@ function App() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/collection/:id" element={<CollectionImages />} />
           <Route path="/interactive/:id" element={<InteractiveView />} />

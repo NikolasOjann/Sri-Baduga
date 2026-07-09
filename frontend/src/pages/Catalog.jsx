@@ -24,7 +24,7 @@ const Catalog = () => {
     <PageTransition style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#C2B280' }}>
 
       <nav style={{ padding: '2rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link to="/about" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-muted)' }}>
+        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-muted)' }}>
           <ArrowLeft size={20} /> {t('back')}
         </Link>
         <div style={{ fontFamily: 'Kalnia', fontSize: '1.2rem', color: 'var(--color-text)' }}>

@@ -19,6 +19,13 @@ const Assistant = () => {
     ]);
   }, [t]);
 
+  // Listen for custom event to open assistant
+  useEffect(() => {
+    const handleOpenAssistant = () => setIsOpen(true);
+    window.addEventListener('open-assistant', handleOpenAssistant);
+    return () => window.removeEventListener('open-assistant', handleOpenAssistant);
+  }, []);
+
   // Context-aware messages based on route
   useEffect(() => {
     let contextMsg = "";
