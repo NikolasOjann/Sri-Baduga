@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
 import { ArrowLeft, Globe } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import bgVideo from '../asset/Galery/Background-5.mp4';
 
 const categories = [
   { id: 1, nameKey: 'geologika', name: 'Geologika', descKey: 'geologikaDesc', img: '/images/geologika.png' },
@@ -20,6 +21,7 @@ const categories = [
 const Catalog = () => {
   const { language, toggleLanguage, t } = useLanguage();
   const [counts, setCounts] = useState({});
+  const videoRef = useRef(null);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/collections/stats/counts')
@@ -28,10 +30,41 @@ const Catalog = () => {
       .catch(() => setCounts({}));
   }, []);
 
-  return (
-    <PageTransition style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#C2B280' }}>
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.9;
+    }
+  }, []);
 
-      <nav style={{ padding: '2rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  return (
+    <PageTransition style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      {/* Video Background */}
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: -1
+        }}
+      >
+        <source src={bgVideo} type="video/mp4" />
+      </video>
+
+      <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-muted)' }}>
           <ArrowLeft size={20} /> {t('back')}
         </Link>
@@ -50,16 +83,11 @@ const Catalog = () => {
 
       <div className="container" style={{ flex: 1, paddingBottom: '4rem', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>{t('tenClassifications')}</h1>
+          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', marginBottom: '1rem' }}>{t('tenClassifications')}</h1>
           <p style={{ color: 'var(--color-text-muted)', fontSize: '1.1rem' }}>{t('catalogDesc')}</p>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gridTemplateRows: 'repeat(2, 1fr)',
-          gap: '1.5rem'
-        }}>
+        <div className="catalog-grid">
           {categories.map((cat) => {
             const itemCount = counts[cat.name] || 0;
             return (

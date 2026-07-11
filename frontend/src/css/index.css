@@ -99,3 +99,156 @@ button {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
+
+/* ========================================================= */
+/* Responsive Utility Classes */
+/* ========================================================= */
+
+.nav-padding {
+  padding: 2rem 4rem;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 8vw, 5rem);
+  line-height: 1.1;
+  margin-bottom: 3rem;
+  font-family: 'Kalnia';
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+}
+
+.collection-grid {
+  column-count: 4;
+  column-gap: 1.5rem;
+}
+
+.interactive-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
+}
+
+.interactive-left {
+  flex: 0 0 55%;
+  height: 100%;
+}
+
+.interactive-right {
+  flex: 0 0 45%;
+  height: 100%;
+}
+
+.modal-content-box {
+  width: 100%;
+  max-width: 600px;
+}
+
+.cookie-box {
+  width: 320px;
+  bottom: 30px;
+  left: 30px;
+}
+
+.thumbnail-bar {
+  left: 27.5%;
+  max-width: 50vw;
+  bottom: 30px;
+}
+
+.interactive-back-btn {
+  top: 40px;
+  left: 40px;
+}
+
+.interactive-top-right {
+  top: 40px;
+  right: 40px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+  .catalog-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .collection-grid {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-padding {
+    padding: 1rem 1.5rem;
+  }
+  
+  .catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .collection-grid {
+    column-count: 2;
+  }
+
+  .interactive-layout {
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .interactive-left {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 60vh;
+  }
+
+  .interactive-right {
+    flex: 0 0 auto;
+    width: 100%;
+    height: auto;
+    min-height: 50vh;
+  }
+
+  .modal-content-box {
+    padding: 0 1rem;
+  }
+  
+  .hero-title {
+    margin-bottom: 2rem;
+  }
+  
+  .thumbnail-bar {
+    left: 50%;
+    max-width: 90vw;
+    bottom: 20px;
+  }
+  
+  .interactive-back-btn {
+    top: 20px;
+    left: 20px;
+  }
+  
+  .interactive-top-right {
+    top: 20px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .catalog-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  
+  .collection-grid {
+    column-count: 1;
+  }
+
+  .cookie-box {
+    width: calc(100% - 40px);
+    bottom: 20px;
+    left: 20px;
+  }
+}

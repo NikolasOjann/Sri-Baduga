@@ -1,43 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
-import { ArrowLeft, Maximize2, Loader, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Maximize2, Loader, AlertCircle, Search } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+
+import bg1 from '../asset/Galery/Background-1.png';
+import bg4 from '../asset/Galery/Background-4.png';
+import bg6 from '../asset/Galery/Background-6.png';
+import bg7 from '../asset/Galery/Background-7.png';
+import bg8 from '../asset/Galery/Background-8.png';
+import bg9 from '../asset/Galery/Background-9.png';
+
 
 // Mapping id URL (/collection/:id) → nama klasifikasi untuk API
 const KATEGORI_MAP = {
-  '1':  'Geologika',
-  '2':  'Biologika',
-  '3':  'Etnografika',
-  '4':  'Arkeologika',
-  '5':  'Historika',
-  '6':  'Numismatika',
-  '7':  'Filologika',
-  '8':  'Keramologika',
-  '9':  'Seni Rupa',
+  '1': 'Geologika',
+  '2': 'Biologika',
+  '3': 'Etnografika',
+  '4': 'Arkeologika',
+  '5': 'Historika',
+  '6': 'Numismatika',
+  '7': 'Filologika',
+  '8': 'Keramologika',
+  '9': 'Seni Rupa',
   '10': 'Teknologika',
 };
 
 // Warna gradient per kategori
 const KATEGORI_COLORS = {
   'Etnografika': 'linear-gradient(135deg, #6B3F1F 0%, #A0735A 50%, #C2956C 100%)',
-  'Filologika':  'linear-gradient(135deg, #1F3A5F 0%, #3D6B8C 50%, #6B9BB5 100%)',
-  'Seni Rupa':   'linear-gradient(135deg, #5C2E2E 0%, #8B5E3C 50%, #B58C6A 100%)',
-  'default':     'linear-gradient(135deg, #3A3A34 0%, #6B6B60 50%, #9A9A8A 100%)',
+  'Filologika': 'linear-gradient(135deg, #1F3A5F 0%, #3D6B8C 50%, #6B9BB5 100%)',
+  'Seni Rupa': 'linear-gradient(135deg, #5C2E2E 0%, #8B5E3C 50%, #B58C6A 100%)',
+  'default': 'linear-gradient(135deg, #3A3A34 0%, #6B6B60 50%, #9A9A8A 100%)',
 };
 
 const API_BASE = 'http://localhost:3001';
 
 const CollectionImages = () => {
   const { id } = useParams();
-  const { t }  = useLanguage();
+  const { t } = useLanguage();
 
-  const [items, setItems]     = useState([]);
+  const [items, setItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState(null);
+  const [error, setError] = useState(null);
 
   const namaKategori = KATEGORI_MAP[id] || id;
-  const gradientBg   = KATEGORI_COLORS[namaKategori] || KATEGORI_COLORS['default'];
+  const gradientBg = KATEGORI_COLORS[namaKategori] || KATEGORI_COLORS['default'];
+
+  const [randomBg] = useState(() => {
+    const bgs = [bg1, bg4, bg6, bg7, bg8, bg9];
+    return bgs[Math.floor(Math.random() * bgs.length)];
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -59,10 +73,20 @@ const CollectionImages = () => {
   }, [id, namaKategori]);
 
   return (
-    <PageTransition style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#C2B280' }}>
+    <PageTransition style={{ 
+      minHeight: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      backgroundColor: '#C2B280',
+      backgroundImage: `url(${randomBg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundRepeat: 'no-repeat'
+    }}>
 
       {/* Navbar */}
-      <nav style={{ padding: '2rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
+      <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
         <Link to="/catalog" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', textDecoration: 'none', fontWeight: '500' }}>
           <ArrowLeft size={20} /> {t('back')}
         </Link>
@@ -105,16 +129,36 @@ const CollectionImages = () => {
         {/* Grid Koleksi */}
         {!loading && !error && items.length > 0 && (
           <>
-            {/* Jumlah koleksi */}
-            <p style={{ color: '#4a4a44', fontSize: '0.85rem', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '2rem', marginTop: '0.5rem' }}>
-              {items.length} koleksi &mdash; {namaKategori}
-            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem', marginTop: '0.5rem' }}>
+              {/* Search Bar */}
+              <div style={{ position: 'relative', maxWidth: '400px' }}>
+                <div style={{ position: 'absolute', top: '50%', left: '1rem', transform: 'translateY(-50%)', color: '#8c8c82', pointerEvents: 'none' }}>
+                  <Search size={18} />
+                </div>
+                <input 
+                  type="text" 
+                  placeholder={`Cari koleksi di ${namaKategori}...`} 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    width: '100%', padding: '0.8rem 1rem 0.8rem 2.8rem', borderRadius: '30px', 
+                    border: '1px solid rgba(0,0,0,0.1)', outline: 'none', backgroundColor: 'rgba(255,255,255,0.7)', 
+                    backdropFilter: 'blur(10px)', fontSize: '0.95rem', color: '#1a1a1a', fontFamily: 'inherit'
+                  }}
+                />
+              </div>
 
-            <div style={{
-              columnCount: 4,
-              columnGap: '1.5rem',
-            }}>
-              {items.map((item, index) => {
+              {/* Jumlah koleksi */}
+              <p style={{ color: '#4a4a44', fontSize: '0.85rem', letterSpacing: '2px', textTransform: 'uppercase' }}>
+                {(() => {
+                  const filtered = items.filter(item => (item.nama_koleksi || '').toLowerCase().includes(searchQuery.toLowerCase()));
+                  return `${filtered.length} koleksi ditemukan \u2014 ${namaKategori}`;
+                })()}
+              </p>
+            </div>
+
+            <div className="collection-grid">
+              {items.filter(item => (item.nama_koleksi || '').toLowerCase().includes(searchQuery.toLowerCase())).map((item, index) => {
                 return (
                   <Link
                     key={item.id}

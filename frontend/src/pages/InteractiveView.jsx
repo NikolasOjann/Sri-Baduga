@@ -1,11 +1,17 @@
 import React, { Suspense, useState, useRef, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import PageTransition from '../animations/PageTransition';
-import { ArrowLeft, Info, Maximize2, ZoomIn, ZoomOut, RotateCcw, Box, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Info, Maximize2, ZoomIn, ZoomOut, RotateCcw, Box, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, useGLTF, Center } from '@react-three/drei';
 import { useLanguage } from '../i18n/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
+
+import bg1 from '../asset/Galery/Background-1.png';
+import bg4 from '../asset/Galery/Background-4.png';
+import bg6 from '../asset/Galery/Background-6.png';
+import bg7 from '../asset/Galery/Background-7.png';
+import bg8 from '../asset/Galery/Background-8.png';
+import bg9 from '../asset/Galery/Background-9.png';
 
 // Dynamic GLTF Loader Component for Real 3D Assets (.glb / .gltf)
 function DynamicGLTFModel({ url }) {
@@ -81,7 +87,7 @@ const API_BASE = 'http://localhost:3001';
 const InteractiveView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language, toggleLanguage } = useLanguage();
 
   const [item, setItem] = useState(null);
   const [categoryItems, setCategoryItems] = useState([]);
@@ -139,37 +145,66 @@ const InteractiveView = () => {
 
   const variants = {
     enter: (direction) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0
+      x: direction > 0 ? '50%' : '-50%',
+      opacity: 0,
+      scale: 0.95
     }),
     center: {
       zIndex: 1,
       x: 0,
       opacity: 1,
+      scale: 1,
       transition: {
-        x: { type: "spring", stiffness: 120, damping: 20 },
-        opacity: { duration: 0.4 }
+        x: { type: "tween", duration: 0.8, ease: [0.76, 0, 0.24, 1] },
+        opacity: { duration: 0.6, ease: "easeOut" },
+        scale: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
       }
     },
     exit: (direction) => ({
       zIndex: 0,
-      x: direction < 0 ? 300 : -300,
+      x: direction < 0 ? '50%' : '-50%',
       opacity: 0,
+      scale: 0.95,
       transition: {
-        x: { type: "spring", stiffness: 120, damping: 20 },
-        opacity: { duration: 0.3 }
+        x: { type: "tween", duration: 0.8, ease: [0.76, 0, 0.24, 1] },
+        opacity: { duration: 0.4 },
+        scale: { duration: 0.8, ease: [0.76, 0, 0.24, 1] }
       }
     })
   };
 
   const ActiveModel = activeArtifact.Model || CylinderModel;
 
+  const [randomBg] = useState(() => {
+    const bgs = [bg1, bg4, bg6, bg7, bg8, bg9];
+    return bgs[Math.floor(Math.random() * bgs.length)];
+  });
+
   return (
-    <PageTransition style={{ height: '100vh', width: '100vw', display: 'flex', position: 'relative', overflow: 'hidden', backgroundColor: '#C2B280' }} ref={containerRef}>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      style={{ 
+        height: '100vh', 
+        width: '100vw', 
+        display: 'flex', 
+        position: 'relative', 
+        overflow: 'hidden', 
+        backgroundColor: '#C2B280',
+        backgroundImage: `url(${randomBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat'
+      }} 
+      ref={containerRef}
+    >
 
       {/* Back Button Overlay */}
-      <div style={{ position: 'absolute', top: 0, left: 0, padding: '2rem 3rem', zIndex: 50, display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <button onClick={() => window.history.back()} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
+      <div className="interactive-back-btn" style={{ position: 'absolute', zIndex: 70, display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <button onClick={() => navigate('/catalog')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
           <ArrowLeft size={16} /> {t('back')}
         </button>
 
@@ -210,42 +245,46 @@ const InteractiveView = () => {
             )}
           </button>
         </div>
+
+        {/* Language Toggle Button */}
+        <button onClick={toggleLanguage} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '50%', cursor: 'pointer', fontWeight: 600, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
+          {language === 'id' ? 'EN' : 'ID'}
+        </button>
       </div>
 
-      {/* Progress/Thumbnails Bar (Bottom) */}
+      {/* FIXED UI ELEMENTS (OUTSIDE OF ANIMATION) */}
+      
+      {/* Slide Arrows */}
+      {categoryItems.length > 0 && currentIndex > 0 && (
+        <button onClick={handlePrevItem} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.9)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'}>
+          <ChevronLeft size={24} color="#1a1a1a" />
+        </button>
+      )}
+      {categoryItems.length > 0 && currentIndex < categoryItems.length - 1 && (
+        <button onClick={handleNextItem} style={{ position: 'absolute', left: 'calc(55% - 65px)', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.9)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'}>
+          <ChevronRight size={24} color="#1a1a1a" />
+        </button>
+      )}
+
+      {/* Progress/Thumbnails Bar (Bottom of Image) */}
       {categoryItems.length > 0 && (
-        <div style={{ position: 'absolute', bottom: '25px', left: '50%', transform: 'translateX(-50%)', zIndex: 50, display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.7rem 1.5rem', backgroundColor: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.1)', maxWidth: '75vw', overflowX: 'auto' }}>
+        <div className="thumbnail-bar" style={{ position: 'absolute', transform: 'translateX(-50%)', zIndex: 60, display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.6rem 1.2rem', backgroundColor: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.1)', overflowX: 'auto' }}>
           {categoryItems.slice(Math.max(0, currentIndex - 5), currentIndex + 6).map((art, idx) => {
             const isSelected = String(art.id) === String(id);
             return (
               <Link 
                 key={art.id} 
                 to={`/interactive/${art.id}`}
+                onClick={() => {
+                  const newIndex = categoryItems.findIndex(x => String(x.id) === String(art.id));
+                  setScrollDir(newIndex > currentIndex ? 1 : -1);
+                }}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  opacity: isSelected ? 1 : 0.5,
-                  transition: 'all 0.3s ease',
-                  transform: isSelected ? 'scale(1.08)' : 'scale(1)',
-                  textDecoration: 'none'
+                  display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', opacity: isSelected ? 1 : 0.5, transition: 'all 0.3s ease', transform: isSelected ? 'scale(1.08)' : 'scale(1)', textDecoration: 'none'
                 }}
               >
-                <div style={{
-                  width: '45px',
-                  height: '32px',
-                  borderRadius: '6px',
-                  overflow: 'hidden',
-                  boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.25)' : 'none',
-                  border: isSelected ? '2px solid #1a1a1a' : '1px solid transparent',
-                  backgroundColor: '#ddd'
-                }}>
-                  <img 
-                    src={art.gambar || dummyArtifacts[0].thumbnail} 
-                    alt={art.nama_koleksi} 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                  />
+                <div style={{ width: '45px', height: '32px', borderRadius: '6px', overflow: 'hidden', boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.25)' : 'none', border: isSelected ? '2px solid #1a1a1a' : '1px solid transparent', backgroundColor: '#ddd' }}>
+                  <img src={art.gambar || dummyArtifacts[0].thumbnail} alt={art.nama_koleksi} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               </Link>
             );
@@ -261,12 +300,13 @@ const InteractiveView = () => {
           initial="enter"
           animate="center"
           exit="exit"
-          style={{ width: '100%', height: '100%', display: 'flex', position: 'absolute', top: 0, left: 0 }}
+          className="interactive-layout"
+          style={{ position: 'absolute', top: 0, left: 0 }}
         >
           {/* Left Side: Interactive Image Viewer or 3D Stage */}
-          <div style={{ flex: '0 0 55%', height: '100%', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem' }}>
+          <div className="interactive-left" style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '4rem 2rem' }}>
             {viewMode === 'image' ? (
-              <div style={{ position: 'relative', width: '100%', height: '80%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ position: 'relative', width: '100%', height: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
                 {activeArtifact.gambar ? (
                   <div style={{
                     overflow: 'hidden',
@@ -276,13 +316,13 @@ const InteractiveView = () => {
                     maxWidth: '85%',
                     position: 'relative',
                     border: '4px solid rgba(255,255,255,0.3)',
-                    backgroundColor: '#1f1f1a'
+                    backgroundColor: 'transparent'
                   }}>
                     <img
                       src={activeArtifact.gambar}
                       alt={activeArtifact.nama_koleksi}
                       style={{
-                        maxHeight: '65vh',
+                        maxHeight: '60vh',
                         maxWidth: '100%',
                         display: 'block',
                         transform: `scale(${imageScale})`,
@@ -300,7 +340,7 @@ const InteractiveView = () => {
 
                 {/* Image Zoom Controls Overlay */}
                 {activeArtifact.gambar && (
-                  <div style={{ position: 'absolute', bottom: '20px', right: '40px', display: 'flex', gap: '0.5rem', backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', padding: '0.4rem', borderRadius: '25px', border: '1px solid rgba(0,0,0,0.1)' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', padding: '0.4rem', borderRadius: '25px', border: '1px solid rgba(0,0,0,0.1)', zIndex: 10 }}>
                     <button onClick={() => setImageScale(s => Math.min(s + 0.3, 3))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom In"><ZoomIn size={16} /></button>
                     <button onClick={() => setImageScale(s => Math.max(s - 0.3, 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom Out"><ZoomOut size={16} /></button>
                     <button onClick={() => setImageScale(1)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Reset Zoom"><RotateCcw size={16} /></button>
@@ -311,7 +351,7 @@ const InteractiveView = () => {
               /* 3D Canvas Mode */
               <>
                 <Canvas shadows camera={{ position: [0, 2, 5], fov: 50 }}>
-                  <color attach="background" args={['#C2B280']} />
+                  
                   <ambientLight intensity={0.6} />
                   <spotLight position={[10, 10, 10]} angle={0.2} penumbra={1} intensity={1} castShadow />
 
@@ -336,7 +376,7 @@ const InteractiveView = () => {
                     autoRotateSpeed={0.8}
                   />
                 </Canvas>
-                <div style={{ position: 'absolute', top: '95px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255, 255, 255, 0.4)', padding: '0.4rem 1rem', borderRadius: '30px', fontSize: '0.78rem', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.05)', letterSpacing: '1px' }}>
+                <div style={{ position: 'absolute', bottom: '90px', left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255, 255, 255, 0.4)', padding: '0.4rem 1rem', borderRadius: '30px', fontSize: '0.78rem', backdropFilter: 'blur(10px)', border: '1px solid rgba(0,0,0,0.05)', letterSpacing: '1px' }}>
                   <Info size={14} /> Putar model 3D untuk melihat dari berbagai sudut
                 </div>
               </>
@@ -344,7 +384,7 @@ const InteractiveView = () => {
           </div>
 
           {/* Right Side: Description & Metadata */}
-          <div style={{ flex: '0 0 45%', height: '100%', backgroundColor: '#C2B280', padding: '5rem 4rem 6rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto' }}>
+          <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '4rem 3rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
             <div style={{ borderLeft: '1px solid rgba(0,0,0,0.15)', paddingLeft: '2.5rem', position: 'relative' }}>
               
               <div style={{ position: 'absolute', left: '-1px', top: 0, width: '3px', height: '80px', backgroundColor: '#1a1a1a' }}></div>
@@ -368,7 +408,7 @@ const InteractiveView = () => {
                 )}
               </div>
               
-              <h1 style={{ fontSize: '2.8rem', marginBottom: '1.5rem', lineHeight: '1.15', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
+              <h1 style={{ fontSize: '2.4rem', marginBottom: '1.2rem', lineHeight: '1.2', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
                 {activeArtifact.nama_koleksi || activeArtifact.titleKey}
               </h1>
 
@@ -376,7 +416,7 @@ const InteractiveView = () => {
                 <p style={{ margin: 0 }}>{activeArtifact.deskripsi || activeArtifact.desc1Key}</p>
 
                 {/* Grid Metadata Lengkap */}
-                <div style={{ marginTop: '2rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', backgroundColor: 'rgba(255,255,255,0.25)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: 'rgba(255,255,255,0.25)', padding: '1.2rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
                   {activeArtifact.no_inventarisasi && (
                     <div>
                       <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>No. Inventarisasi</h4>
@@ -416,10 +456,8 @@ const InteractiveView = () => {
           </div>
         </motion.div>
       </AnimatePresence>
-
-    </PageTransition>
+    </motion.div>
   );
 };
 
 export default InteractiveView;
-

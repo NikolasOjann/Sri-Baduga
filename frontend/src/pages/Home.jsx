@@ -1,11 +1,11 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, Stage, PresentationControls } from '@react-three/drei';
 import { MessageCircle, X } from 'lucide-react';
 import modelUrl from '../glb/contoh.glb?url';
-import bgImage from '../asset/Galery/Background-1.png';
+import WayangParallax from '../components/WayangParallax';
 
 // Error Boundary to prevent crashes if the 3D model path is wrong
 class ErrorBoundary extends React.Component {
@@ -45,18 +45,16 @@ const Home = () => {
   };
 
   return (
-    <PageTransition style={{ 
-      height: '100vh', 
-      width: '100vw', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      position: 'relative', 
-      overflow: 'hidden',
-      backgroundImage: `url(${bgImage})`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat'
+    <PageTransition style={{
+      height: '100vh',
+      width: '100vw',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+      overflow: 'hidden'
     }}>
+      {/* 2.5D Parallax Background */}
+      <WayangParallax />
 
       {/* Background Decor */}
       <div style={{
@@ -72,7 +70,7 @@ const Home = () => {
       }}></div>
 
       {/* Navigation */}
-      <nav style={{ padding: '2rem 4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
+      <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
         <div style={{ fontFamily: 'Kalnia', fontSize: '1.5rem', color: 'var(--color-text)', fontWeight: 'bold' }}>
           Sri Baduga
         </div>
@@ -86,7 +84,7 @@ const Home = () => {
         <h2 style={{ fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '4px', color: 'var(--color-text-muted)', marginBottom: '1rem', fontFamily: 'Elms Sans, sans-serif' }}>
           Jelajahi Sejarah Jawa Barat
         </h2>
-        <h1 style={{ fontSize: '5vw', lineHeight: '1.1', marginBottom: '3rem', fontFamily: 'Kalnia' }}>
+        <h1 className="hero-title">
           Museum<br />Sri Baduga
         </h1>
         <Link to="/catalog" className="btn-primary">
@@ -186,7 +184,7 @@ const Home = () => {
           </button>
 
           {/* 3D Character Rendering */}
-          <div style={{ width: '100%', maxWidth: '600px', flex: 1, position: 'relative', minHeight: '300px' }}>
+          <div className="modal-content-box" style={{ flex: 1, position: 'relative', minHeight: '300px' }}>
             <ErrorBoundary>
               <Suspense fallback={<div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa' }}>Loading Character...</div>}>
                 <Canvas camera={{ position: [0, 1, 4], fov: 45 }}>
@@ -211,15 +209,12 @@ const Home = () => {
 
           {/* Cookie Consent Box */}
           {!cookieConsent && (
-            <div style={{
+            <div className="cookie-box" style={{
               position: 'absolute',
-              bottom: '30px',
-              left: '30px',
               backgroundColor: 'white',
               color: 'black',
               padding: '20px',
               borderRadius: '12px',
-              width: '320px',
               boxShadow: '0 10px 30px rgba(0,0,0,0.8)',
               zIndex: 1000
             }}>
