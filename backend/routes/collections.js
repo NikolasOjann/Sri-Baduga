@@ -51,7 +51,7 @@ router.get('/', (req, res) => {
   // Fuzzy search by nama_koleksi atau deskripsi
   if (search) {
     const fuse = new Fuse(data, {
-      keys: ['nama_koleksi', 'deskripsi', 'keterangan'],
+      keys: ['nama_koleksi', 'sub_klasifikasi', 'deskripsi', 'keterangan'],
       threshold: 0.4,
     });
     data = fuse.search(search).map(r => r.item);

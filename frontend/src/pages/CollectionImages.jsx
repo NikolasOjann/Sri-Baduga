@@ -165,33 +165,40 @@ const CollectionImages = () => {
                     to={`/interactive/${item.id}`}
                     style={{
                       breakInside: 'avoid',
-                      marginBottom: '1.5rem',
-                      borderRadius: '16px',
+                      marginBottom: '1.75rem',
+                      borderRadius: '20px',
                       overflow: 'hidden',
                       position: 'relative',
                       textDecoration: 'none',
                       display: 'block',
-                      background: gradientBg,
-                      boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                      background: 'rgba(24, 24, 22, 0.92)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
                       cursor: 'pointer',
-                      transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease',
+                      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'scale(1.02) translateY(-4px)';
-                      e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.25)';
+                      e.currentTarget.style.transform = 'translateY(-6px)';
+                      e.currentTarget.style.boxShadow = '0 20px 45px rgba(0,0,0,0.45)';
+                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.45)';
                       const img = e.currentTarget.querySelector('.card-img');
-                      if (img) img.style.transform = 'scale(1.05)';
+                      if (img) img.style.transform = 'scale(1.06)';
+                      const cta = e.currentTarget.querySelector('.card-cta');
+                      if (cta) cta.style.color = '#eab308';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'scale(1) translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.25)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
                       const img = e.currentTarget.querySelector('.card-img');
                       if (img) img.style.transform = 'scale(1)';
+                      const cta = e.currentTarget.querySelector('.card-cta');
+                      if (cta) cta.style.color = 'rgba(255,255,255,0.85)';
                     }}
                   >
-                    {/* Foto artefak yang menentukan tinggi natural card */}
+                    {/* Foto artefak utuh dan jelas */}
                     {item.gambar && (
-                      <div style={{ position: 'relative', width: '100%', overflow: 'hidden', minHeight: '180px' }}>
+                      <div style={{ position: 'relative', width: '100%', overflow: 'hidden', minHeight: '200px', backgroundColor: '#141412' }}>
                         <img
                           className="card-img"
                           src={item.gambar}
@@ -200,7 +207,7 @@ const CollectionImages = () => {
                             width: '100%',
                             height: 'auto',
                             display: 'block',
-                            transition: 'transform 0.6s ease',
+                            transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
                           }}
                           onError={(e) => {
                             e.currentTarget.style.display = 'none';
@@ -209,17 +216,17 @@ const CollectionImages = () => {
                       </div>
                     )}
 
-                    {/* Jika tidak ada gambar, berikan padding agar card tetap seimbang */}
                     {!item.gambar && (
-                      <div style={{ height: '140px' }} />
+                      <div style={{ height: '160px', backgroundColor: '#141412' }} />
                     )}
 
                     {/* Nomor urut dekoratif */}
                     <div style={{
-                      position: 'absolute', top: '1.2rem', right: '1.5rem',
-                      fontSize: '3.5rem', fontFamily: 'Kalnia',
-                      color: 'rgba(255,255,255,0.15)', fontWeight: 'bold', lineHeight: 1,
+                      position: 'absolute', top: '1rem', right: '1.25rem',
+                      fontSize: '3rem', fontFamily: 'Kalnia',
+                      color: 'rgba(255,255,255,0.12)', fontWeight: 'bold', lineHeight: 1,
                       userSelect: 'none',
+                      pointerEvents: 'none',
                       zIndex: 2,
                     }}>
                       {String(index + 1).padStart(2, '0')}
@@ -228,91 +235,70 @@ const CollectionImages = () => {
                     {/* Badge No. Inventarisasi */}
                     {item.no_inventarisasi && (
                       <div style={{
-                        position: 'absolute', top: '1.2rem', left: '1.2rem',
-                        backgroundColor: 'rgba(0,0,0,0.45)',
+                        position: 'absolute', top: '1rem', left: '1rem',
+                        backgroundColor: 'rgba(15, 15, 13, 0.75)',
                         backdropFilter: 'blur(8px)',
-                        padding: '0.25rem 0.75rem',
+                        padding: '0.3rem 0.8rem',
                         borderRadius: '20px',
                         fontSize: '0.68rem',
-                        color: 'rgba(255,255,255,0.9)',
+                        color: 'rgba(255,255,255,0.95)',
                         letterSpacing: '1px',
                         fontFamily: 'monospace',
                         zIndex: 2,
-                        border: '1px solid rgba(255,255,255,0.15)',
+                        border: '1px solid rgba(212, 175, 55, 0.3)',
                       }}>
                         {item.no_inventarisasi}
                       </div>
                     )}
 
-                    {/* Konten deskripsi di atas gambar (overlay gradient) */}
+                    {/* Konten judul di bawah gambar */}
                     <div style={{
-                      position: item.gambar ? 'absolute' : 'relative',
-                      bottom: 0, left: 0, right: 0,
-                      padding: '2.5rem 1.75rem 1.5rem',
-                      background: item.gambar
-                        ? 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.75) 45%, rgba(0,0,0,0) 100%)'
-                        : 'transparent',
+                      position: 'relative',
+                      padding: '1.35rem 1.5rem',
+                      backgroundColor: 'rgba(20, 20, 18, 0.98)',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.75rem',
                       zIndex: 2,
                     }}>
                       <h2 style={{
-                        fontSize: '1.35rem',
-                        marginBottom: '0.4rem',
-                        color: '#fff',
+                        fontSize: '1.22rem',
+                        color: '#f8fafc',
                         fontFamily: 'Kalnia',
                         fontWeight: 500,
-                        lineHeight: 1.25,
+                        lineHeight: 1.35,
+                        margin: 0,
                       }}>
                         {item.nama_koleksi}
                       </h2>
 
-                      {item.deskripsi && (
-                        <p style={{
-                          color: 'rgba(255,255,255,0.8)',
-                          fontSize: '0.82rem',
-                          lineHeight: 1.55,
-                          marginBottom: '1rem',
-                          display: '-webkit-box',
-                          WebkitLineClamp: 3,
-                          WebkitBoxOrient: 'vertical',
-                          overflow: 'hidden',
-                        }}>
-                          {item.deskripsi}
-                        </p>
-                      )}
-
-                      {/* Footer card: kondisi + dimensi + cta */}
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      {/* Footer card */}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.3rem' }}>
                         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          {item.kondisi && (
-                            <span style={{
-                              backgroundColor: item.kondisi.toLowerCase() === 'baik' || item.kondisi.toLowerCase() === 'utuh'
-                                ? 'rgba(74,222,128,0.25)'
-                                : 'rgba(251,191,36,0.25)',
-                              color: item.kondisi.toLowerCase() === 'baik' || item.kondisi.toLowerCase() === 'utuh' ? '#4ade80' : '#fbbf24',
-                              padding: '0.2rem 0.6rem',
-                              borderRadius: '10px',
-                              fontSize: '0.68rem',
-                              fontWeight: 600,
-                              textTransform: 'capitalize',
-                              border: '1px solid rgba(255,255,255,0.1)',
-                            }}>
-                              {item.kondisi}
-                            </span>
-                          )}
                           {item.dimensi?.panjang && (
                             <span style={{
-                              backgroundColor: 'rgba(255,255,255,0.15)',
-                              color: 'rgba(255,255,255,0.85)',
-                              padding: '0.2rem 0.6rem',
-                              borderRadius: '10px',
-                              fontSize: '0.68rem',
+                              backgroundColor: 'rgba(212, 175, 55, 0.12)',
+                              color: '#facc15',
+                              padding: '0.22rem 0.65rem',
+                              borderRadius: '8px',
+                              fontSize: '0.7rem',
+                              border: '1px solid rgba(212, 175, 55, 0.25)',
                             }}>
                               {item.dimensi.panjang}
                             </span>
                           )}
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.78rem' }}>
-                          <Maximize2 size={12} /> Detail
+                        <div className="card-cta" style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.4rem',
+                          color: 'rgba(255,255,255,0.85)',
+                          fontSize: '0.78rem',
+                          fontWeight: 500,
+                          transition: 'color 0.3s ease',
+                        }}>
+                          <Maximize2 size={13} /> Detail
                         </div>
                       </div>
                     </div>
