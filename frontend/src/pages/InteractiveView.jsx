@@ -116,7 +116,7 @@ const InteractiveView = () => {
             .then(catData => {
               setCategoryItems(catData.data || []);
             })
-            .catch(() => {});
+            .catch(() => { });
         }
       })
       .catch(() => {
@@ -181,30 +181,36 @@ const InteractiveView = () => {
   });
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ 
-        height: '100vh', 
-        width: '100vw', 
-        display: 'flex', 
-        position: 'relative', 
-        overflow: 'hidden', 
+      style={{
+        height: '100vh',
+        width: '100vw',
+        display: 'flex',
+        position: 'relative',
+        overflow: 'hidden',
         backgroundColor: '#C2B280',
         backgroundImage: `url(${randomBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat'
-      }} 
+      }}
       ref={containerRef}
     >
 
       {/* Back Button Overlay */}
       <div className="interactive-back-btn" style={{ position: 'absolute', zIndex: 70, display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <button onClick={() => navigate('/catalog')} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
+        <button onClick={() => {
+          if (activeArtifact && activeArtifact.klasifikasi) {
+            navigate(`/collection/${encodeURIComponent(activeArtifact.klasifikasi)}`);
+          } else {
+            navigate('/catalog');
+          }
+        }} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
           <ArrowLeft size={16} /> {t('back')}
         </button>
 
@@ -253,7 +259,7 @@ const InteractiveView = () => {
       </div>
 
       {/* FIXED UI ELEMENTS (OUTSIDE OF ANIMATION) */}
-      
+
       {/* Slide Arrows */}
       {categoryItems.length > 0 && currentIndex > 0 && (
         <button onClick={handlePrevItem} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.9)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'}>
@@ -272,8 +278,8 @@ const InteractiveView = () => {
           {categoryItems.slice(Math.max(0, currentIndex - 5), currentIndex + 6).map((art, idx) => {
             const isSelected = String(art.id) === String(id);
             return (
-              <Link 
-                key={art.id} 
+              <Link
+                key={art.id}
                 to={`/interactive/${art.id}`}
                 onClick={() => {
                   const newIndex = categoryItems.findIndex(x => String(x.id) === String(art.id));
@@ -351,7 +357,7 @@ const InteractiveView = () => {
               /* 3D Canvas Mode */
               <>
                 <Canvas shadows camera={{ position: [0, 2, 5], fov: 50 }}>
-                  
+
                   <ambientLight intensity={0.6} />
                   <spotLight position={[10, 10, 10]} angle={0.2} penumbra={1} intensity={1} castShadow />
 
@@ -386,7 +392,7 @@ const InteractiveView = () => {
           {/* Right Side: Description & Metadata */}
           <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '4rem 3rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
             <div style={{ borderLeft: '1px solid rgba(0,0,0,0.15)', paddingLeft: '2.5rem', position: 'relative' }}>
-              
+
               <div style={{ position: 'absolute', left: '-1px', top: 0, width: '3px', height: '80px', backgroundColor: '#1a1a1a' }}></div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
@@ -407,7 +413,7 @@ const InteractiveView = () => {
                   </span>
                 )}
               </div>
-              
+
               <h1 style={{ fontSize: '2.4rem', marginBottom: '1.2rem', lineHeight: '1.2', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
                 {activeArtifact.nama_koleksi || activeArtifact.titleKey}
               </h1>

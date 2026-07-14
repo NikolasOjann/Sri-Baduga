@@ -73,10 +73,10 @@ const CollectionImages = () => {
   }, [id, namaKategori]);
 
   return (
-    <PageTransition style={{ 
-      minHeight: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column', 
+    <PageTransition style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
       backgroundColor: '#C2B280',
       backgroundImage: `url(${randomBg})`,
       backgroundSize: 'cover',
@@ -135,14 +135,14 @@ const CollectionImages = () => {
                 <div style={{ position: 'absolute', top: '50%', left: '1rem', transform: 'translateY(-50%)', color: '#8c8c82', pointerEvents: 'none' }}>
                   <Search size={18} />
                 </div>
-                <input 
-                  type="text" 
-                  placeholder={`Cari koleksi di ${namaKategori}...`} 
+                <input
+                  type="text"
+                  placeholder={`Cari koleksi di ${namaKategori}...`}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
-                    width: '100%', padding: '0.8rem 1rem 0.8rem 2.8rem', borderRadius: '30px', 
-                    border: '1px solid rgba(0,0,0,0.1)', outline: 'none', backgroundColor: 'rgba(255,255,255,0.7)', 
+                    width: '100%', padding: '0.8rem 1rem 0.8rem 2.8rem', borderRadius: '30px',
+                    border: '1px solid rgba(0,0,0,0.1)', outline: 'none', backgroundColor: 'rgba(255,255,255,0.7)',
                     backdropFilter: 'blur(10px)', fontSize: '0.95rem', color: '#1a1a1a', fontFamily: 'inherit'
                   }}
                 />
@@ -217,7 +217,7 @@ const CollectionImages = () => {
                     )}
 
                     {!item.gambar && (
-                      <div style={{ height: '160px', backgroundColor: '#141412' }} />
+                      <div style={{ height: '280px', backgroundColor: '#141412' }} />
                     )}
 
                     {/* Nomor urut dekoratif */}
@@ -253,10 +253,13 @@ const CollectionImages = () => {
 
                     {/* Konten judul di bawah gambar */}
                     <div style={{
-                      position: 'relative',
-                      padding: '1.35rem 1.5rem',
-                      backgroundColor: 'rgba(20, 20, 18, 0.98)',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      width: '100%',
+                      padding: '2.5rem 1.5rem 1.35rem 1.5rem',
+                      background: 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%)',
+                      borderTop: 'none',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '0.75rem',
