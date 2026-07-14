@@ -45,6 +45,11 @@ app.listen(PORT, () => {
   console.log(`  GET  /api/collections/:id`);
   console.log(`  GET  /api/collections/kategori/:nama`);
   console.log(`  POST /api/chat`);
-  console.log(`\nTips: Jalankan "npm run extract" untuk mengekstrak PDF ke JSON`);
+  console.log(`\nIntegrasi RAG & Ollama:`);
+  console.log(`  • RAG Service  : http://localhost:8000/chat (Submodule llm-museum)`);
+  console.log(`  • Fallback     : Fuse.js (Lokal JSON) jika RAG/Ollama offline`);
+  console.log(`\nTips:`);
+  console.log(`  • Jalankan RAG Python : cd rag-service/backend && uvicorn app.main:app --port 8000 --reload`);
+  console.log(`  • Ekstrak PDF ke JSON : npm run extract`);
   console.log('================================\n');
 });
