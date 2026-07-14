@@ -18,8 +18,19 @@ function main() {
   const goldenFile = path.join(DATA_DIR, 'collections.golden.json');
   if (fs.existsSync(goldenFile)) {
     const goldenData = JSON.parse(fs.readFileSync(goldenFile, 'utf-8'));
+    // Otomatis gunakan .png transparan jika filenya sudah ada di public/images
+    for (const item of goldenData) {
+      if (item.gambar && item.gambar.endsWith('.jpg')) {
+        const pngUrl = item.gambar.replace(/\.jpg$/i, '.png');
+        const relImgPath = item.gambar.replace(PUBLIC_BASE_URL, '');
+        const pngDiskPath = path.join(IMAGES_DIR, relImgPath.replace(/\.jpg$/i, '.png'));
+        if (fs.existsSync(pngDiskPath)) {
+          item.gambar = pngUrl;
+        }
+      }
+    }
     fs.writeFileSync(COLLECTIONS_FILE, JSON.stringify(goldenData, null, 2), 'utf-8');
-    console.log(`[OK] Memulihkan data dan gambar dari dataset referensi akurat (${goldenData.length} koleksi)`);
+    console.log(`[OK] Data dan gambar dipulihkan (${goldenData.length} koleksi, otomatis menggunakan PNG transparan jika tersedia)`);
     return;
   }
 
@@ -45,12 +56,18 @@ function main() {
       continue;
     }
 
-    const files = fs.readdirSync(folderPath)
-      .filter(f => /\.(jpg|jpeg|png|webp)$/i.test(f))
+    // Prioritaskan file .png (transparan hasil AI) jika ada, jika tidak gunakan .jpg
+    const rawFiles = fs.readdirSync(folderPath);
+    const baseNames = new Set(rawFiles.map(f => path.parse(f).name));
+    const files = Array.from(baseNames)
       .sort((a, b) => {
         const numA = parseInt((a.match(/\d+/) || [0])[0], 10);
         const numB = parseInt((b.match(/\d+/) || [0])[0], 10);
         return numA - numB || a.localeCompare(b);
+      })
+      .map(base => {
+        if (rawFiles.includes(`${base}.png`)) return `${base}.png`;
+        return `${base}.jpg`;
       });
 
     const categoryArtifacts = collections.filter(c =>

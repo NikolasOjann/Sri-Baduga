@@ -331,6 +331,8 @@ const InteractiveView = () => {
                         maxHeight: '60vh',
                         maxWidth: '100%',
                         display: 'block',
+                        mixBlendMode: 'lighten',
+                        filter: 'contrast(1.06) brightness(1.03)',
                         transform: `scale(${imageScale})`,
                         transition: 'transform 0.3s ease',
                         cursor: imageScale > 1 ? 'grab' : 'zoom-in'

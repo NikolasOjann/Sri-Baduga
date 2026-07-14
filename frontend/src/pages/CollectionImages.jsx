@@ -36,6 +36,186 @@ const KATEGORI_COLORS = {
 
 const API_BASE = 'http://localhost:3001';
 
+const CollectionCard = ({ item, index }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  return (
+    <Link
+      key={item.id}
+      to={`/interactive/${item.id}`}
+      style={{
+        display: 'block',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        position: 'relative',
+        textDecoration: 'none',
+        background: 'rgba(24, 24, 22, 0.92)',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
+        cursor: 'pointer',
+        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        opacity: 0,
+        animation: 'fadeInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        animationDelay: `${Math.min(index * 0.04, 0.6)}s`,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-6px)';
+        e.currentTarget.style.boxShadow = '0 20px 45px rgba(0,0,0,0.45)';
+        e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.45)';
+        const img = e.currentTarget.querySelector('.card-img');
+        if (img) img.style.transform = 'scale(1.06)';
+        const cta = e.currentTarget.querySelector('.card-cta');
+        if (cta) cta.style.color = '#eab308';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.25)';
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+        const img = e.currentTarget.querySelector('.card-img');
+        if (img) img.style.transform = 'scale(1)';
+        const cta = e.currentTarget.querySelector('.card-cta');
+        if (cta) cta.style.color = 'rgba(255,255,255,0.85)';
+      }}
+    >
+      {/* Foto artefak dengan vignette mask agar batas kotak studio menyatu halus */}
+      {item.gambar && (
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          overflow: 'hidden',
+          minHeight: '220px',
+          backgroundColor: '#181816',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          {!imgLoaded && (
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: '#1c1c1a',
+              backgroundImage: 'linear-gradient(90deg, #1c1c1a 0%, #262624 50%, #1c1c1a 100%)',
+              backgroundSize: '200% 100%',
+              animation: 'shimmer 1.5s infinite linear',
+              zIndex: 1,
+            }} />
+          )}
+          <img
+            className="card-img"
+            src={item.gambar}
+            alt={item.nama_koleksi}
+            onLoad={() => setImgLoaded(true)}
+            style={{
+              width: '100%',
+              height: 'auto',
+              display: 'block',
+              WebkitMaskImage: 'radial-gradient(ellipse 92% 88% at 50% 50%, black 65%, transparent 100%)',
+              maskImage: 'radial-gradient(ellipse 92% 88% at 50% 50%, black 65%, transparent 100%)',
+              filter: 'contrast(1.06) brightness(1.02)',
+              transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease',
+              opacity: imgLoaded ? 1 : 0,
+            }}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              setImgLoaded(true);
+            }}
+          />
+        </div>
+      )}
+
+      {!item.gambar && (
+        <div style={{ height: '280px', backgroundColor: '#141412' }} />
+      )}
+
+      {/* Nomor urut dekoratif */}
+      <div style={{
+        position: 'absolute', top: '1rem', right: '1.25rem',
+        fontSize: '3rem', fontFamily: 'Kalnia',
+        color: 'rgba(255,255,255,0.12)', fontWeight: 'bold', lineHeight: 1,
+        userSelect: 'none',
+        pointerEvents: 'none',
+        zIndex: 2,
+      }}>
+        {String(index + 1).padStart(2, '0')}
+      </div>
+
+      {/* Badge No. Inventarisasi */}
+      {item.no_inventarisasi && (
+        <div style={{
+          position: 'absolute', top: '1rem', left: '1rem',
+          backgroundColor: 'rgba(15, 15, 13, 0.75)',
+          backdropFilter: 'blur(8px)',
+          padding: '0.3rem 0.8rem',
+          borderRadius: '20px',
+          fontSize: '0.68rem',
+          color: 'rgba(255,255,255,0.95)',
+          letterSpacing: '1px',
+          fontFamily: 'monospace',
+          zIndex: 2,
+          border: '1px solid rgba(212, 175, 55, 0.3)',
+        }}>
+          {item.no_inventarisasi}
+        </div>
+      )}
+
+      {/* Konten judul di bawah gambar */}
+      <div style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        padding: '2.5rem 1.5rem 1.35rem 1.5rem',
+        background: 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%)',
+        borderTop: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.75rem',
+        zIndex: 2,
+      }}>
+        <h2 style={{
+          fontSize: '1.22rem',
+          color: '#f8fafc',
+          fontFamily: 'Kalnia',
+          fontWeight: 500,
+          lineHeight: 1.35,
+          margin: 0,
+        }}>
+          {item.nama_koleksi}
+        </h2>
+
+        {/* Footer card */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.3rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {item.dimensi?.panjang && (
+              <span style={{
+                backgroundColor: 'rgba(212, 175, 55, 0.12)',
+                color: '#facc15',
+                padding: '0.22rem 0.65rem',
+                borderRadius: '8px',
+                fontSize: '0.7rem',
+                border: '1px solid rgba(212, 175, 55, 0.25)',
+              }}>
+                {item.dimensi.panjang}
+              </span>
+            )}
+          </div>
+          <div className="card-cta" style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            color: 'rgba(255,255,255,0.85)',
+            fontSize: '0.78rem',
+            fontWeight: 500,
+            transition: 'color 0.3s ease',
+          }}>
+            <Maximize2 size={13} /> Detail
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
 const CollectionImages = () => {
   const { id } = useParams();
   const { t } = useLanguage();
@@ -53,6 +233,26 @@ const CollectionImages = () => {
     return bgs[Math.floor(Math.random() * bgs.length)];
   });
 
+  const [numCols, setNumCols] = useState(() => {
+    if (typeof window === 'undefined') return 4;
+    if (window.innerWidth <= 480) return 1;
+    if (window.innerWidth <= 768) return 2;
+    if (window.innerWidth <= 1024) return 3;
+    return 4;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width <= 480) setNumCols(1);
+      else if (width <= 768) setNumCols(2);
+      else if (width <= 1024) setNumCols(3);
+      else setNumCols(4);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -62,8 +262,23 @@ const CollectionImages = () => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.json();
       })
-      .then(data => {
-        setItems(data.data || []);
+      .then(async data => {
+        const fetchedItems = data.data || [];
+        
+        // Preload batch pertama agar saat grid muncul tidak ada jumping/lompatan proses load gambar ("biar ga keliatan proses load nya")
+        const imagesToPreload = fetchedItems.slice(0, 16).map(item => item.gambar).filter(Boolean);
+        await Promise.all(
+          imagesToPreload.map(url => {
+            return new Promise(resolve => {
+              const img = new Image();
+              img.onload = resolve;
+              img.onerror = resolve;
+              img.src = url;
+            });
+          })
+        );
+
+        setItems(fetchedItems);
         setLoading(false);
       })
       .catch(() => {
@@ -156,159 +371,37 @@ const CollectionImages = () => {
                 })()}
               </p>
             </div>
+            {(() => {
+              const filteredItems = items.filter(item => (item.nama_koleksi || '').toLowerCase().includes(searchQuery.toLowerCase()));
+              const columns = Array.from({ length: numCols }, () => []);
+              filteredItems.forEach((item, index) => {
+                columns[index % numCols].push({ item, originalIndex: index });
+              });
 
-            <div className="collection-grid">
-              {items.filter(item => (item.nama_koleksi || '').toLowerCase().includes(searchQuery.toLowerCase())).map((item, index) => {
-                return (
-                  <Link
-                    key={item.id}
-                    to={`/interactive/${item.id}`}
-                    style={{
-                      breakInside: 'avoid',
-                      marginBottom: '1.75rem',
-                      borderRadius: '20px',
-                      overflow: 'hidden',
-                      position: 'relative',
-                      textDecoration: 'none',
-                      display: 'block',
-                      background: 'rgba(24, 24, 22, 0.92)',
-                      border: '1px solid rgba(255, 255, 255, 0.08)',
-                      boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
-                      cursor: 'pointer',
-                      transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-6px)';
-                      e.currentTarget.style.boxShadow = '0 20px 45px rgba(0,0,0,0.45)';
-                      e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.45)';
-                      const img = e.currentTarget.querySelector('.card-img');
-                      if (img) img.style.transform = 'scale(1.06)';
-                      const cta = e.currentTarget.querySelector('.card-cta');
-                      if (cta) cta.style.color = '#eab308';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.25)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                      const img = e.currentTarget.querySelector('.card-img');
-                      if (img) img.style.transform = 'scale(1)';
-                      const cta = e.currentTarget.querySelector('.card-cta');
-                      if (cta) cta.style.color = 'rgba(255,255,255,0.85)';
-                    }}
-                  >
-                    {/* Foto artefak utuh dan jelas */}
-                    {item.gambar && (
-                      <div style={{ position: 'relative', width: '100%', overflow: 'hidden', minHeight: '200px', backgroundColor: '#141412' }}>
-                        <img
-                          className="card-img"
-                          src={item.gambar}
-                          alt={item.nama_koleksi}
-                          style={{
-                            width: '100%',
-                            height: 'auto',
-                            display: 'block',
-                            transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)',
-                          }}
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {!item.gambar && (
-                      <div style={{ height: '280px', backgroundColor: '#141412' }} />
-                    )}
-
-                    {/* Nomor urut dekoratif */}
-                    <div style={{
-                      position: 'absolute', top: '1rem', right: '1.25rem',
-                      fontSize: '3rem', fontFamily: 'Kalnia',
-                      color: 'rgba(255,255,255,0.12)', fontWeight: 'bold', lineHeight: 1,
-                      userSelect: 'none',
-                      pointerEvents: 'none',
-                      zIndex: 2,
-                    }}>
-                      {String(index + 1).padStart(2, '0')}
-                    </div>
-
-                    {/* Badge No. Inventarisasi */}
-                    {item.no_inventarisasi && (
-                      <div style={{
-                        position: 'absolute', top: '1rem', left: '1rem',
-                        backgroundColor: 'rgba(15, 15, 13, 0.75)',
-                        backdropFilter: 'blur(8px)',
-                        padding: '0.3rem 0.8rem',
-                        borderRadius: '20px',
-                        fontSize: '0.68rem',
-                        color: 'rgba(255,255,255,0.95)',
-                        letterSpacing: '1px',
-                        fontFamily: 'monospace',
-                        zIndex: 2,
-                        border: '1px solid rgba(212, 175, 55, 0.3)',
-                      }}>
-                        {item.no_inventarisasi}
-                      </div>
-                    )}
-
-                    {/* Konten judul di bawah gambar */}
-                    <div style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      width: '100%',
-                      padding: '2.5rem 1.5rem 1.35rem 1.5rem',
-                      background: 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%)',
-                      borderTop: 'none',
+              return (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: '1.5rem',
+                  width: '100%',
+                  alignItems: 'flex-start',
+                }}>
+                  {columns.map((col, colIdx) => (
+                    <div key={colIdx} style={{
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '0.75rem',
-                      zIndex: 2,
+                      gap: '1.75rem',
+                      flex: 1,
+                      minWidth: 0,
                     }}>
-                      <h2 style={{
-                        fontSize: '1.22rem',
-                        color: '#f8fafc',
-                        fontFamily: 'Kalnia',
-                        fontWeight: 500,
-                        lineHeight: 1.35,
-                        margin: 0,
-                      }}>
-                        {item.nama_koleksi}
-                      </h2>
-
-                      {/* Footer card */}
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '0.3rem' }}>
-                        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          {item.dimensi?.panjang && (
-                            <span style={{
-                              backgroundColor: 'rgba(212, 175, 55, 0.12)',
-                              color: '#facc15',
-                              padding: '0.22rem 0.65rem',
-                              borderRadius: '8px',
-                              fontSize: '0.7rem',
-                              border: '1px solid rgba(212, 175, 55, 0.25)',
-                            }}>
-                              {item.dimensi.panjang}
-                            </span>
-                          )}
-                        </div>
-                        <div className="card-cta" style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                          color: 'rgba(255,255,255,0.85)',
-                          fontSize: '0.78rem',
-                          fontWeight: 500,
-                          transition: 'color 0.3s ease',
-                        }}>
-                          <Maximize2 size={13} /> Detail
-                        </div>
-                      </div>
+                      {col.map(({ item, originalIndex }) => (
+                        <CollectionCard key={item.id} item={item} index={originalIndex} />
+                      ))}
                     </div>
-                  </Link>
-                );
-              })}
-            </div>
+                  ))}
+                </div>
+              );
+            })()}
           </>
         )}
 

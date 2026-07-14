@@ -122,8 +122,9 @@ button {
 }
 
 .collection-grid {
-  column-count: 4;
-  column-gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.75rem;
 }
 
 .interactive-layout {
@@ -176,7 +177,7 @@ button {
     grid-template-columns: repeat(3, 1fr);
   }
   .collection-grid {
-    column-count: 3;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -190,7 +191,8 @@ button {
   }
   
   .collection-grid {
-    column-count: 2;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
   }
 
   .interactive-layout {
@@ -243,7 +245,8 @@ button {
   }
   
   .collection-grid {
-    column-count: 1;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.25rem;
   }
 
   .cookie-box {

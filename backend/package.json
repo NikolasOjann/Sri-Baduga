@@ -8,7 +8,9 @@
     "split:dataset": "node scripts/split-pdf-dataset.js",
     "extract": "node scripts/extract-pdf.js",
     "extract:images": "node scripts/extract-images.js",
-    "extract:all": "node scripts/extract-pdf.js && node scripts/extract-images.js"
+    "extract:all": "node scripts/extract-pdf.js && node scripts/extract-images.js",
+    "remove:bg": "C:\\laragon\\bin\\python\\python-3.10\\python.exe scripts/remove-backgrounds.py",
+    "link:images": "node scripts/link-images.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
