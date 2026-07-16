@@ -1,3 +1,0 @@
-[submodule "backend/rag-service"]
-	path = rag-service
-	url = https://github.com/RiftVal/llm-museum.git
