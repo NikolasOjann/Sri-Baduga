@@ -75,7 +75,12 @@ const Assistant = () => {
         body: JSON.stringify({ message: userMsg }),
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { text: data.reply, sender: 'nyai' }]);
+      setMessages(prev => [...prev, { 
+        text: data.reply, 
+        sender: 'nyai',
+        source: data.source,
+        artifacts: data.artifacts || []
+      }]);
     } catch {
       setMessages(prev => [...prev, {
         text: 'Maaf, saya sedang tidak dapat merespons. Pastikan server berjalan.',
@@ -140,6 +145,28 @@ const Assistant = () => {
                     whiteSpace: 'pre-wrap',
                   }}>
                   {msg.text}
+
+                  {msg.source && (
+                    <div style={{ marginTop: '10px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: '8px' }}>
+                      {msg.source === 'ollama_rag' && <span style={{ color: '#4ade80', fontWeight: '500' }}>⚡ Dijawab oleh AI Ollama & RAG</span>}
+                      {msg.source === 'local_fuse' && <span style={{ color: '#fbbf24', fontWeight: '500' }}>🔍 Dijawab oleh Pencarian Lokal (Fallback)</span>}
+                      {msg.source === 'museum_faq' && <span style={{ color: '#60a5fa', fontWeight: '500' }}>ℹ️ Informasi Umum Museum</span>}
+                    </div>
+                  )}
+
+                  {msg.artifacts && msg.artifacts.length > 0 && (
+                    <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {msg.artifacts.map((art, aIdx) => (
+                        <div key={aIdx} style={{ backgroundColor: 'rgba(0,0,0,0.35)', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div style={{ overflow: 'hidden' }}>
+                            <strong style={{ color: '#fff', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{art.nama_koleksi}</strong>
+                            {art.klasifikasi && <span style={{ color: '#a3a3a3', fontSize: '0.75rem' }}>{art.klasifikasi}</span>}
+                          </div>
+                          {art.no_inventarisasi && <span style={{ background: 'rgba(59,130,246,0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', flexShrink: 0, marginLeft: '8px' }}>{art.no_inventarisasi}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </motion.div>
               ))}
 

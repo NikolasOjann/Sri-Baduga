@@ -86,23 +86,72 @@ function checkMuseumInfo(message) {
 
 // ============================================================
 // POST /api/chat
-// Body: { "message": "ceritakan tentang golok ciomas" }
-// Response: { "reply": "...", "artifacts": [...] }
+// Body: { "message": "ceritakan tentang golok ciomas", "session_id": "optional_session_id" }
+// Response: { "reply": "...", "artifacts": [...], "source": "ollama_rag" | "local_fuse" }
 // ============================================================
-router.post('/', (req, res) => {
-  const { message } = req.body;
+router.post('/', async (req, res) => {
+  const { message, session_id } = req.body;
 
   if (!message || !message.trim()) {
     return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
   }
 
-  // 1. Cek pertanyaan umum museum
+  // 1. Cek pertanyaan umum museum (jam buka, tiket, alamat, dsb)
   const museumReply = checkMuseumInfo(message);
   if (museumReply) {
-    return res.json({ reply: museumReply, artifacts: [] });
+    return res.json({ reply: museumReply, artifacts: [], source: 'museum_faq' });
   }
 
-  // 2. Cari di data koleksi menggunakan Fuse.js
+  // 2. Coba hubungi Python RAG & Ollama Service (Submodule llm-museum di port 8000)
+  try {
+    const ragResponse = await fetch('http://localhost:8000/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: message,
+        session_id: session_id || 'default_session',
+      }),
+      signal: AbortSignal.timeout(600000), // Timeout 10 menit (600.000 ms) agar Ollama di CPU tidak terputus
+    });
+
+    if (ragResponse.ok) {
+      const ragData = await ragResponse.json();
+      
+      // Pemetaan sources dari Python RAG agar cocok dengan format artifacts di Frontend
+      let artifacts = [];
+      const collections = loadCollections();
+      if (ragData.sources && Array.isArray(ragData.sources)) {
+        artifacts = ragData.sources.map(s => {
+          const match = collections.find(c =>
+            (c.nama_koleksi && s.name && c.nama_koleksi.toLowerCase().includes(s.name.toLowerCase())) ||
+            (s.name && c.nama_koleksi && s.name.toLowerCase().includes(c.nama_koleksi.toLowerCase()))
+          );
+          return match ? {
+            id: match.id,
+            nama_koleksi: match.nama_koleksi,
+            klasifikasi: match.klasifikasi,
+            no_inventarisasi: match.no_inventarisasi,
+          } : {
+            nama_koleksi: s.name,
+            klasifikasi: s.category,
+          };
+        });
+      }
+
+      return res.json({
+        reply: ragData.answer,
+        artifacts: artifacts,
+        session_id: ragData.session_id || 'default_session',
+        source: 'ollama_rag',
+      });
+    } else {
+      console.log(`⚠️ [RAG Service] Python RAG merespons status non-ok: ${ragResponse.status}`);
+    }
+  } catch (err) {
+    console.log(`⚠️ [RAG Service] Gagal terhubung ke Python RAG (${err.message}). Fallback ke pencarian lokal Fuse.js...`);
+  }
+
+  // 3. Fallback: Cari di data koleksi menggunakan Fuse.js jika Python RAG offline
   const collections = loadCollections();
 
   if (collections.length === 0) {
@@ -158,6 +207,7 @@ router.post('/', (req, res) => {
       klasifikasi:     a.klasifikasi,
       no_inventarisasi: a.no_inventarisasi,
     })),
+    source: 'local_fuse',
   });
 });
 
