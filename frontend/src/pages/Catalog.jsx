@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
 import { ArrowLeft, Globe } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
-import bgVideo from '../asset/Galery/Background-5.mp4';
+import bgImage from '../asset/Galery/Background-12.png';
 
 const categories = [
   { id: 1, nameKey: 'geologika', name: 'Geologika', descKey: 'geologikaDesc', img: '/images/geologika.png' },
@@ -21,7 +21,6 @@ const categories = [
 const Catalog = () => {
   const { language, toggleLanguage, t } = useLanguage();
   const [counts, setCounts] = useState({});
-  const videoRef = useRef(null);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/collections/stats/counts')
@@ -30,39 +29,19 @@ const Catalog = () => {
       .catch(() => setCounts({}));
   }, []);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.9;
-    }
-  }, []);
-
   return (
     <PageTransition style={{
       minHeight: '100vh',
       display: 'flex',
       flexDirection: 'column',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      backgroundImage: `url(${bgImage})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundRepeat: 'no-repeat'
     }}>
-      {/* Video Background */}
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          zIndex: -1
-        }}
-      >
-        <source src={bgVideo} type="video/mp4" />
-      </video>
 
       <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text-muted)' }}>

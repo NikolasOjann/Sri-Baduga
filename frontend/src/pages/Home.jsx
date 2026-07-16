@@ -6,6 +6,7 @@ import { useGLTF, Stage, PresentationControls } from '@react-three/drei';
 import { MessageCircle, X } from 'lucide-react';
 import modelUrl from '../glb/contoh.glb?url';
 import WayangParallax from '../components/WayangParallax';
+import logo from '../asset/Galery/Logo.png';
 
 // Error Boundary to prevent crashes if the 3D model path is wrong
 class ErrorBoundary extends React.Component {
@@ -71,8 +72,8 @@ const Home = () => {
 
       {/* Navigation */}
       <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
-        <div style={{ fontFamily: 'Kalnia', fontSize: '1.5rem', color: 'var(--color-text)', fontWeight: 'bold' }}>
-          Sri Baduga
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <img src={logo} alt="Logo Sri Baduga" style={{ height: '50px', objectFit: 'contain' }} />
         </div>
         <div style={{ display: 'flex', gap: '2rem', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', fontFamily: 'Elms Sans, sans-serif' }}>
           <Link to="/catalog" style={{ color: 'var(--color-text-muted)' }}>Koleksi</Link>
