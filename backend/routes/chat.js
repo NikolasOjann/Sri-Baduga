@@ -111,7 +111,7 @@ router.post('/', async (req, res) => {
         question: message,
         session_id: session_id || 'default_session',
       }),
-      signal: AbortSignal.timeout(25000), // Timeout 25 detik jika Ollama sibuk/offline
+      signal: AbortSignal.timeout(600000), // Timeout 10 menit (600.000 ms) agar Ollama di CPU tidak terputus
     });
 
     if (ragResponse.ok) {
@@ -144,9 +144,11 @@ router.post('/', async (req, res) => {
         session_id: ragData.session_id || 'default_session',
         source: 'ollama_rag',
       });
+    } else {
+      console.log(`⚠️ [RAG Service] Python RAG merespons status non-ok: ${ragResponse.status}`);
     }
   } catch (err) {
-    console.log('⚠️ [RAG Service] Gagal terhubung ke Python RAG (http://localhost:8000/chat). Fallback ke pencarian lokal Fuse.js...');
+    console.log(`⚠️ [RAG Service] Gagal terhubung ke Python RAG (${err.message}). Fallback ke pencarian lokal Fuse.js...`);
   }
 
   // 3. Fallback: Cari di data koleksi menggunakan Fuse.js jika Python RAG offline

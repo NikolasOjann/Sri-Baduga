@@ -36,7 +36,7 @@ app.use((req, res) => {
 // ============================================================
 // Start server
 // ============================================================
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`\n=== Museum Sri Baduga Backend ===`);
   console.log(`Server berjalan di  : http://localhost:${PORT}`);
   console.log(`\nEndpoints tersedia:`);
@@ -49,7 +49,9 @@ app.listen(PORT, () => {
   console.log(`  • RAG Service  : http://localhost:8000/chat (Submodule llm-museum)`);
   console.log(`  • Fallback     : Fuse.js (Lokal JSON) jika RAG/Ollama offline`);
   console.log(`\nTips:`);
-  console.log(`  • Jalankan RAG Python : cd rag-service/backend && uvicorn app.main:app --port 8000 --reload`);
+  console.log(`  • Jalankan RAG Python : cd ../rag-service && uvicorn app.main:app --port 8000 --reload`);
   console.log(`  • Ekstrak PDF ke JSON : npm run extract`);
-  console.log('================================\n');
 });
+
+server.setTimeout(600000); // Timeout 10 menit agar koneksi HTTP tidak diputus sebelum Ollama selesai berpikir
+
