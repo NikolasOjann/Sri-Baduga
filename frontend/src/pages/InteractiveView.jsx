@@ -360,8 +360,11 @@ const InteractiveView = () => {
               <>
                 <Canvas shadows camera={{ position: [0, 2, 5], fov: 50 }}>
 
-                  <ambientLight intensity={0.6} />
-                  <spotLight position={[10, 10, 10]} angle={0.2} penumbra={1} intensity={1} castShadow />
+                  <ambientLight intensity={1.5} />
+                  <spotLight position={[10, 15, 10]} angle={0.3} penumbra={1} intensity={2} castShadow />
+                  <directionalLight position={[-10, 5, 10]} intensity={1.5} />
+                  <directionalLight position={[10, 5, -10]} intensity={1.5} />
+                  <directionalLight position={[0, -10, 0]} intensity={0.8} />
 
                   <Suspense fallback={null}>
                     {activeArtifact.model_3d ? (
@@ -392,7 +395,7 @@ const InteractiveView = () => {
           </div>
 
           {/* Right Side: Description & Metadata */}
-          <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '4rem 3rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
+          <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '6rem 3rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
             <div style={{ borderLeft: '1px solid rgba(0,0,0,0.15)', paddingLeft: '2.5rem', position: 'relative' }}>
 
               <div style={{ position: 'absolute', left: '-1px', top: 0, width: '3px', height: '80px', backgroundColor: '#1a1a1a' }}></div>

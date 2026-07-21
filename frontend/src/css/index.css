@@ -7,7 +7,7 @@
   --color-stone: #8c8c82;
   --color-stone-dark: #4a4a44;
 
-  --color-bg: #C2B280;
+  --color-bg: #cdbf98;
   /* Ecru as background */
   --color-bg-light: #d6cbb0;
 
@@ -176,6 +176,7 @@ button {
   .catalog-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
   .collection-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -185,11 +186,11 @@ button {
   .nav-padding {
     padding: 1rem 1.5rem;
   }
-  
+
   .catalog-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .collection-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1.25rem;
@@ -217,22 +218,22 @@ button {
   .modal-content-box {
     padding: 0 1rem;
   }
-  
+
   .hero-title {
     margin-bottom: 2rem;
   }
-  
+
   .thumbnail-bar {
     left: 50%;
     max-width: 90vw;
     bottom: 20px;
   }
-  
+
   .interactive-back-btn {
     top: 20px;
     left: 20px;
   }
-  
+
   .interactive-top-right {
     top: 20px;
     right: 20px;
@@ -243,7 +244,7 @@ button {
   .catalog-grid {
     grid-template-columns: repeat(1, 1fr);
   }
-  
+
   .collection-grid {
     grid-template-columns: repeat(1, 1fr);
     gap: 1.25rem;

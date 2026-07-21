@@ -10,7 +10,7 @@ import bg6 from '../asset/Galery/Background-6.png';
 import bg7 from '../asset/Galery/Background-7.png';
 import bg8 from '../asset/Galery/Background-8.png';
 import bg9 from '../asset/Galery/Background-9.png';
-
+import l1Bg from '../asset/Galery/L1.jpg';
 
 // Mapping id URL (/collection/:id) → nama klasifikasi untuk API
 const KATEGORI_MAP = {
@@ -49,7 +49,9 @@ const CollectionCard = ({ item, index }) => {
         overflow: 'hidden',
         position: 'relative',
         textDecoration: 'none',
-        background: 'rgba(24, 24, 22, 0.92)',
+        backgroundImage: `url(${l1Bg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
         cursor: 'pointer',
@@ -77,6 +79,18 @@ const CollectionCard = ({ item, index }) => {
         if (cta) cta.style.color = 'rgba(255,255,255,0.85)';
       }}
     >
+      {/* Efek Cahaya dari atas */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '200px',
+        background: 'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 100%)',
+        pointerEvents: 'none',
+        zIndex: 1,
+      }} />
+
       {/* Foto artefak dengan vignette mask agar batas kotak studio menyatu halus */}
       {item.gambar && (
         <div style={{
@@ -84,7 +98,7 @@ const CollectionCard = ({ item, index }) => {
           width: '100%',
           overflow: 'hidden',
           minHeight: '220px',
-          backgroundColor: '#181816',
+          backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -127,18 +141,6 @@ const CollectionCard = ({ item, index }) => {
         <div style={{ height: '280px', backgroundColor: '#141412' }} />
       )}
 
-      {/* Nomor urut dekoratif */}
-      <div style={{
-        position: 'absolute', top: '1rem', right: '1.25rem',
-        fontSize: '3rem', fontFamily: 'Kalnia',
-        color: 'rgba(255,255,255,0.12)', fontWeight: 'bold', lineHeight: 1,
-        userSelect: 'none',
-        pointerEvents: 'none',
-        zIndex: 2,
-      }}>
-        {String(index + 1).padStart(2, '0')}
-      </div>
-
       {/* Badge No. Inventarisasi */}
       {item.no_inventarisasi && (
         <div style={{
@@ -160,13 +162,10 @@ const CollectionCard = ({ item, index }) => {
 
       {/* Konten judul di bawah gambar */}
       <div style={{
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
+        position: 'relative',
         width: '100%',
-        padding: '2.5rem 1.5rem 1.35rem 1.5rem',
-        background: 'linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 50%, transparent 100%)',
-        borderTop: 'none',
+        padding: '1.25rem 1.5rem 1.35rem 1.5rem',
+        background: 'transparent',
         display: 'flex',
         flexDirection: 'column',
         gap: '0.75rem',
@@ -174,7 +173,7 @@ const CollectionCard = ({ item, index }) => {
       }}>
         <h2 style={{
           fontSize: '1.22rem',
-          color: '#f8fafc',
+          color: '#637c36', 
           fontFamily: 'Kalnia',
           fontWeight: 500,
           lineHeight: 1.35,
@@ -300,19 +299,72 @@ const CollectionImages = () => {
       backgroundRepeat: 'no-repeat'
     }}>
 
-      {/* Navbar */}
-      <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
-        <Link to="/catalog" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', textDecoration: 'none', fontWeight: '500' }}>
-          <ArrowLeft size={20} /> {t('back')}
-        </Link>
-        <div style={{ fontFamily: 'Kalnia', fontSize: '1.5rem', color: '#1a1a1a', letterSpacing: '2px' }}>
-          {namaKategori}
-        </div>
-        <div style={{ width: '80px' }} />
-      </nav>
+      {/* Sticky Header Wrapper */}
+      <div style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 50,
+        backgroundColor: '#C2B280',
+        backgroundImage: `url(${randomBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat',
+        borderBottom: '1px solid rgba(0,0,0,0.08)',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.05)' // Subtle shadow to separate from content below
+      }}>
+        {/* Navbar */}
+        <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          
+          {/* Left: Back Button */}
+          <div style={{ flex: '1 1 0%', minWidth: '100px' }}>
+            <Link to="/catalog" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', textDecoration: 'none', fontWeight: '500' }}>
+              <ArrowLeft size={20} /> {t('back')}
+            </Link>
+          </div>
+
+          {/* Center: Title */}
+          <div style={{ flex: '0 1 auto', fontFamily: 'Kalnia', fontSize: '1.6rem', color: '#1a1a1a', letterSpacing: '2px', textAlign: 'center' }}>
+            {namaKategori}
+          </div>
+
+          {/* Right: Search & Count */}
+          <div style={{ flex: '1 1 0%', display: 'flex', justifyContent: 'flex-end', minWidth: '280px' }}>
+            {!loading && !error && items.length > 0 && (
+              <div style={{ width: '100%', maxWidth: '350px', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'flex-end' }}>
+                {/* Search Bar */}
+                <div style={{ position: 'relative', width: '100%' }}>
+                  <div style={{ position: 'absolute', top: '50%', left: '1rem', transform: 'translateY(-50%)', color: '#8c8c82', pointerEvents: 'none' }}>
+                    <Search size={16} />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder={`Cari koleksi di ${namaKategori}...`}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{
+                      width: '100%', padding: '0.65rem 1rem 0.65rem 2.8rem', borderRadius: '30px',
+                      border: '1px solid rgba(0,0,0,0.1)', outline: 'none', backgroundColor: 'rgba(255,255,255,0.7)',
+                      backdropFilter: 'blur(10px)', fontSize: '0.9rem', color: '#1a1a1a', fontFamily: 'inherit'
+                    }}
+                  />
+                </div>
+
+                {/* Jumlah koleksi */}
+                <p style={{ color: '#4a4a44', fontSize: '0.75rem', letterSpacing: '1px', textTransform: 'uppercase', margin: 0, textAlign: 'right' }}>
+                  {(() => {
+                    const filtered = items.filter(item => (item.nama_koleksi || '').toLowerCase().includes(searchQuery.toLowerCase()));
+                    return `${filtered.length} koleksi ditemukan \u2014 ${namaKategori}`;
+                  })()}
+                </p>
+              </div>
+            )}
+          </div>
+        </nav>
+      </div>
 
       {/* Content Area */}
-      <div style={{ flex: 1, maxWidth: '1600px', margin: '0 auto', width: '100%', padding: '0 2rem 4rem' }}>
+      <div style={{ flex: 1, maxWidth: '1600px', margin: '0 auto', width: '100%', padding: '2rem 2rem 4rem' }}>
 
         {/* Loading State */}
         {loading && (
@@ -343,34 +395,7 @@ const CollectionImages = () => {
 
         {/* Grid Koleksi */}
         {!loading && !error && items.length > 0 && (
-          <>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem', marginTop: '0.5rem' }}>
-              {/* Search Bar */}
-              <div style={{ position: 'relative', maxWidth: '400px' }}>
-                <div style={{ position: 'absolute', top: '50%', left: '1rem', transform: 'translateY(-50%)', color: '#8c8c82', pointerEvents: 'none' }}>
-                  <Search size={18} />
-                </div>
-                <input
-                  type="text"
-                  placeholder={`Cari koleksi di ${namaKategori}...`}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  style={{
-                    width: '100%', padding: '0.8rem 1rem 0.8rem 2.8rem', borderRadius: '30px',
-                    border: '1px solid rgba(0,0,0,0.1)', outline: 'none', backgroundColor: 'rgba(255,255,255,0.7)',
-                    backdropFilter: 'blur(10px)', fontSize: '0.95rem', color: '#1a1a1a', fontFamily: 'inherit'
-                  }}
-                />
-              </div>
-
-              {/* Jumlah koleksi */}
-              <p style={{ color: '#4a4a44', fontSize: '0.85rem', letterSpacing: '2px', textTransform: 'uppercase' }}>
-                {(() => {
-                  const filtered = items.filter(item => (item.nama_koleksi || '').toLowerCase().includes(searchQuery.toLowerCase()));
-                  return `${filtered.length} koleksi ditemukan \u2014 ${namaKategori}`;
-                })()}
-              </p>
-            </div>
+          <div>
             {(() => {
               const filteredItems = items.filter(item => (item.nama_koleksi || '').toLowerCase().includes(searchQuery.toLowerCase()));
               const columns = Array.from({ length: numCols }, () => []);
@@ -402,7 +427,7 @@ const CollectionImages = () => {
                 </div>
               );
             })()}
-          </>
+          </div>
         )}
 
       </div>
