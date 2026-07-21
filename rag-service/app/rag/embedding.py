@@ -10,7 +10,8 @@ class MuseumEmbedding:
         print("Loading Embedding Model...")
 
         self.model = SentenceTransformer(
-            settings.EMBEDDING_MODEL
+            settings.EMBEDDING_MODEL,
+            local_files_only=True
         )
 
         print("Embedding Model Loaded")
