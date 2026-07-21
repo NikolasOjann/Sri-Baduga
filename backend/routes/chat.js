@@ -117,15 +117,26 @@ router.post('/', async (req, res) => {
     if (ragResponse.ok) {
       const ragData = await ragResponse.json();
       
+      // DEBUG: Lihat apa yang dikirim Python RAG
+      console.log('📦 [RAG Sources dari Python]:', JSON.stringify(ragData.sources, null, 2));
+
       // Pemetaan sources dari Python RAG agar cocok dengan format artifacts di Frontend
       let artifacts = [];
       const collections = loadCollections();
       if (ragData.sources && Array.isArray(ragData.sources)) {
-        artifacts = ragData.sources.map(s => {
-          const match = collections.find(c =>
-            (c.nama_koleksi && s.name && c.nama_koleksi.toLowerCase().includes(s.name.toLowerCase())) ||
-            (s.name && c.nama_koleksi && s.name.toLowerCase().includes(c.nama_koleksi.toLowerCase()))
-          );
+        const rawArtifacts = ragData.sources.map(s => {
+          // Prioritas 1: cocokkan berdasarkan nomor inventarisasi (paling unik & konsisten)
+          let match = s.inventory
+            ? collections.find(c => c.no_inventarisasi === s.inventory)
+            : null;
+
+          // Prioritas 2: cocokkan berdasarkan nama EXACT (case-insensitive)
+          if (!match && s.name) {
+            match = collections.find(c =>
+              c.nama_koleksi && c.nama_koleksi.toLowerCase() === s.name.toLowerCase()
+            );
+          }
+
           return match ? {
             id: match.id,
             nama_koleksi: match.nama_koleksi,
@@ -136,6 +147,28 @@ router.post('/', async (req, res) => {
             klasifikasi: s.category,
           };
         });
+
+        // Cek apakah ini mode "pilihan" (nama berbeda) atau "detail" (nama sama, inventory beda)
+        const uniqueSourceNames = new Set(ragData.sources.map(s => s.name));
+        const isChoosingMode = uniqueSourceNames.size > 1;
+
+        if (isChoosingMode) {
+          // Mode clarification: deduplikasi by nama agar hanya tampil 1 kartu per nama
+          const seenNames = new Set();
+          artifacts = rawArtifacts.filter(a => {
+            const key = a.nama_koleksi?.toLowerCase();
+            if (!key || seenNames.has(key)) return false;
+            seenNames.add(key);
+            return true;
+          });
+          console.log('🗂️  [Mode: Pilihan] Deduplikasi aktif');
+        } else {
+          // Mode post-selection: tampilkan semua item individual (beda no. inventaris)
+          artifacts = rawArtifacts;
+          console.log('📋 [Mode: Detail] Semua item ditampilkan');
+        }
+
+        console.log('✅ [Artifacts dikirim ke Frontend]:', artifacts.map(a => `${a.nama_koleksi} (${a.no_inventarisasi})`));
       }
 
       return res.json({
@@ -144,71 +177,22 @@ router.post('/', async (req, res) => {
         session_id: ragData.session_id || 'default_session',
         source: 'ollama_rag',
       });
-    } else {
+      // Jika RAG merespons status non-ok, kembalikan pesan error.
       console.log(`⚠️ [RAG Service] Python RAG merespons status non-ok: ${ragResponse.status}`);
+      return res.status(500).json({
+        reply: "Mohon maaf, server AI saat ini sedang mengalami gangguan. Silakan coba lagi nanti.",
+        artifacts: [],
+        source: 'error'
+      });
     }
   } catch (err) {
-    console.log(`⚠️ [RAG Service] Gagal terhubung ke Python RAG (${err.message}). Fallback ke pencarian lokal Fuse.js...`);
-  }
-
-  // 3. Fallback: Cari di data koleksi menggunakan Fuse.js jika Python RAG offline
-  const collections = loadCollections();
-
-  if (collections.length === 0) {
-    return res.json({
-      reply: 'Maaf, data koleksi museum belum tersedia. Silakan hubungi petugas untuk informasi lebih lanjut.',
+    console.log(`⚠️ [RAG Service] Gagal terhubung ke Python RAG (${err.message}).`);
+    return res.status(500).json({
+      reply: "Mohon maaf, server AI (LLM+RAG) saat ini sedang offline. Pastikan Python server sudah berjalan.",
       artifacts: [],
+      source: 'error'
     });
   }
-
-  const fuse = new Fuse(collections, {
-    keys: [
-      { name: 'nama_koleksi', weight: 2 },
-      { name: 'deskripsi',    weight: 1 },
-      { name: 'klasifikasi',  weight: 1 },
-      { name: 'keterangan',   weight: 0.5 },
-    ],
-    threshold:       0.4,
-    includeScore:    true,
-    minMatchCharLen: 2,
-  });
-
-  const results = fuse.search(message);
-
-  if (results.length === 0) {
-    return res.json({
-      reply: `Maaf, saya tidak menemukan informasi tentang "${message}" di database koleksi Museum Sri Baduga. Coba tanyakan nama benda koleksi yang lebih spesifik, atau tanya tentang jam buka, lokasi, dan tiket museum.`,
-      artifacts: [],
-    });
-  }
-
-  // Ambil maksimal 3 hasil teratas
-  const topResults = results.slice(0, 3).map(r => r.item);
-
-  let reply;
-  if (topResults.length === 1) {
-    reply = `Berikut informasi tentang koleksi yang kamu tanyakan:\n\n${formatArtifactResponse(topResults[0])}`;
-  } else {
-    reply = `Saya menemukan ${topResults.length} koleksi yang relevan dengan pertanyaanmu:\n\n`;
-    topResults.forEach((item, idx) => {
-      reply += `${idx + 1}. **${item.nama_koleksi}** (${item.klasifikasi})\n`;
-      if (item.deskripsi) {
-        reply += `   ${item.deskripsi.slice(0, 100)}...\n\n`;
-      }
-    });
-    reply += `\nKetik nama yang lebih spesifik untuk informasi lengkap.`;
-  }
-
-  res.json({
-    reply,
-    artifacts: topResults.map(a => ({
-      id:              a.id,
-      nama_koleksi:    a.nama_koleksi,
-      klasifikasi:     a.klasifikasi,
-      no_inventarisasi: a.no_inventarisasi,
-    })),
-    source: 'local_fuse',
-  });
 });
 
 module.exports = router;

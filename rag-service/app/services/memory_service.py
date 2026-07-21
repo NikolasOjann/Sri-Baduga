@@ -168,6 +168,9 @@ class MemoryService:
 
         )["candidate_names"]
 
+    def get_candidate_documents(self, session_id):
+        return self._get_session(session_id).get("candidate_documents", [])
+
     # =====================================================
     # FIND DOCUMENT
     # =====================================================

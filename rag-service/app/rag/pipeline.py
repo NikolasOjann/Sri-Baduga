@@ -37,7 +37,7 @@ class MuseumPipeline:
 
     ):
 
-        selected_document = self.memory.get_selected_document(session_id)
+        selected_document = self.memory.get_document(session_id)
         q_lower = (question or "").strip().lower()
         follow_up_keywords = [
             "terbuat dari",
@@ -165,27 +165,33 @@ class MuseumPipeline:
 
             if not selected_name:
 
-                # couldn't resolve selection; show candidates again
-                candidates = self.memory.get_candidates(session_id)
+                # couldn't resolve selection
+                # If the user asked a broader/general question (e.g. "apa saja", "ada apa"),
+                # treat it as a new query: stop clarification and continue to normal agent flow.
+                q_lower = (question or "").strip().lower()
+                cancel_phrases = ["apa saja", "ada apa", "ada apa saja", "apa yang ada", "kembali", "bukan"]
 
-                answer = (
-                    "Saya tidak menemukan koleksi tersebut.\n\n"
-                    "Silakan pilih salah satu berikut:\n\n"
-                )
+                if any(p in q_lower for p in cancel_phrases):
+                    # cancel clarification state and fall through to agent handling
+                    self.memory.stop_clarification(session_id)
 
-                for item in candidates:
+                else:
+                    # re-show candidates to let user pick
+                    candidates = self.memory.get_candidates(session_id)
 
-                    answer += f"• {item}\n"
+                    answer = (
+                        "Saya tidak menemukan koleksi tersebut.\n\n"
+                        "Silakan pilih salah satu berikut:\n\n"
+                    )
 
-                return {
+                    for item in candidates:
+                        answer += f"• {item}\n"
 
-                    "answer": answer,
-
-                    "documents": [],
-
-                    "sources": []
-
-                }
+                    return {
+                        "answer": answer,
+                        "documents": [],
+                        "sources": []
+                    }
 
             # resolved to a candidate name; get all matching candidate documents
             candidate_docs = [
@@ -198,7 +204,7 @@ class MuseumPipeline:
 
             if candidate_docs:
 
-                self.memory.set_selected_document(session_id, candidate_docs[0])
+                self.memory.set_document(session_id, candidate_docs[0])
 
                 prompt_question = (
                     f"Jelaskan koleksi bernama {selected_name} secara detail. "
@@ -212,6 +218,8 @@ class MuseumPipeline:
                 sources = []
                 for doc in candidate_docs:
                     sources.append({
+                        "id": doc.metadata.get("id"),
+                        "inventory": doc.metadata.get("inventory"),
                         "name": doc.metadata.get("name"),
                         "category": doc.metadata.get("category"),
                         "location": doc.metadata.get("location")
@@ -276,17 +284,32 @@ class MuseumPipeline:
             keyword = result["keyword"]
             candidates = result["candidates"]
 
-            answer = f"{keyword} tergolong menjadi beberapa, ada "
-            answer += ", ".join(candidates)
-            answer += f" {keyword} apa yang anda maksud?"
+            answer = f"Saya menemukan beberapa koleksi terkait '{keyword}'. Silakan lihat daftar di bawah ini dan beri tahu saya spesifik koleksi yang Anda maksud."
+
+            documents = result.get("documents", [])
+
+            # Deduplikasi: tampilkan hanya 1 kartu per nama unik di mode clarification
+            seen_names = set()
+            sources = []
+            for doc in documents:
+                name = doc.metadata.get("name")
+                if name not in seen_names:
+                    seen_names.add(name)
+                    sources.append({
+                        "id": doc.metadata.get("id"),
+                        "inventory": doc.metadata.get("inventory"),
+                        "name": name,
+                        "category": doc.metadata.get("category"),
+                        "location": doc.metadata.get("location")
+                    })
 
             return {
 
                 "answer": answer,
 
-                "documents": [],
+                "documents": documents,
 
-                "sources": []
+                "sources": sources
 
             }
 
@@ -396,6 +419,10 @@ class MuseumPipeline:
             sources.append(
 
                 {
+
+                    "id": doc.metadata.get("id"),
+
+                    "inventory": doc.metadata.get("inventory"),
 
                     "name": doc.metadata.get("name"),
 
