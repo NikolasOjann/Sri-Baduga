@@ -48,7 +48,7 @@ const Assistant = () => {
         return [...prev, { text: contextMsg, sender: "nyai" }];
       });
       // Optionally auto-open the assistant to guide the user
-      setIsOpen(true);
+      // setIsOpen(true);
     }
   }, [location.pathname, t]);
 
@@ -132,7 +132,7 @@ const Assistant = () => {
                   key={idx}
                   style={{
                     alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
-                    backgroundColor: msg.sender === 'user' ? '#3b82f6' : 'rgba(255,255,255,0.1)',
+                    backgroundColor: msg.sender === 'user' ? '#C2B280' : 'rgba(255,255,255,0.1)',
                     color: '#fff',
                     padding: '12px 16px',
                     borderRadius: '16px',
@@ -162,7 +162,7 @@ const Assistant = () => {
                             <strong style={{ color: '#fff', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{art.nama_koleksi}</strong>
                             {art.klasifikasi && <span style={{ color: '#a3a3a3', fontSize: '0.75rem' }}>{art.klasifikasi}</span>}
                           </div>
-                          {art.no_inventarisasi && <span style={{ background: 'rgba(59,130,246,0.2)', color: '#60a5fa', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', flexShrink: 0, marginLeft: '8px' }}>{art.no_inventarisasi}</span>}
+                          {art.no_inventarisasi && <span style={{ background: 'rgba(194,178,128,0.2)', color: '#C2B280', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', flexShrink: 0, marginLeft: '8px' }}>{art.no_inventarisasi}</span>}
                         </div>
                       ))}
                     </div>
@@ -218,15 +218,15 @@ const Assistant = () => {
                 type="submit"
                 disabled={isSending || !input.trim()}
                 style={{
-                  background: isSending ? '#6b7280' : '#3b82f6',
+                  background: isSending ? '#6b7280' : '#C2B280',
                   color: '#fff', border: 'none', borderRadius: '50%',
                   width: '40px', height: '40px', flexShrink: 0,
                   display: 'flex', justifyContent: 'center', alignItems: 'center',
                   cursor: isSending ? 'not-allowed' : 'pointer',
                   transition: 'background 0.3s',
                 }}
-                onMouseEnter={(e) => { if (!isSending) e.currentTarget.style.background = '#2563eb'; }}
-                onMouseLeave={(e) => { if (!isSending) e.currentTarget.style.background = '#3b82f6'; }}
+                onMouseEnter={(e) => { if (!isSending) e.currentTarget.style.background = '#AD9C69'; }}
+                onMouseLeave={(e) => { if (!isSending) e.currentTarget.style.background = '#C2B280'; }}
               >
                 {isSending
                   ? <Loader size={16} className="spin" />
@@ -246,12 +246,12 @@ const Assistant = () => {
           width: '65px',
           height: '65px',
           borderRadius: '50%',
-          backgroundColor: '#3b82f6',
+          backgroundColor: '#C2B280',
           border: 'none',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          boxShadow: '0 5px 20px rgba(59, 130, 246, 0.5)',
+          boxShadow: '0 5px 20px rgba(194, 178, 128, 0.5)',
           position: 'relative',
           cursor: 'pointer',
           zIndex: 10
