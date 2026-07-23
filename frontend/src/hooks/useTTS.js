@@ -10,7 +10,7 @@ let globalAudio = null;
  * Memanggil backend /tts/speak dan memainkan audio MP3 yang dihasilkan.
  */
 export function useTTS() {
-  const speak = useCallback((text) => {
+  const speak = useCallback((text, lang = 'id') => {
     if (!text || !text.trim()) return;
 
     // Hentikan audio yang sedang diputar di mana pun
@@ -20,8 +20,8 @@ export function useTTS() {
     }
 
     try {
-      // Gunakan streaming GET secara langsung dengan menempelkan teks sebagai parameter
-      const streamUrl = `${TTS_API}?text=${encodeURIComponent(text)}`;
+      // Gunakan streaming GET secara langsung dengan menempelkan teks dan bahasa sebagai parameter
+      const streamUrl = `${TTS_API}?text=${encodeURIComponent(text)}&lang=${lang}`;
       globalAudio = new Audio(streamUrl);
 
       // Play audio secara langsung selagi data distream

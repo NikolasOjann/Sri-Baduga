@@ -12,7 +12,7 @@ const Assistant = () => {
   const [isSending, setIsSending] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const location = useLocation();
-  const { t }    = useLanguage();
+  const { t, language }    = useLanguage();
   const messagesEndRef = useRef(null);
   const { speak, stop } = useTTS();
 
@@ -33,14 +33,14 @@ const Assistant = () => {
   useEffect(() => {
     if (isOpen) {
       if (!isMuted) {
-        speak(t('assistantGreeting'));
+        speak(t('assistantGreeting'), language);
       }
     } else {
       // Hentikan suara jika chatbot ditutup
       stop();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [isOpen, language]);
 
   // Listen for custom event to open assistant
   useEffect(() => {
@@ -56,7 +56,9 @@ const Assistant = () => {
 
     let contextMsg = "";
     if (location.pathname === '/') {
-      contextMsg = "Sampurasun. Selamat datang di Sri Baduga, jelajahi dengan leluasa dan nikmati perjalanan yang nyaman dan berkesan.";
+      contextMsg = language === 'id' 
+        ? "Sampurasun. Selamat datang di Sri Baduga, jelajahi dengan leluasa dan nikmati perjalanan yang nyaman dan berkesan." 
+        : "Welcome to Sri Baduga. Explore freely and enjoy a comfortable and memorable journey.";
     } else if (location.pathname === '/catalog') {
       contextMsg = t('assistantCatalogContext');
     } else if (location.pathname.startsWith('/collection/')) {
@@ -90,19 +92,21 @@ const Assistant = () => {
 
     // Langsung bacakan tanpa menambahkan ke balon teks chat
     if (contextMsg && !isMuted) {
-      speak(contextMsg);
+      speak(contextMsg, language);
     }
-  }, [location.pathname, t, isMuted, speak]);
+  }, [location.pathname, t, isMuted, speak, language]);
 
   // Auto-speak setiap pesan baru dari nyai (AI)
   useEffect(() => {
-    if (messages.length === 0) return;
-    const lastMsg = messages[messages.length - 1];
-    if (lastMsg.sender === 'nyai' && !isMuted) {
-      speak(lastMsg.text);
+    if (messages.length > 0 && !isMuted) {
+      const lastMsg = messages[messages.length - 1];
+      // Hanya speak pesan dari nyai (kecuali jika pesan itu sama dengan contextMsg route, tapi kita sudah hapus contextMsg dari array)
+      if (lastMsg.sender === "nyai") {
+        speak(lastMsg.text, language);
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [messages]);
+  }, [messages, isMuted, speak, language]);
 
   // Auto-scroll ke pesan terbaru
   useEffect(() => {

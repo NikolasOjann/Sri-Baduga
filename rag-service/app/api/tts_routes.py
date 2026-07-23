@@ -9,14 +9,14 @@ router = APIRouter()
 
 
 @router.get("/tts/speak")
-async def speak(text: str = ""):
+async def speak(text: str = "", lang: str = "id"):
     """
-    Endpoint TTS: menerima teks dari query parameter, men-stream audio MP3 langsung.
+    Endpoint TTS: menerima teks dan bahasa dari query parameter, men-stream audio MP3 langsung.
     """
     if not text.strip():
         return {"error": "Teks kosong"}
 
-    generator = stream_speech(text)
+    generator = stream_speech(text, lang)
     if not generator:
         return {"error": "Gagal generate stream"}
 

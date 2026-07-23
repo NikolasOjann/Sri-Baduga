@@ -144,12 +144,12 @@ const InteractiveView = () => {
         
         // Beri jeda sedikit agar jika chatbot sedang menyapa rute interaktif, audionya bisa langsung ditimpa (override)
         const timer = setTimeout(() => {
-          speak(textToSpeak);
+          speak(textToSpeak, language);
         }, 500);
         return () => clearTimeout(timer);
       }
     }
-  }, [loading, activeArtifact, speak, t]);
+  }, [loading, activeArtifact, speak, t, language]);
 
   const handleNextItem = () => {
     if (categoryItems.length > 0 && currentIndex >= 0 && currentIndex < categoryItems.length - 1) {
