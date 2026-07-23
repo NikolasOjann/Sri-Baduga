@@ -1,27 +1,46 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Loader } from 'lucide-react';
+import { MessageCircle, X, Send, Loader, Volume2, VolumeX } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useTTS } from '../hooks/useTTS';
 
 const API_BASE = 'http://localhost:3001';
 
 const Assistant = () => {
   const [isOpen, setIsOpen]   = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const location = useLocation();
   const { t }    = useLanguage();
   const messagesEndRef = useRef(null);
+  const { speak, stop } = useTTS();
 
   const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState('');
 
   // Update greeting when language changes or initially
   useEffect(() => {
+    const greeting = t('assistantGreeting');
     setMessages([
-      { text: t('assistantGreeting'), sender: "nyai" }
+      { text: greeting, sender: "nyai" }
     ]);
+    // Tidak lagi otomatis dibacakan saat web dimuat, melainkan saat chatbot dibuka
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t]);
+
+  // Bacakan sapaan chatbot setiap kali user membuka chatbot, matikan saat ditutup
+  useEffect(() => {
+    if (isOpen) {
+      if (!isMuted) {
+        speak(t('assistantGreeting'));
+      }
+    } else {
+      // Hentikan suara jika chatbot ditutup
+      stop();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   // Listen for custom event to open assistant
   useEffect(() => {
@@ -30,27 +49,60 @@ const Assistant = () => {
     return () => window.removeEventListener('open-assistant', handleOpenAssistant);
   }, []);
 
-  // Context-aware messages based on route
+  // Context-aware messages based on route (Audio-only, tidak masuk riwayat chat)
   useEffect(() => {
-    let contextMsg = "";
-    if (location.pathname === '/catalog') {
-      contextMsg = t('assistantCatalogContext');
-    } else if (location.pathname.startsWith('/interactive')) {
-      contextMsg = t('assistantInteractiveContext');
-    }
+    // Hentikan suara sebelumnya setiap kali pindah halaman
+    stop();
 
-    if (contextMsg) {
-      setMessages(prev => {
-        // Prevent duplicate context messages
-        if (prev.length > 0 && prev[prev.length - 1].text === contextMsg) {
-          return prev;
+    let contextMsg = "";
+    if (location.pathname === '/') {
+      contextMsg = "Sampurasun. Selamat datang di Sri Baduga, jelajahi dengan leluasa dan nikmati perjalanan yang nyaman dan berkesan.";
+    } else if (location.pathname === '/catalog') {
+      contextMsg = t('assistantCatalogContext');
+    } else if (location.pathname.startsWith('/collection/')) {
+      // Dapatkan ID kategori dari URL (misal: /collection/1 atau /collection/Etnografika)
+      const parts = location.pathname.split('/');
+      let categoryId = parts[2];
+      
+      if (categoryId && categoryId !== 'undefined' && categoryId !== 'null') {
+        categoryId = decodeURIComponent(categoryId).toLowerCase();
+        
+        // Mapping jika navigasi kembali menggunakan nama kategori, bukan ID angka
+        const KATEGORI_NAME_TO_ID = {
+          'geologika': '1', 'biologika': '2', 'etnografika': '3', 
+          'arkeologika': '4', 'historika': '5', 'numismatika': '6', 
+          'filologika': '7', 'keramologika': '8', 'seni rupa': '9', 'teknologika': '10'
+        };
+        
+        if (KATEGORI_NAME_TO_ID[categoryId]) {
+          categoryId = KATEGORI_NAME_TO_ID[categoryId];
         }
-        return [...prev, { text: contextMsg, sender: "nyai" }];
-      });
-      // Optionally auto-open the assistant to guide the user
-      // setIsOpen(true);
+
+        const key = `assistantCollectionContext_${categoryId}`;
+        const translated = t(key);
+        // Cegah pembacaan key mentah (yang ada underscore-nya) jika translation tidak ditemukan
+        if (translated !== key) {
+          contextMsg = translated;
+        }
+      }
     }
-  }, [location.pathname, t]);
+    // rute '/interactive' sengaja dihapus dari sini agar tidak tabrakan dengan penjelasan barang di InteractiveView.jsx
+
+    // Langsung bacakan tanpa menambahkan ke balon teks chat
+    if (contextMsg && !isMuted) {
+      speak(contextMsg);
+    }
+  }, [location.pathname, t, isMuted, speak]);
+
+  // Auto-speak setiap pesan baru dari nyai (AI)
+  useEffect(() => {
+    if (messages.length === 0) return;
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg.sender === 'nyai' && !isMuted) {
+      speak(lastMsg.text);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   // Auto-scroll ke pesan terbaru
   useEffect(() => {
@@ -62,6 +114,9 @@ const Assistant = () => {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim() || isSending) return;
+
+    // Hentikan audio yang sedang berjalan saat user kirim pesan baru
+    stop();
 
     const userMsg = input.trim();
     setMessages(prev => [...prev, { text: userMsg, sender: 'user' }]);
@@ -114,14 +169,28 @@ const Assistant = () => {
               backdropFilter: 'blur(10px)'
             }}
           >
+            {/* Header */}
             <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', color: '#fff', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <div style={{ width: '8px', height: '8px', backgroundColor: '#4ade80', borderRadius: '50%' }}></div>
                 <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 500, color: '#fff' }}>{t('assistantTitle')}</h3>
               </div>
-              <button onClick={() => setIsOpen(false)} style={{ background: 'none', color: '#a3a3a3', border: 'none', cursor: 'pointer' }}>
-                <X size={20} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {/* Tombol Mute/Unmute */}
+                <button
+                  onClick={() => {
+                    if (!isMuted) stop();
+                    setIsMuted(prev => !prev);
+                  }}
+                  title={isMuted ? 'Aktifkan Suara' : 'Matikan Suara'}
+                  style={{ background: 'none', color: isMuted ? '#6b7280' : '#4ade80', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '2px' }}
+                >
+                  {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                </button>
+                <button onClick={() => setIsOpen(false)} style={{ background: 'none', color: '#a3a3a3', border: 'none', cursor: 'pointer' }}>
+                  <X size={20} />
+                </button>
+              </div>
             </div>
             
             <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -159,7 +228,7 @@ const Assistant = () => {
                       {msg.artifacts.map((art, aIdx) => (
                         <div key={aIdx} style={{ backgroundColor: 'rgba(0,0,0,0.35)', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div style={{ overflow: 'hidden' }}>
-                            <strong style={{ color: '#fff', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{art.nama_koleksi}</strong>
+                            <strong style={{ color: '#fff', display: 'block' }}>{art.nama_koleksi}</strong>
                             {art.klasifikasi && <span style={{ color: '#a3a3a3', fontSize: '0.75rem' }}>{art.klasifikasi}</span>}
                           </div>
                           {art.no_inventarisasi && <span style={{ background: 'rgba(194,178,128,0.2)', color: '#C2B280', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', flexShrink: 0, marginLeft: '8px' }}>{art.no_inventarisasi}</span>}

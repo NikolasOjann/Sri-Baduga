@@ -16,9 +16,16 @@ class OllamaClient:
         )
 
         self.model = settings.LLM_MODEL
+        self._cache = {}
 
     def generate(self, prompt):
+        
+        # Gunakan prompt sebagai cache key
+        if prompt in self._cache:
+            print("⚡ [Ollama Cache HIT]")
+            return self._cache[prompt]
 
+        print("⚡ [Ollama MISS] Generating response...")
         response = self.client.chat(
 
             model=self.model,
@@ -33,5 +40,13 @@ class OllamaClient:
             ]
 
         )
+        
+        answer = response["message"]["content"]
+        
+        # Batasi ukuran cache (misal 100)
+        if len(self._cache) > 100:
+            self._cache.pop(next(iter(self._cache)))
+            
+        self._cache[prompt] = answer
 
-        return response["message"]["content"]
+        return answer

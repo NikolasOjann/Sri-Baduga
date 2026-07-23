@@ -74,23 +74,29 @@ class DocumentSelector:
 
 
         # ==========================================
-        # CARI BERDASARKAN KEYWORD (AWALAN SAMA)
+        # CARI BERDASARKAN KEYWORD / FUZZY MATCH
         # ==========================================
-
+        import difflib
         matched = []
 
-        for name in unique_names:
-            if self.normalize(name).startswith(question):
-                matched.append(name)
-
-        # ==========================================
-        # FALLBACK: CARI BERDASARKAN KEYWORD (MENGANDUNG KATA)
-        # ==========================================
-
-        if len(matched) == 0:
+        # 1. Cek apakah keyword adalah nama kategori (dengan fuzzy)
+        categories = {self.normalize(doc.metadata.get("category", "")) for doc in documents if doc and doc.metadata.get("category")}
+        cat_matches = difflib.get_close_matches(question, categories, n=1, cutoff=0.7)
+        if cat_matches:
+            matched_cat = cat_matches[0]
+            # Jika user mencari kategori, maka kembalikan semua nama unik dalam kategori tersebut
+            matched_set = {doc.metadata.get("name") for doc in documents if doc and self.normalize(doc.metadata.get("category", "")) == matched_cat}
+            matched = list(matched_set)
+            
+        # 2. Jika bukan kategori, cari berdasarkan nama koleksi (dengan fuzzy & substring)
+        if not matched:
+            name_matches = difflib.get_close_matches(question, unique_names, n=10, cutoff=0.7)
             for name in unique_names:
-                if question in self.normalize(name):
-                    matched.append(name)
+                if question in self.normalize(name) and name not in name_matches:
+                    name_matches.append(name)
+                elif self.normalize(name).startswith(question) and name not in name_matches:
+                    name_matches.append(name)
+            matched = name_matches
 
         # ==========================================
         # TIDAK ADA

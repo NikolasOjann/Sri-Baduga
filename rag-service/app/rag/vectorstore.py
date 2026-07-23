@@ -163,7 +163,7 @@ class MuseumVectorStore:
 
             k=k,
 
-            fetch_k=20
+            fetch_k=10
 
         )
 

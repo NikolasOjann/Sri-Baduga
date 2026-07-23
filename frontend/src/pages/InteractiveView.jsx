@@ -4,6 +4,7 @@ import { ArrowLeft, Info, Maximize2, ZoomIn, ZoomOut, RotateCcw, Box, Image as I
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, ContactShadows, useGLTF, Center } from '@react-three/drei';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useTTS } from '../hooks/useTTS';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import bg1 from '../asset/Galery/Background-1.png';
@@ -88,6 +89,7 @@ const InteractiveView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { t, language, toggleLanguage } = useLanguage();
+  const { speak } = useTTS();
 
   const [item, setItem] = useState(null);
   const [categoryItems, setCategoryItems] = useState([]);
@@ -128,6 +130,26 @@ const InteractiveView = () => {
 
   const currentIndex = categoryItems.findIndex(x => String(x.id) === String(id));
   const activeArtifact = item || dummyArtifacts[0];
+
+  // Auto-speak penjelasan barang saat halaman berhasil di-load
+  useEffect(() => {
+    if (!loading && activeArtifact) {
+      // Dapatkan teks judul dan deskripsi, atau gunakan dummy teks
+      const title = activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '');
+      const desc = activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : '');
+      
+      if (title || desc) {
+        // Gabungkan judul dan deskripsi dengan jeda (titik)
+        const textToSpeak = `${title}. ${desc}`.trim();
+        
+        // Beri jeda sedikit agar jika chatbot sedang menyapa rute interaktif, audionya bisa langsung ditimpa (override)
+        const timer = setTimeout(() => {
+          speak(textToSpeak);
+        }, 500);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [loading, activeArtifact, speak, t]);
 
   const handleNextItem = () => {
     if (categoryItems.length > 0 && currentIndex >= 0 && currentIndex < categoryItems.length - 1) {

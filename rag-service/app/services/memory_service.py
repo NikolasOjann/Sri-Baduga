@@ -90,6 +90,10 @@ class MemoryService:
 
         )["selected_document"]
 
+    def clear_document(self, session_id):
+        """Reset selected_document ketika user berpindah topik."""
+        self._get_session(session_id)["selected_document"] = None
+
     # =====================================================
     # CLARIFICATION
     # =====================================================

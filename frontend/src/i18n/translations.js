@@ -41,8 +41,18 @@ export const translations = {
     askAssistant: "Tanya Nyai...",
     assistantGreeting: "Halo! Saya Nyai, asisten virtual Anda. Ada yang bisa saya bantu tentang Museum Sri Baduga?",
     assistantResponse: "Menarik! Saat ini saya masih dalam tahap purwarupa, namun nantinya saya dapat menceritakan sejarah lengkap koleksi tersebut berdasarkan database museum.",
-    assistantCatalogContext: "Selamat datang di Galeri. Anda dapat memilih salah satu dari sepuluh kategori koleksi di sini.",
-    assistantInteractiveContext: "Ini adalah tampilan 3D interaktif. Anda dapat memutar artefak dengan kursor, dan scroll ke bawah untuk melihat artefak selanjutnya!"
+    assistantCatalogContext: "Ini adalah ruang Katalog Koleksi. Di sini Anda bisa melihat berbagai kategori benda bersejarah yang kami simpan. Kategori apa yang paling menarik bagi Anda?",
+    assistantInteractiveContext: "Ini adalah ruang Tampilan 3D Interaktif. Anda dapat memutar dan melihat koleksi secara 360 derajat. Jika butuh penjelasan tentang benda ini, tanyakan saja pada saya!",
+    assistantCollectionContext_1: "Anda sedang melihat koleksi Geologika, yang menampilkan bukti-bukti sejarah alam dan formasi bumi.",
+    assistantCollectionContext_2: "Ini adalah koleksi Biologika, tempat Anda dapat mempelajari berbagai spesimen flora dan fauna bersejarah.",
+    assistantCollectionContext_3: "Selamat datang di koleksi Etnografika. Di sini tersimpan berbagai benda budaya daerah dari peninggalan masa lalu.",
+    assistantCollectionContext_4: "Anda berada di koleksi Arkeologika, yang menyimpan berbagai artefak dan peninggalan prasejarah dari masa lampau.",
+    assistantCollectionContext_5: "Ini adalah koleksi Historika, menampilkan benda-benda yang memiliki nilai sejarah perjuangan yang penting bagi bangsa.",
+    assistantCollectionContext_6: "Selamat datang di koleksi Numismatika dan Heraldika. Di sini Anda bisa melihat berbagai mata uang kuno dan lambang bersejarah.",
+    assistantCollectionContext_7: "Anda sedang menjelajahi koleksi Filologika, yang merawat berbagai naskah dan manuskrip kuno peninggalan leluhur.",
+    assistantCollectionContext_8: "Ini adalah koleksi Keramologika. Silakan nikmati berbagai artefak yang terbuat dari tanah liat, porselen, dan keramik.",
+    assistantCollectionContext_9: "Selamat datang di koleksi Seni Rupa. Di sini Anda dapat melihat berbagai karya seni lukis dan pahat murni yang sarat makna.",
+    assistantCollectionContext_10: "Anda berada di koleksi Teknologika, tempat dipamerkannya berbagai peralatan dan teknologi tradisional karya nenek moyang kita."
   },
   en: {
     back: "Back",
@@ -84,9 +94,19 @@ export const translations = {
     inventory: "Inventory Number",
     assistantTitle: "Nyai - Virtual Assistant",
     askAssistant: "Ask Nyai...",
-    assistantGreeting: "Hello! I am Nyai, your virtual assistant. How can I help you regarding the Sri Baduga Museum?",
-    assistantResponse: "Interesting! I am currently still in the prototype phase, but later I will be able to tell the complete history of the collection based on the museum's database.",
-    assistantCatalogContext: "Welcome to the Gallery. You can select one of the ten collection categories here.",
-    assistantInteractiveContext: "This is the interactive 3D view. You can rotate the artifact with your cursor, and scroll down to see the next artifact!"
+    assistantGreeting: "Hello! I am Nyai, your virtual assistant. Is there anything I can help you with regarding the Sri Baduga Museum?",
+    assistantResponse: "Interesting! I am currently still in the prototype phase, but eventually I will be able to tell the complete history of the collection based on the museum database.",
+    assistantCatalogContext: "This is the Collection Catalog room. Here you can see various categories of historical objects we keep. Which category interests you the most?",
+    assistantInteractiveContext: "This is the Interactive 3D View room. You can rotate and view the collection in 360 degrees. If you need an explanation about this object, just ask me!",
+    assistantCollectionContext_1: "You are looking at the Geologika collection, displaying evidence of natural history and earth formations.",
+    assistantCollectionContext_2: "This is the Biologika collection, where you can study various historical flora and fauna specimens.",
+    assistantCollectionContext_3: "Welcome to the Ethnographica collection. Various regional cultural objects from the past are kept here.",
+    assistantCollectionContext_4: "You are in the Archaeologica collection, which preserves various artifacts and prehistoric relics from the past.",
+    assistantCollectionContext_5: "This is the Historica collection, displaying objects that have important historical value for the nation.",
+    assistantCollectionContext_6: "Welcome to the Numismatica and Heraldica collection. Here you can see various ancient currencies and historical symbols.",
+    assistantCollectionContext_7: "You are exploring the Philologica collection, which cares for various ancient manuscripts and documents of our ancestors.",
+    assistantCollectionContext_8: "This is the Ceramologica collection. Please enjoy various artifacts made of clay, porcelain, and ceramics.",
+    assistantCollectionContext_9: "Welcome to the Fine Arts collection. Here you can see various pure art and sculptures full of meaning.",
+    assistantCollectionContext_10: "You are in the Technologica collection, where various traditional tools and technologies made by our ancestors are exhibited."
   }
 };
