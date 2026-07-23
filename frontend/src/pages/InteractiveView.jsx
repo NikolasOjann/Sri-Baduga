@@ -446,34 +446,46 @@ const InteractiveView = () => {
               </h1>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
-                <p style={{ margin: 0 }}>{activeArtifact.deskripsi || activeArtifact.desc1Key}</p>
+                <p style={{ margin: 0 }}>
+                  {language === 'en' 
+                    ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key))) 
+                    : (activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))}
+                </p>
 
                 {/* Grid Metadata Lengkap */}
                 <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: 'rgba(255,255,255,0.25)', padding: '1.2rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
                   {activeArtifact.no_inventarisasi && (
                     <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>No. Inventarisasi</h4>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
+                        {language === 'en' ? 'Inventory No.' : 'No. Inventarisasi'}
+                      </h4>
                       <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600, fontFamily: 'monospace' }}>{activeArtifact.no_inventarisasi}</p>
                     </div>
                   )}
 
                   {activeArtifact.dimensi && activeArtifact.dimensi.panjang && (
                     <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>Dimensi</h4>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
+                        {language === 'en' ? 'Dimension' : 'Dimensi'}
+                      </h4>
                       <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.dimensi.panjang}</p>
                     </div>
                   )}
 
                   {activeArtifact.tempat_penyimpanan && (
                     <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>Tempat Penyimpanan</h4>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
+                        {language === 'en' ? 'Storage Location' : 'Tempat Penyimpanan'}
+                      </h4>
                       <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tempat_penyimpanan}</p>
                     </div>
                   )}
 
                   {activeArtifact.tanggal_pengamatan && (
                     <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>Tanggal Pendataan</h4>
+                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
+                        {language === 'en' ? 'Observation Date' : 'Tanggal Pendataan'}
+                      </h4>
                       <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tanggal_pengamatan}</p>
                     </div>
                   )}
@@ -481,7 +493,7 @@ const InteractiveView = () => {
 
                 {activeArtifact.keterangan && (
                   <div style={{ marginTop: '0.5rem', fontSize: '0.82rem', color: '#555', fontStyle: 'italic' }}>
-                    Catatan: {activeArtifact.keterangan}
+                    {language === 'en' ? 'Note: ' : 'Catatan: '} {activeArtifact.keterangan}
                   </div>
                 )}
               </div>
