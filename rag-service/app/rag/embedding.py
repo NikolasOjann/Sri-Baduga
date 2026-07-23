@@ -11,7 +11,7 @@ class MuseumEmbedding:
 
         self.model = SentenceTransformer(
             settings.EMBEDDING_MODEL,
-            local_files_only=True
+            local_files_only=False
         )
 
         print("Embedding Model Loaded")

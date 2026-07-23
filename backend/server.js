@@ -22,6 +22,7 @@ app.use('/models', express.static(path.join(__dirname, 'public', 'models')));
 // ============================================================
 app.use('/api/collections', require('./routes/collections'));
 app.use('/api/chat',        require('./routes/chat'));
+app.use('/api/admin',       require('./routes/admin'));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -46,7 +47,7 @@ const server = app.listen(PORT, () => {
   console.log(`  GET  /api/collections/kategori/:nama`);
   console.log(`  POST /api/chat`);
   console.log(`\nIntegrasi RAG & Ollama:`);
-  console.log(`  • RAG Service  : http://localhost:8000/chat (Submodule llm-museum)`);
+  console.log(`  • RAG Service  : http://127.0.0.1:8000/chat (Submodule llm-museum)`);
   console.log(`  • Fallback     : Fuse.js (Lokal JSON) jika RAG/Ollama offline`);
   console.log(`\nTips:`);
   console.log(`  • Jalankan RAG Python : cd ../rag-service && uvicorn app.main:app --port 8000 --reload`);
