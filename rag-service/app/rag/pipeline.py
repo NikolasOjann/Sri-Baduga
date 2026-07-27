@@ -9,7 +9,37 @@ from app.core.dependencies import (
 
 from app.services.memory_service import MemoryService
 from app.services.prompt_service import PromptService
+import difflib
 
+# Global Cache untuk menyimpan jawaban RAG yang sudah pernah di-generate
+_LLM_CACHE = {}
+
+def normalize_query_for_cache(q: str) -> str:
+    import re
+    q_clean = re.sub(r'[^\w\s]', '', (q or "").lower())
+    words = q_clean.split()
+    stopwords = {"itu", "ini", "sih", "dong", "kalo", "kalau", "ya", "yang", "dan", "di", "ke", "dari", "nya"}
+    words = [w for w in words if w not in stopwords]
+    return " ".join(sorted(words))
+
+def find_cached_result(question: str, selected_document):
+    """Mencari cache dengan tingkat kemiripan pertanyaan yang tinggi setelah dinormalisasi."""
+    q_norm = normalize_query_for_cache(question)
+    doc_id = str(selected_document.metadata.get("id")) if selected_document else "none"
+    
+    possible_keys = [k for k in _LLM_CACHE.keys() if k.endswith(f"_{doc_id}")]
+    for k in possible_keys:
+        cached_q_norm = k.rsplit("_", 1)[0]
+        # Jika kemiripan string sangat tinggi (misal: "apa tombak" vs "apa tombak")
+        if difflib.SequenceMatcher(None, q_norm, cached_q_norm).ratio() > 0.80:
+            return _LLM_CACHE[k]
+    return None
+
+def save_to_cache(question: str, selected_document, result: dict):
+    q_norm = normalize_query_for_cache(question)
+    doc_id = str(selected_document.metadata.get("id")) if selected_document else "none"
+    cache_key = f"{q_norm}_{doc_id}"
+    _LLM_CACHE[cache_key] = result
 
 def strip_markdown(text: str) -> str:
     """Hapus formatting Markdown (bold, italic, heading) dari teks jawaban LLM."""
@@ -45,16 +75,24 @@ class MuseumPipeline:
     # =====================================================
 
     def ask(
-
         self,
-
         question,
-
         session_id
-
     ):
-
         selected_document = self.memory.get_document(session_id)
+        
+        # =====================================================
+        # CACHE CHECK (SMART SEMANTIC CACHE)
+        # =====================================================
+        cached_result = find_cached_result(question, selected_document)
+        if cached_result:
+            print("\n" + "="*60)
+            print("SMART CACHE HIT! Mengembalikan jawaban instan.")
+            print("="*60)
+            self.memory.add_user(session_id, question)
+            self.memory.add_ai(session_id, cached_result["answer"])
+            return cached_result
+
         q_lower = (question or "").strip().lower()
         follow_up_keywords = [
             "terbuat dari", "dari apa", "bahan", "material",
@@ -83,19 +121,25 @@ class MuseumPipeline:
             # biarkan query jatuh ke pencarian baru.
             # -------------------------------------------------------
             current_name = selected_document.metadata.get("name", "").lower()
-            # Ambil semua nama koleksi yang ada di database untuk cek apakah user menyebut nama lain
+            
+            # Gunakan logika pembersihan keyword yang sudah canggih dari retriever
+            # untuk mendeteksi apakah ada penyebutan nama barang lain (meski typo)
+            retriever = get_retriever()
+            extracted = retriever.extract_keyword(q_lower)
+            
+            # Jika hasil ekstraksi menghasilkan nama barang yang valid di database
+            # dan nama tersebut berbeda dari konteks saat ini, maka user telah berpindah topik
             from app.rag.database_manager import get_database
             db = get_database()
-            all_names = list(db.name_index.keys())  # lowercase keys
-            mentioned_other = any(
-                name in q_lower and name != current_name
-                for name in all_names
-                if len(name) >= 4  # hindari kata pendek seperti 'mas', 'sisi'
-            )
+            all_names = list(db.name_index.keys())
+            
+            mentioned_other = False
+            if extracted in all_names and extracted != current_name:
+                mentioned_other = True
 
             if mentioned_other:
                 # User ingin tanya tentang koleksi LAIN → reset selected_document
-                print("[PIPELINE] Topic switch detected, clearing selected_document")
+                print(f"[PIPELINE] Topic switch detected (from {current_name} to {extracted}), clearing context")
                 self.memory.clear_document(session_id)
                 selected_document = None
             else:
@@ -129,7 +173,7 @@ class MuseumPipeline:
                     answer
                 )
 
-                return {
+                final_result = {
                     "answer": answer,
                     "documents": documents,
                     "sources": [
@@ -140,6 +184,8 @@ class MuseumPipeline:
                         }
                     ]
                 }
+                save_to_cache(question, selected_document, final_result)
+                return final_result
 
         # =====================================================
         # FOLLOW-UP FALLBACK: jika selected_document kosong,
@@ -189,11 +235,13 @@ class MuseumPipeline:
                             "location": doc.metadata.get("location")
                         })
                     
-                    return {
+                    final_result = {
                         "answer": answer,
                         "documents": documents,
                         "sources": sources
                     }
+                    save_to_cache(question, self.memory.get_document(session_id), final_result)
+                    return final_result
 
         # =====================================================
         # USER SEDANG MEMILIH KOLEKSI (clarification flow)
@@ -245,11 +293,13 @@ class MuseumPipeline:
                     self.memory.add_user(session_id, question)
                     self.memory.add_ai(session_id, answer)
 
-                    return {
+                    final_result = {
                         "answer": answer,
                         "documents": candidate_docs,
                         "sources": sources
                     }
+                    # Jangan cache pertanyaan klarifikasi karena konteksnya transisi
+                    return final_result
 
                 else:
                     return {
@@ -269,15 +319,48 @@ class MuseumPipeline:
         q_clean = (question or "").strip().lower()
 
         collection_list_keywords = [
+            # Bahasa Indonesia formal
             "klasifikasi", "jenis koleksi", "jenis-jenis", "ada apa saja",
             "apa saja koleksi", "koleksi apa saja", "koleksi ada apa",
             "ada apa di museum", "isi museum", "apa yang ada", "benda apa saja",
             "tampilkan koleksi", "daftar koleksi", "kategori koleksi", "tipe koleksi",
-            "semua koleksi", "ada koleksi apa", "tampilkan semua", "kategori apa", 
+            "semua koleksi", "ada koleksi apa", "tampilkan semua", "kategori apa",
             "apa saja jenisnya", "jenis benda", "koleksi benda", "macam macam", "macam-macam",
-            "jenis jenis", "jenis"
+            "jenis jenis",
+            # Kata "terdapat", "isinya", "berisi" — pola umum pengguna
+            "terdapat apa", "ada item apa", "terdapat item", "berisi apa", "isinya apa",
+            "item apa saja", "benda apa yang ada", "koleksi apa yang ada",
+            "apa yang terdapat", "apa yang tersimpan", "ada benda apa",
+            # Variasi santai / singkat
+            "ada apa", "apa aja", "ada apa aja", "isinya", "isi nya", "itemnya",
+            "item nya", "koleksinya", "koleksi nya",
         ]
-        if any(kw in q_clean for kw in collection_list_keywords):
+
+        # ── Cek 1: pertanyaan menyebut nama kategori + kata tanya koleksi
+        # Contoh: "pada seni rupa terdapat item apa?" → deteksi "seni rupa" + "item"
+        category_keys = list(CATEGORY_INFO.keys())  # e.g. "seni rupa", "etnografika"
+        inquiry_words = [
+            "terdapat", "tersimpan", "berisi", "isinya", "item", "koleksi",
+            "ada apa", "apa saja", "apa aja", "benda", "apa yang"
+        ]
+        
+        result = None
+        for cat_key in category_keys:
+            if cat_key in q_clean:
+                if any(iw in q_clean for iw in inquiry_words):
+                    # Arahkan ke pencarian langsung berdasarkan nama kategori
+                    from app.tools.museum_search_tool import MuseumSearchTool
+                    search_tool = MuseumSearchTool(get_retriever())
+                    bypass_result = search_tool.run(question=cat_key, context=self.agent.context)
+                    if bypass_result.get("status") in ["success", "clarification"]:
+                        result = bypass_result
+                        print(f"\n[PIPELINE] CATEGORY BYPASS ACTIVATED for: {cat_key}")
+                    break
+                    
+        if result:
+            pass # Skip Cek 2 jika Cek 1 sudah dapat hasil
+        # ── Cek 2: keyword daftar klasifikasi umum ada di pertanyaan
+        elif any(kw in q_clean for kw in collection_list_keywords):
             col_tool = MuseumCollectionTool(get_retriever())
             return col_tool.run(question=question)
 
@@ -331,9 +414,7 @@ class MuseumPipeline:
             "selamat pagi", "selamat siang", "selamat sore", "selamat malam"
         ]
         
-        result = None
-        
-        if word_count > 0 and word_count <= 4 and not any(k in q_clean for k in general_keywords):
+        if result is None and word_count > 0 and word_count <= 4 and not any(k in q_clean for k in general_keywords):
             print("\n" + "="*60)
             print("FAST PATH SEARCH ACTIVATED")
             print("="*60)
@@ -349,7 +430,29 @@ class MuseumPipeline:
                 print("Fast Path Empty, fallback to LLM Planner...")
         
         # =====================================================
-        # AGENT
+        # EXACT ITEM BYPASS (ANTI-HALLUCINATION)
+        # Jika algoritma ekstraksi berhasil menemukan nama barang 
+        # yang valid di database, kita paksa pencarian ke barang tersebut!
+        # Ini mencegah AI Agent berhalusinasi (misal: mengira "tombak di mana" 
+        # berarti menanyakan lokasi/alamat museum).
+        # =====================================================
+        if result is None:
+            extracted_item = get_retriever().extract_keyword(q_clean)
+            from app.rag.database_manager import get_database
+            db_names = list(get_database().name_index.keys())
+            
+            if extracted_item in db_names:
+                print(f"\n[PIPELINE] EXACT ITEM BYPASS ACTIVATED for: {extracted_item}")
+                from app.tools.museum_search_tool import MuseumSearchTool
+                search_tool = MuseumSearchTool(get_retriever())
+                # Kita gunakan query asli (question) agar 'terbuat dari' dll tetap terbaca di context
+                bypass_result = search_tool.run(question=question, context=self.agent.context)
+                if bypass_result.get("status") in ["success", "clarification"]:
+                    result = bypass_result
+                    print(f"Exact Bypass Success! Status: {result.get('status')}")
+
+        # =====================================================
+        # AGENT (Fallback ke LLM Planner jika tidak ada cara cepat)
         # =====================================================
 
         if result is None:
@@ -556,12 +659,11 @@ class MuseumPipeline:
 
             )
 
-        return {
-
+        final_result = {
             "answer": answer,
-
             "documents": documents,
-
             "sources": sources
-
         }
+        
+        save_to_cache(question, self.memory.get_document(session_id), final_result)
+        return final_result

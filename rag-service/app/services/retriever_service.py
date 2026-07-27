@@ -103,49 +103,49 @@ class RetrieverService:
     # =====================================================
 
     def extract_keyword(self, question):
-
-        keyword = question.lower()
-
-        ignore = [
-
-            "apa itu",
-
-            "apa",
-
-            "siapa",
-
-            "dimana",
-
-            "di mana",
-
-            "jelaskan",
-
-            "ceritakan",
-
-            "fungsi",
-
-            "asal",
-
-            "berasal",
-
-            "terbuat dari",
-
-            "terbuat",
-
-            "buat",
-
-            "adalah",
-
-            "tentang",
-
-            "informasi",
-
-            "koleksi"
-
+        import re
+        import difflib
+        if not question: return ""
+        
+        q_lower = question.lower()
+        # Hapus tanda baca
+        q_clean = re.sub(r'[^\w\s]', '', q_lower)
+        
+        # 1. STRATEGI POSITIF: Cari nama koleksi/kategori langsung di dalam pertanyaan
+        all_names = list(self.database.name_index.keys())
+        all_cats = list(self.database.category_index.keys())
+        all_targets = all_names + all_cats
+        
+        # Urutkan dari yang paling panjang (agar 'arca nandi' terdeteksi sblm 'arca')
+        all_targets.sort(key=len, reverse=True)
+        
+        for target in all_targets:
+            # Jika target ada di dalam string pertanyaan
+            if target and target in q_clean:
+                return target
+                
+        # 2. STRATEGI FUZZY: Cari jika ada salah ketik sedikit (typo)
+        words = q_clean.split()
+        for word in words:
+            if len(word) >= 4:
+                matches = difflib.get_close_matches(word, all_targets, n=1, cutoff=0.75)
+                if matches:
+                    return matches[0]
+        
+        # 3. STRATEGI NEGATIF (Fallback): Hapus kata-kata pengantar/tanya
+        stopwords = [
+            "apa", "itu", "ini", "saja", "siapa", "dimana", "di", "mana", "kapan",
+            "mengapa", "kenapa", "bagaimana", "berikan", "tolong", "jelaskan",
+            "tentang", "info", "informasi", "kalo", "kalau", "dong", "sih",
+            "yang", "dimaksud", "arti", "artinya", "berarti", "adalah", "fungsi",
+            "coba", "ceritakan", "sejarah", "asal", "usul", "berasal", "terbuat", 
+            "dari", "buat", "koleksi", "jelasin", "mun", "naon", "kumaha", "kunaon"
         ]
-
-        for word in ignore:
-
-            keyword = keyword.replace(word, "")
-
-        return keyword.strip()
+        
+        cleaned_words = [w for w in words if w not in stopwords]
+        
+        # Jika setelah dihapus habis, kembalikan text asli (safety fallback)
+        if not cleaned_words:
+            return question.strip()
+            
+        return " ".join(cleaned_words)

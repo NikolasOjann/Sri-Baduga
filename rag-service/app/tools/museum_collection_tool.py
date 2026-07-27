@@ -139,10 +139,10 @@ class MuseumCollectionTool:
             cat_info = self.get_category_info(extracted_keyword)
             if cat_info:
                 answer = (
-                    f"📚 **{cat_info['label']}**\n\n"
+                    f"📚 {cat_info['label']}\n\n"
                     f"{cat_info['definisi']}\n\n"
                     f"---\n"
-                    f"💡 Ketikkan **'{cat_info['label']}'** untuk melihat daftar koleksi dalam kategori ini."
+                    f"💡 Ketikkan '{cat_info['label']}' untuk melihat daftar koleksi dalam kategori ini."
                 )
                 return {
                     "tool": "museum_collection",
@@ -154,18 +154,18 @@ class MuseumCollectionTool:
 
         # Default: tampilkan semua 10 kategori beserta definisi singkat
         lines = [
-            "🏛️ **Klasifikasi Koleksi Museum Sri Baduga**\n",
-            "Museum Sri Baduga memiliki **10 jenis klasifikasi koleksi** berdasarkan standar permuseuman nasional:\n",
+            "🏛️ Klasifikasi Koleksi Museum Sri Baduga\n",
+            "Museum Sri Baduga memiliki 10 jenis klasifikasi koleksi berdasarkan standar permuseuman nasional:\n",
         ]
         for i, (key, info) in enumerate(CATEGORY_INFO.items(), 1):
             ringkasan = info["definisi"].split(".")[0] + "."
-            lines.append(f"**{i}. {info['label']}**")
+            lines.append(f"{i}. {info['label']}")
             lines.append(f"   {ringkasan}\n")
 
         lines.append("---")
         lines.append(
-            "💡 **Tips:** Ketikkan nama kategori (misalnya **Etnografika**) untuk melihat daftar koleksinya, "
-            "atau ketik **'apa itu Filologika'** untuk penjelasan lengkap suatu kategori."
+            "💡 Tips: Ketikkan nama kategori (misalnya Etnografika) untuk melihat daftar koleksinya, "
+            "atau ketik 'apa itu Filologika' untuk penjelasan lengkap suatu kategori."
         )
 
         answer = "\n".join(lines)
