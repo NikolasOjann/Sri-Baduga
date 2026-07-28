@@ -257,3 +257,16 @@ button {
     left: 20px;
   }
 }
+
+/* Voice Visualizer Animation */
+.voice-bar {
+  width: 3px;
+  background-color: white;
+  border-radius: 3px;
+  animation: sound-wave 1s infinite ease-in-out;
+}
+
+@keyframes sound-wave {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
