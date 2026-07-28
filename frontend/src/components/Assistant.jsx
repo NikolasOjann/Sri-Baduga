@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Loader, Volume2, VolumeX } from 'lucide-react';
+import { MessageCircle, X, Send, Loader, Volume2, VolumeX, Mic } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTTS } from '../hooks/useTTS';
@@ -11,9 +11,12 @@ const Assistant = () => {
   const [isOpen, setIsOpen]   = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const location = useLocation();
-  const { t, language }    = useLanguage();
+  const { t, language } = useLanguage();
   const messagesEndRef = useRef(null);
+  const lastSpokenIndexRef = useRef(-1); // Mencegah TTS terpicu dua kali untuk pesan yang sama
+  const recognitionRef = useRef(null);
   const { speak, stop } = useTTS();
 
   const [messages, setMessages] = useState([]);
@@ -22,10 +25,14 @@ const Assistant = () => {
   // Update greeting when language changes or initially
   useEffect(() => {
     const greeting = t('assistantGreeting');
-    setMessages([
-      { text: greeting, sender: "nyai" }
-    ]);
-    // Tidak lagi otomatis dibacakan saat web dimuat, melainkan saat chatbot dibuka
+    setMessages(prev => {
+      // Jika chat masih kosong atau isinya cuma sapaan awal, maka perbarui bahasanya
+      if (prev.length === 0 || (prev.length === 1 && prev[0].sender === "nyai")) {
+        return [{ text: greeting, sender: "nyai" }];
+      }
+      // Jika sudah ada riwayat obrolan panjang, biarkan riwayatnya utuh (tidak reset)
+      return prev;
+    });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t]);
 
@@ -99,9 +106,12 @@ const Assistant = () => {
   // Auto-speak setiap pesan baru dari nyai (AI)
   useEffect(() => {
     if (messages.length > 0 && !isMuted) {
-      const lastMsg = messages[messages.length - 1];
-      // Hanya speak pesan dari nyai (kecuali jika pesan itu sama dengan contextMsg route, tapi kita sudah hapus contextMsg dari array)
-      if (lastMsg.sender === "nyai") {
+      const lastIndex = messages.length - 1;
+      const lastMsg = messages[lastIndex];
+      
+      // Hanya speak pesan dari nyai (dan pastikan pesan pada index ini belum pernah dibacakan)
+      if (lastMsg.sender === "nyai" && lastSpokenIndexRef.current !== lastIndex) {
+        lastSpokenIndexRef.current = lastIndex;
         speak(lastMsg.text, language);
       }
     }
@@ -115,23 +125,20 @@ const Assistant = () => {
     }
   }, [messages]);
 
-  const handleSend = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || isSending) return;
+  const sendMessageToAPI = async (text) => {
+    if (!text.trim()) return;
 
     // Hentikan audio yang sedang berjalan saat user kirim pesan baru
     stop();
 
-    const userMsg = input.trim();
-    setMessages(prev => [...prev, { text: userMsg, sender: 'user' }]);
-    setInput('');
+    setMessages(prev => [...prev, { text, sender: 'user' }]);
     setIsSending(true);
 
     try {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMsg }),
+        body: JSON.stringify({ message: text }),
       });
       const data = await res.json();
       setMessages(prev => [...prev, { 
@@ -148,6 +155,56 @@ const Assistant = () => {
     } finally {
       setIsSending(false);
     }
+  };
+
+  const handleSend = (e) => {
+    e.preventDefault();
+    if (!input.trim() || isSending) return;
+    
+    const userMsg = input.trim();
+    setInput('');
+    sendMessageToAPI(userMsg);
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    setIsListening(false);
+  };
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Maaf, browser Anda tidak mendukung fitur suara (Gunakan Chrome/Edge terbaru).');
+      return;
+    }
+    
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.lang = language === 'en' ? 'en-US' : 'id-ID';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      sendMessageToAPI(transcript);
+    };
+
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error:", event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
   };
 
   return (
@@ -227,6 +284,31 @@ const Assistant = () => {
                     </div>
                   )}
 
+                  {msg.sender === 'nyai' && (
+                    <button
+                      onClick={() => speak(msg.text)}
+                      title="Ulangi Audio"
+                      style={{
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        color: '#4ade80',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '4px 10px',
+                        marginTop: '10px',
+                        borderRadius: '12px',
+                        fontSize: '0.75rem',
+                        transition: 'background 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                    >
+                      <Volume2 size={14} /> Putar Ulang
+                    </button>
+                  )}
+
                   {msg.artifacts && msg.artifacts.length > 0 && (
                     <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {msg.artifacts.map((art, aIdx) => (
@@ -287,6 +369,34 @@ const Assistant = () => {
                   opacity: isSending ? 0.5 : 1,
                 }}
               />
+              <button
+                type="button"
+                onClick={isListening ? stopListening : startListening}
+                disabled={isSending}
+                title={isListening ? "Berhenti Suara" : "Gunakan Suara"}
+                style={{
+                  background: isListening ? '#ef4444' : 'rgba(255,255,255,0.05)',
+                  color: isListening ? '#fff' : '#a3a3a3',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '50%',
+                  width: '40px', height: '40px', flexShrink: 0,
+                  display: 'flex', justifyContent: 'center', alignItems: 'center',
+                  cursor: isSending ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.3s',
+                  boxShadow: isListening ? '0 0 10px rgba(239, 68, 68, 0.6)' : 'none'
+                }}
+              >
+                {isListening ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', height: '16px' }}>
+                    <span className="voice-bar" style={{ animationDelay: '0s' }} />
+                    <span className="voice-bar" style={{ animationDelay: '0.2s' }} />
+                    <span className="voice-bar" style={{ animationDelay: '0.4s' }} />
+                    <span className="voice-bar" style={{ animationDelay: '0.1s' }} />
+                  </div>
+                ) : (
+                  <Mic size={16} />
+                )}
+              </button>
               <button
                 type="submit"
                 disabled={isSending || !input.trim()}
