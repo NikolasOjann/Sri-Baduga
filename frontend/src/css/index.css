@@ -30,6 +30,7 @@ body {
   color: var(--color-text);
   font-family: 'Elms Sans', sans-serif;
   overflow-x: hidden;
+  overscroll-behavior: none; /* Prevent scroll bounce */
   -webkit-font-smoothing: antialiased;
 }
 

@@ -137,11 +137,11 @@ const InteractiveView = () => {
       // Dapatkan teks judul dan deskripsi, atau gunakan dummy teks
       const title = activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '');
       const desc = activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : '');
-      
+
       if (title || desc) {
         // Gabungkan judul dan deskripsi dengan jeda (titik)
         const textToSpeak = `${title}. ${desc}`.trim();
-        
+
         // Beri jeda sedikit agar jika chatbot sedang menyapa rute interaktif, audionya bisa langsung ditimpa (override)
         const timer = setTimeout(() => {
           speak(textToSpeak, language);
@@ -447,8 +447,8 @@ const InteractiveView = () => {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
                 <p style={{ margin: 0 }}>
-                  {language === 'en' 
-                    ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key))) 
+                  {language === 'en'
+                    ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))
                     : (activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))}
                 </p>
 

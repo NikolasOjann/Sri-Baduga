@@ -57,10 +57,12 @@ const Assistant = () => {
     let contextMsg = "";
     if (location.pathname === '/') {
       contextMsg = language === 'id' 
+        ? "Selamat datang di beranda Museum Sri Baduga." 
+        : "Welcome to the Sri Baduga Museum homepage.";
+    } else if (location.pathname === '/catalog') {
+      contextMsg = language === 'id' 
         ? "Sampurasun. Selamat datang di Sri Baduga, jelajahi dengan leluasa dan nikmati perjalanan yang nyaman dan berkesan." 
         : "Welcome to Sri Baduga. Explore freely and enjoy a comfortable and memorable journey.";
-    } else if (location.pathname === '/catalog') {
-      contextMsg = t('assistantCatalogContext');
     } else if (location.pathname.startsWith('/collection/')) {
       // Dapatkan ID kategori dari URL (misal: /collection/1 atau /collection/Etnografika)
       const parts = location.pathname.split('/');
@@ -94,6 +96,18 @@ const Assistant = () => {
     if (contextMsg && !isMuted) {
       speak(contextMsg, language);
     }
+  }, [location.pathname, t, isMuted, speak, language]);
+
+  // Listen for catalog overlay close event to play catalog specific audio
+  useEffect(() => {
+    const handleOverlayClosed = () => {
+      if (location.pathname === '/catalog' && !isMuted) {
+        stop();
+        speak(t('assistantCatalogContext'), language);
+      }
+    };
+    window.addEventListener('catalog-overlay-closed', handleOverlayClosed);
+    return () => window.removeEventListener('catalog-overlay-closed', handleOverlayClosed);
   }, [location.pathname, t, isMuted, speak, language]);
 
   // Auto-speak setiap pesan baru dari nyai (AI)
