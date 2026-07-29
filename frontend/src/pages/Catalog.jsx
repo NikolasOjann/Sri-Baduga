@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
 import { ArrowLeft, Globe, MessageCircle, X } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
@@ -51,9 +51,14 @@ const categories = [
 
 const Catalog = () => {
   const { language, toggleLanguage, t } = useLanguage();
+  const location = useLocation();
   const [counts, setCounts] = useState({});
-  const [showOverlay, setShowOverlay] = useState(true);
-  const [cookieConsent, setCookieConsent] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(() => {
+    return location.state?.fromHome === true;
+  });
+  const [cookieConsent, setCookieConsent] = useState(() => {
+    return localStorage.getItem('cookieConsentAccepted') === 'true';
+  });
 
   const openAssistant = () => {
     setShowOverlay(false);
@@ -315,7 +320,10 @@ const Catalog = () => {
                 Situs web ini menggunakan cookie untuk meningkatkan pengalaman menjelajah Anda. Dengan terus menggunakan situs ini, Anda menyetujui penggunaan cookie oleh kami. Pelajari lebih lanjut di sini
               </p>
               <button
-                onClick={() => setCookieConsent(true)}
+                onClick={() => {
+                  setCookieConsent(true);
+                  localStorage.setItem('cookieConsentAccepted', 'true');
+                }}
                 style={{
                   backgroundColor: '#1a1a1a',
                   color: 'white',
