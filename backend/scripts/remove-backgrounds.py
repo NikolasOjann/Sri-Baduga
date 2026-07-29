@@ -48,8 +48,32 @@ def main():
             t0 = time.time()
             try:
                 with Image.open(jpg_path) as input_img:
-                    output_img = remove(input_img)
-                    output_img.save(png_path, "PNG")
+                    # Gunakan post_process_mask agar lubang kecil di dalam objek/artefak tidak terhapus
+                    output_img = remove(input_img, post_process_mask=True)
+                    
+                    # Validasi agar tidak menghapus objek utama (gaboleh sampe ngehapus si gambar nya)
+                    alpha = output_img.split()[3]
+                    bbox = alpha.getbbox()
+                    w, h = input_img.size
+                    
+                    if not bbox:
+                        print(f"  [{idx}/{len(files)}] [WARNING] AI menghapus seluruh gambar {filename}! Mencoba tanpa post_process_mask...")
+                        output_img = remove(input_img)
+                        alpha = output_img.split()[3]
+                        bbox = alpha.getbbox()
+                        
+                    if bbox:
+                        box_area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
+                        if box_area < (w * h * 0.02):
+                            print(f"  [{idx}/{len(files)}] [WARNING] Objek terlalu kecil/terhapus pada {filename}. Tetap menyimpan original PNG.")
+                            # Jika AI salah mengira objek utama sebagai background, simpan versi aman/original transparan
+                            output_img.save(png_path, "PNG")
+                        else:
+                            output_img.save(png_path, "PNG")
+                    else:
+                        print(f"  [{idx}/{len(files)}] [ERROR] Gagal mempertahankan objek pada {filename}. Lewati agar gambar tidak rusak.")
+                        continue
+
                 dt = round(time.time() - t0, 2)
                 print(f"  [{idx}/{len(files)}] [OK] {filename} -> {png_filename} ({dt}s)")
                 total_processed += 1

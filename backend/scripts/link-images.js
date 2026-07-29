@@ -70,9 +70,11 @@ function main() {
         return `${base}.jpg`;
       });
 
-    const categoryArtifacts = collections.filter(c =>
-      (c.klasifikasi || '').toLowerCase() === kategori.toLowerCase()
-    );
+    const categoryArtifacts = collections.filter(c => {
+      const k = (c.klasifikasi || '').toLowerCase();
+      const target = kategori.toLowerCase();
+      return k === target || (target === 'etnografika' && k === 'etnografi');
+    });
 
     let catLinked = 0;
     for (let i = 0; i < categoryArtifacts.length; i++) {
