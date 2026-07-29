@@ -30,6 +30,44 @@ function Datasets() {
   });
   const [modalLoading, setModalLoading] = useState(false);
 
+  // ================= State Selection =================
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds(datasets.map(d => d.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  const handleSelectRow = (id) => {
+    setSelectedIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (!window.confirm(`Yakin ingin menghapus ${selectedIds.length} data terpilih?`)) return;
+    
+    setLoadingData(true);
+    const token = localStorage.getItem('adminToken');
+    
+    try {
+      await Promise.all(selectedIds.map(id => 
+        fetch(`http://localhost:3001/api/admin/datasets/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+      ));
+      setSelectedIds([]);
+      fetchDatasets();
+    } catch (err) {
+      alert('Gagal menghapus data: ' + err.message);
+    }
+    setLoadingData(false);
+  };
+
   const standardCategories = [
     'Geologika', 'Biologika', 'Etnografika', 'Arkeologika', 'Historika',
     'Numismatika', 'Filologika', 'Keramologika', 'Seni Rupa', 'Teknologika'
@@ -141,6 +179,32 @@ function Datasets() {
   const handleModalChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setModalLoading(true);
+    const fd = new FormData();
+    fd.append('gambar_file', file);
+    
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch('http://localhost:3001/api/admin/upload-image', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: fd
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Gagal upload gambar.');
+      
+      setFormData(prev => ({ ...prev, gambar: data.url }));
+    } catch (err) {
+      alert(`Error upload: ${err.message}`);
+    } finally {
+      setModalLoading(false);
+    }
   };
 
   const handleSaveManual = async (e) => {
@@ -308,6 +372,14 @@ function Datasets() {
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
+          {selectedIds.length > 0 && (
+            <button 
+              onClick={handleBulkDelete}
+              style={{ padding: '10px 20px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              Hapus Terpilih ({selectedIds.length})
+            </button>
+          )}
         </div>
         
         {loadingData ? (
@@ -317,12 +389,18 @@ function Datasets() {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
               <thead>
                 <tr style={{ backgroundColor: '#f4f6f9', borderBottom: '2px solid #dee2e6' }}>
+                  <th style={{ padding: '12px', textAlign: 'center', width: '40px' }}>
+                    <input 
+                      type="checkbox" 
+                      onChange={handleSelectAll}
+                      checked={datasets.length > 0 && selectedIds.length === datasets.length}
+                    />
+                  </th>
                   <th style={{ padding: '12px', textAlign: 'left' }}>ID</th>
                   <th style={{ padding: '12px', textAlign: 'center' }}>Gambar</th>
                   <th style={{ padding: '12px', textAlign: 'left' }}>No Registrasi</th>
                   <th style={{ padding: '12px', textAlign: 'left' }}>Nama Koleksi</th>
                   <th style={{ padding: '12px', textAlign: 'left' }}>Klasifikasi</th>
-                  <th style={{ padding: '12px', textAlign: 'left' }}>Sumber PDF</th>
                   <th style={{ padding: '12px', textAlign: 'center' }}>Aksi</th>
                 </tr>
               </thead>
@@ -334,6 +412,13 @@ function Datasets() {
                 ) : (
                   datasets.map((item) => (
                     <tr key={item.id} style={{ borderBottom: '1px solid #dee2e6' }}>
+                      <td style={{ padding: '12px', textAlign: 'center' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={selectedIds.includes(item.id)}
+                          onChange={() => handleSelectRow(item.id)}
+                        />
+                      </td>
                       <td style={{ padding: '12px' }}>{item.id}</td>
                       <td style={{ padding: '12px', textAlign: 'center' }}>
                         {item.gambar ? (
@@ -350,9 +435,6 @@ function Datasets() {
                         }}>
                           {item.klasifikasi}
                         </span>
-                      </td>
-                      <td style={{ padding: '12px', color: '#6c757d', fontSize: '12px' }}>
-                        {item.source_pdf || '-'}
                       </td>
                       <td style={{ padding: '12px', textAlign: 'center' }}>
                         <button 
@@ -433,15 +515,23 @@ function Datasets() {
                 </select>
               </div>
               <div style={{ marginBottom: '15px' }}>
-                <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>URL Gambar / Foto</label>
-                <input 
-                  type="text" 
-                  name="gambar"
-                  placeholder="Contoh: http://localhost:3001/images/etno/1.jpg"
-                  value={formData.gambar}
-                  onChange={handleModalChange}
-                  style={{ width: '100%', padding: '10px', boxSizing: 'border-box', border: '1px solid #ced4da', borderRadius: '4px' }}
-                />
+                <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Upload Gambar / Foto</label>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    style={{ flex: 1, padding: '6px', boxSizing: 'border-box', border: '1px solid #ced4da', borderRadius: '4px' }}
+                  />
+                  {formData.gambar && (
+                    <img src={formData.gambar} alt="Preview" style={{ height: '40px', width: '40px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ddd' }} />
+                  )}
+                </div>
+                {formData.gambar && (
+                  <div style={{ marginTop: '5px', fontSize: '12px', color: '#28a745' }}>
+                    ✓ Gambar tersimpan ({formData.gambar.split('/').pop()})
+                  </div>
+                )}
               </div>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Deskripsi Singkat</label>

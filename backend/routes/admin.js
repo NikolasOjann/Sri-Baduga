@@ -55,6 +55,42 @@ router.post('/login', (req, res) => {
 });
 
 // ==========================================================
+// Konfigurasi & Endpoint Upload Gambar (Manual)
+// ==========================================================
+const imgUploadDir = path.join(__dirname, '..', 'public', 'images', 'Uploads');
+if (!fs.existsSync(imgUploadDir)) {
+  fs.mkdirSync(imgUploadDir, { recursive: true });
+}
+
+const imgStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, imgUploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'manual-' + Date.now() + path.extname(file.originalname).toLowerCase());
+  }
+});
+
+const uploadImage = multer({
+  storage: imgStorage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Hanya file gambar yang diperbolehkan.'));
+    }
+  }
+});
+
+router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'File gambar tidak ditemukan.' });
+  }
+  const fileUrl = `http://localhost:3001/images/Uploads/${req.file.filename}`;
+  res.json({ url: fileUrl });
+});
+
+// ==========================================================
 // Endpoint: UPLOAD PDF & Ekstrak Data
 // Dilindungi oleh authenticateToken
 // ==========================================================
@@ -129,7 +165,7 @@ router.post('/datasets', authenticateToken, (req, res) => {
   }
 
   const data = loadCollections();
-  
+
   // Cari ID terbesar untuk increment
   let maxId = 0;
   data.forEach(item => {
@@ -173,14 +209,14 @@ router.post('/datasets', authenticateToken, (req, res) => {
 router.put('/datasets/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
   const { nama_koleksi, no_registrasi, klasifikasi, deskripsi, gambar } = req.body;
-  
+
   if (!nama_koleksi || !no_registrasi || !klasifikasi) {
     return res.status(400).json({ error: 'Nama Koleksi, No Registrasi, dan Klasifikasi wajib diisi.' });
   }
 
   const data = loadCollections();
   const index = data.findIndex(item => String(item.id) === String(id));
-  
+
   if (index === -1) {
     return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
   }
@@ -202,7 +238,7 @@ router.put('/datasets/:id', authenticateToken, (req, res) => {
 router.delete('/datasets/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
   const data = loadCollections();
-  
+
   const index = data.findIndex(item => String(item.id) === String(id));
   if (index === -1) {
     return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
