@@ -232,12 +232,12 @@ const InteractiveView = () => {
           } else {
             navigate('/catalog');
           }
-        }} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
+        }} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
           <ArrowLeft size={16} /> {t('back')}
         </button>
 
         {/* Mode Toggle Button */}
-        <div style={{ display: 'flex', backgroundColor: 'rgba(255,255,255,0.45)', backdropFilter: 'blur(10px)', borderRadius: '30px', padding: '3px', border: '1px solid rgba(0,0,0,0.1)' }}>
+        <div style={{ display: 'flex', backgroundColor: '#D2B48C', backdropFilter: 'blur(10px)', borderRadius: '30px', padding: '3px', border: '1px solid rgba(0,0,0,0.1)' }}>
           <button
             onClick={() => setViewMode('image')}
             style={{
@@ -275,7 +275,7 @@ const InteractiveView = () => {
         </div>
 
         {/* Language Toggle Button */}
-        <button onClick={toggleLanguage} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', color: '#1a1a1a', backgroundColor: 'rgba(255,255,255,0.45)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '50%', cursor: 'pointer', fontWeight: 600, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.45)'}>
+        <button onClick={toggleLanguage} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', color: '#1a1a1a', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '50%', cursor: 'pointer', fontWeight: 600, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
           {language === 'id' ? 'EN' : 'ID'}
         </button>
       </div>
@@ -284,19 +284,19 @@ const InteractiveView = () => {
 
       {/* Slide Arrows */}
       {categoryItems.length > 0 && currentIndex > 0 && (
-        <button onClick={handlePrevItem} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.9)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'}>
+        <button onClick={handlePrevItem} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
           <ChevronLeft size={24} color="#1a1a1a" />
         </button>
       )}
       {categoryItems.length > 0 && currentIndex < categoryItems.length - 1 && (
-        <button onClick={handleNextItem} style={{ position: 'absolute', left: 'calc(55% - 65px)', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.7)', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.9)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.7)'}>
+        <button onClick={handleNextItem} style={{ position: 'absolute', left: 'calc(55% - 65px)', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
           <ChevronRight size={24} color="#1a1a1a" />
         </button>
       )}
 
       {/* Progress/Thumbnails Bar (Bottom of Image) */}
       {categoryItems.length > 0 && (
-        <div className="thumbnail-bar" style={{ position: 'absolute', transform: 'translateX(-50%)', zIndex: 60, display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.6rem 1.2rem', backgroundColor: 'rgba(255,255,255,0.5)', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.1)', overflowX: 'auto' }}>
+        <div className="thumbnail-bar" style={{ position: 'absolute', transform: 'translateX(-50%)', zIndex: 60, display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.6rem 1.2rem', backgroundColor: '#D2B48C', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.1)', overflowX: 'auto' }}>
           {categoryItems.slice(Math.max(0, currentIndex - 5), currentIndex + 6).map((art, idx) => {
             const isSelected = String(art.id) === String(id);
             return (
@@ -370,7 +370,7 @@ const InteractiveView = () => {
 
                 {/* Image Zoom Controls Overlay */}
                 {activeArtifact.gambar && (
-                  <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: 'rgba(255,255,255,0.6)', backdropFilter: 'blur(10px)', padding: '0.4rem', borderRadius: '25px', border: '1px solid rgba(0,0,0,0.1)', zIndex: 10 }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: '#D2B48C', backdropFilter: 'blur(10px)', padding: '0.4rem', borderRadius: '25px', border: '1px solid rgba(0,0,0,0.1)', zIndex: 10 }}>
                     <button onClick={() => setImageScale(s => Math.min(s + 0.3, 3))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom In"><ZoomIn size={16} /></button>
                     <button onClick={() => setImageScale(s => Math.max(s - 0.3, 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom Out"><ZoomOut size={16} /></button>
                     <button onClick={() => setImageScale(1)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Reset Zoom"><RotateCcw size={16} /></button>
