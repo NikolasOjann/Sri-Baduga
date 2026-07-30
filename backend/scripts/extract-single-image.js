@@ -14,8 +14,21 @@ const PDFIMAGES_CMD = 'D:\\poppler\\Library\\bin\\pdfimages.exe';
 const PYTHON_CMD = 'C:\\laragon\\bin\\python\\python-3.10\\python.exe';
 const REMBG_SCRIPT = path.join(__dirname, 'remove-single-bg.py');
 const COLLECTIONS_FILE = path.join(__dirname, '..', 'data', 'collections.json');
-const IMAGES_DIR = path.join(__dirname, '..', 'public', 'images', 'Uploads');
-const PUBLIC_BASE_URL = 'http://localhost:3001/images/Uploads';
+const mapKlasifikasiToFolder = (klasifikasi) => {
+  if (!klasifikasi) return 'Uploads';
+  const k = klasifikasi.toLowerCase();
+  if (k.includes('arkeo')) return 'arkeo';
+  if (k.includes('etno')) return 'etno';
+  if (k.includes('geo')) return 'geo';
+  if (k.includes('bio')) return 'bio';
+  if (k.includes('histo')) return 'histo';
+  if (k.includes('numis')) return 'numis';
+  if (k.includes('filo')) return 'filo';
+  if (k.includes('keramo')) return 'keramo';
+  if (k.includes('seni')) return 'senirupa';
+  if (k.includes('tekno')) return 'tekno';
+  return 'Uploads';
+};
 
 async function main() {
   const pdfPath = process.argv[2];
@@ -26,9 +39,36 @@ async function main() {
     process.exit(1);
   }
 
-  if (!fs.existsSync(IMAGES_DIR)) {
-    fs.mkdirSync(IMAGES_DIR, { recursive: true });
+  const raw = fs.readFileSync(COLLECTIONS_FILE, 'utf-8');
+  const collections = JSON.parse(raw);
+  
+  const itemIndex = collections.findIndex(c => String(c.id) === String(artifactId));
+  if (itemIndex === -1) {
+    console.error(`[ERROR] Koleksi dengan ID ${artifactId} tidak ditemukan.`);
+    process.exit(1);
   }
+  
+  const item = collections[itemIndex];
+  const folderName = mapKlasifikasiToFolder(item.klasifikasi);
+  const targetDir = path.join(__dirname, '..', 'public', 'images', folderName);
+  
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+
+  // Hitung nomor urut file berdasarkan isi folder
+  let maxSeq = 0;
+  const files = fs.readdirSync(targetDir);
+  files.forEach(f => {
+    const match = f.match(new RegExp(`^${folderName}-(\\d+)\\.(png|jpg|jpeg)$`, 'i'));
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (num > maxSeq) maxSeq = num;
+    }
+  });
+  const nextSeq = String(maxSeq + 1).padStart(3, '0');
+  const finalPngName = `${folderName}-${nextSeq}.png`;
+  const finalPngPath = path.join(targetDir, finalPngName);
 
   const baseName = path.basename(pdfPath, path.extname(pdfPath));
   const safePrefix = baseName.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase() + '_' + Date.now();
@@ -67,27 +107,16 @@ async function main() {
     }
 
     // 3. Panggil skrip Python untuk hapus background
-    const finalPngName = `${safePrefix}.png`;
-    const finalPngPath = path.join(IMAGES_DIR, finalPngName);
-    
-    console.log(`[NODE] Memanggil Python AI Remove BG...`);
+    console.log(`[NODE] Memanggil Python AI Remove BG (Folder: ${folderName}, File: ${finalPngName})...`);
     execSync(`"${PYTHON_CMD}" "${REMBG_SCRIPT}" "${bestFile}" "${finalPngPath}"`, { stdio: 'inherit' });
 
     // 4. Update collections.json
     if (fs.existsSync(finalPngPath)) {
-      const publicUrl = `${PUBLIC_BASE_URL}/${finalPngName}`;
+      const publicUrl = `http://localhost:3001/images/${folderName}/${finalPngName}`;
       
-      const raw = fs.readFileSync(COLLECTIONS_FILE, 'utf-8');
-      const collections = JSON.parse(raw);
-      
-      const itemIndex = collections.findIndex(c => String(c.id) === String(artifactId));
-      if (itemIndex !== -1) {
-        collections[itemIndex].gambar = publicUrl;
-        fs.writeFileSync(COLLECTIONS_FILE, JSON.stringify(collections, null, 2), 'utf-8');
-        console.log(`[NODE] Sukses update koleksi ID ${artifactId} dengan gambar: ${publicUrl}`);
-      } else {
-        console.warn(`[WARN] Koleksi dengan ID ${artifactId} tidak ditemukan di database.`);
-      }
+      collections[itemIndex].gambar = publicUrl;
+      fs.writeFileSync(COLLECTIONS_FILE, JSON.stringify(collections, null, 2), 'utf-8');
+      console.log(`[NODE] Sukses update koleksi ID ${artifactId} dengan gambar: ${publicUrl}`);
     }
     
   } catch (err) {

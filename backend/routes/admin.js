@@ -82,12 +82,76 @@ const uploadImage = multer({
   }
 });
 
+const mapKlasifikasiToFolder = (klasifikasi) => {
+  if (!klasifikasi) return 'Uploads';
+  const k = klasifikasi.toLowerCase();
+  if (k.includes('arkeo')) return 'arkeo';
+  if (k.includes('etno')) return 'etno';
+  if (k.includes('geo')) return 'geo';
+  if (k.includes('bio')) return 'bio';
+  if (k.includes('histo')) return 'histo';
+  if (k.includes('numis')) return 'numis';
+  if (k.includes('filo')) return 'filo';
+  if (k.includes('keramo')) return 'keramo';
+  if (k.includes('seni')) return 'senirupa';
+  if (k.includes('tekno')) return 'tekno';
+  return 'Uploads';
+};
+
 router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'File gambar tidak ditemukan.' });
   }
-  const fileUrl = `http://localhost:3001/images/Uploads/${req.file.filename}`;
-  res.json({ url: fileUrl });
+  
+  const originalPath = req.file.path;
+  
+  // Tentukan folder tujuan berdasarkan klasifikasi
+  const folderName = mapKlasifikasiToFolder(req.body.klasifikasi);
+  const targetDir = path.join(__dirname, '..', 'public', 'images', folderName);
+  
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+
+  // Hitung nomor urut file berdasarkan isi folder
+  let maxSeq = 0;
+  const files = fs.readdirSync(targetDir);
+  files.forEach(f => {
+    const match = f.match(new RegExp(`^${folderName}-(\\d+)\\.(png|jpg|jpeg)$`, 'i'));
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (num > maxSeq) maxSeq = num;
+    }
+  });
+  const nextSeq = String(maxSeq + 1).padStart(3, '0');
+  
+  const finalFilename = `${folderName}-${nextSeq}.png`;
+  const finalPath = path.join(targetDir, finalFilename);
+  const fallbackFilename = `${folderName}-${nextSeq}${path.extname(req.file.originalname).toLowerCase()}`;
+  const fallbackPath = path.join(targetDir, fallbackFilename);
+  
+  const PYTHON_CMD = 'C:\\laragon\\bin\\python\\python-3.10\\python.exe';
+  const REMBG_SCRIPT = path.join(__dirname, '..', 'scripts', 'remove-single-bg.py');
+
+  try {
+    console.log(`[Admin Upload] Memanggil Python AI Remove BG untuk upload manual (Folder: ${folderName}, File: ${finalFilename})...`);
+    // Tunggu proses hapus background selesai secara sinkronus agar bisa return URL
+    const { execSync } = require('child_process');
+    execSync(`"${PYTHON_CMD}" "${REMBG_SCRIPT}" "${originalPath}" "${finalPath}"`, { stdio: 'pipe' });
+    
+    // Opsional: Hapus file asli yang belum dihapus backgroundnya untuk menghemat storage
+    if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
+
+    const fileUrl = `http://localhost:3001/images/${folderName}/${finalFilename}`;
+    res.json({ url: fileUrl });
+  } catch (err) {
+    console.error(`[ERROR] Gagal hapus background: ${err.message}`);
+    // Fallback: Jika script AI gagal, pindahkan gambar asli ke folder tujuan
+    if (fs.existsSync(originalPath)) fs.renameSync(originalPath, fallbackPath);
+    
+    const fileUrl = `http://localhost:3001/images/${folderName}/${fallbackFilename}`;
+    res.json({ url: fileUrl });
+  }
 });
 
 // ==========================================================
@@ -196,7 +260,7 @@ router.post('/datasets', authenticateToken, (req, res) => {
     tanggal_input: new Date().toISOString()
   };
 
-  data.unshift(newItem); // Tambahkan ke paling atas
+  data.push(newItem); // Tambahkan ke paling bawah
   saveCollections(data);
 
   console.log(`[Admin] Artefak dibuat manual: ${nama_koleksi} (ID: ${newItem.id})`);

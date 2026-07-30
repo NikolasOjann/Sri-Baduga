@@ -221,18 +221,6 @@ const Catalog = () => {
             <X size={40} />
           </button>
 
-          {/* Title */}
-          <h1 style={{
-            fontFamily: 'Kalnia',
-            fontSize: '3rem',
-            fontWeight: 'bold',
-            marginBottom: '1rem',
-            textAlign: 'center',
-            marginTop: '2rem'
-          }}>
-            Jelajahi Museum Sri Baduga Bersama NyAI
-          </h1>
-
           {/* Subtitle */}
           <p style={{
             maxWidth: '650px',

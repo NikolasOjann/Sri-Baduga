@@ -155,7 +155,7 @@ function Datasets() {
   const openCreateModal = () => {
     setIsEditMode(false);
     setEditId(null);
-    setFormData({ nama_koleksi: '', no_registrasi: '', klasifikasi: 'Geologika', deskripsi: '', gambar: '' });
+    setFormData({ nama_koleksi: '', no_registrasi: '', klasifikasi: '', deskripsi: '', gambar: '' });
     setIsModalOpen(true);
   };
 
@@ -165,7 +165,7 @@ function Datasets() {
     setFormData({ 
       nama_koleksi: item.nama_koleksi || '', 
       no_registrasi: item.no_registrasi || '', 
-      klasifikasi: item.klasifikasi || 'Geologika', 
+      klasifikasi: item.klasifikasi || '', 
       deskripsi: item.deskripsi || '',
       gambar: item.gambar || ''
     });
@@ -182,12 +182,18 @@ function Datasets() {
   };
 
   const handleImageUpload = async (e) => {
+    if (!formData.klasifikasi) {
+      alert('Silakan pilih Klasifikasi terlebih dahulu sebelum mengunggah gambar!');
+      e.target.value = '';
+      return;
+    }
     const file = e.target.files[0];
     if (!file) return;
 
     setModalLoading(true);
     const fd = new FormData();
     fd.append('gambar_file', file);
+    fd.append('klasifikasi', formData.klasifikasi);
     
     try {
       const token = localStorage.getItem('adminToken');
@@ -507,8 +513,10 @@ function Datasets() {
                   name="klasifikasi"
                   value={formData.klasifikasi}
                   onChange={handleModalChange}
+                  required
                   style={{ width: '100%', padding: '10px', boxSizing: 'border-box', border: '1px solid #ced4da', borderRadius: '4px' }}
                 >
+                  <option value="" disabled>-- Pilih Klasifikasi --</option>
                   {standardCategories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
