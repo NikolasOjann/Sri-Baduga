@@ -23,7 +23,7 @@ const Catalog = () => {
   const [counts, setCounts] = useState({});
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/collections/stats/counts')
+    fetch(('http://' + window.location.hostname + ':3001/api/collections/stats/counts'))
       .then(res => res.json())
       .then(data => setCounts(data || {}))
       .catch(() => setCounts({}));

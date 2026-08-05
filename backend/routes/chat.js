@@ -77,8 +77,14 @@ function checkMuseumInfo(message) {
   if (msg.includes('telepon') || msg.includes('kontak') || msg.includes('hubungi') || msg.includes('telp')) {
     return MUSEUM_INFO.telepon;
   }
-  if (msg.includes('sejarah museum') || msg.includes('tentang museum') || msg.includes('profil museum')) {
+  if (msg.includes('sejarah museum') || msg.includes('tentang museum') || msg.includes('profil museum') || msg.includes('siapa sri baduga')) {
     return MUSEUM_INFO.sejarah;
+  }
+  if (msg.includes('apa itu etnografika') || msg.includes('arti etnografika')) {
+    return 'Etnografika adalah koleksi benda-benda budaya yang menggambarkan identitas, adat istiadat, dan tradisi suatu kelompok etnis atau masyarakat. Di Museum Sri Baduga, koleksi ini menampilkan kekayaan budaya masyarakat Jawa Barat masa lalu hingga masa kini.';
+  }
+  if (msg.includes('paling unik') || msg.includes('koleksi unik')) {
+    return 'Setiap koleksi di Museum Sri Baduga memiliki keunikannya tersendiri! Namun, beberapa yang sering menjadi favorit pengunjung adalah replika Prasasti, koleksi Mahkota, serta berbagai naskah kuno peninggalan masa kerajaan di bumi Pasundan.';
   }
 
   return null;
@@ -96,13 +102,19 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
   }
 
-  // 1. Cek pertanyaan umum museum (jam buka, tiket, alamat, dsb)
-  const museumReply = checkMuseumInfo(message);
-  if (museumReply) {
-    return res.json({ reply: museumReply, artifacts: [], source: 'museum_faq' });
+  // Cek apakah ini pertanyaan umum tentang museum (info museum hardcoded / saran pertanyaan)
+  const museumInfoReply = checkMuseumInfo(message);
+  if (museumInfoReply) {
+    return res.json({
+      reply: museumInfoReply,
+      artifacts: [],
+      session_id: session_id || 'default_session',
+      source: 'local_fuse',
+    });
   }
 
-  // 2. Coba hubungi Python RAG & Ollama Service (Submodule llm-museum di port 8000)
+  // Coba hubungi Python RAG & Ollama Service (Submodule llm-museum di port 8000)
+
   try {
     const ragResponse = await fetch('http://127.0.0.1:8000/chat', {
       method: 'POST',
@@ -177,6 +189,7 @@ router.post('/', async (req, res) => {
         session_id: ragData.session_id || 'default_session',
         source: 'ollama_rag',
       });
+    } else {
       // Jika RAG merespons status non-ok, kembalikan pesan error.
       console.log(`⚠️ [RAG Service] Python RAG merespons status non-ok: ${ragResponse.status}`);
       return res.status(500).json({

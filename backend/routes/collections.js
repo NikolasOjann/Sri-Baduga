@@ -62,7 +62,15 @@ router.get('/', (req, res) => {
   const pageNum  = parseInt(page);
   const limitNum = parseInt(limit);
   const start    = (pageNum - 1) * limitNum;
-  const paginated = data.slice(start, start + limitNum);
+  let paginated = data.slice(start, start + limitNum);
+
+  // Dynamically rewrite relative URLs using the request's hostname
+  const base = `${req.protocol}://${req.hostname}:3001`;
+  paginated = paginated.map(item => ({
+    ...item,
+    gambar: (item.gambar && item.gambar.startsWith('/')) ? base + item.gambar : item.gambar,
+    model_3d: (item.model_3d && item.model_3d.startsWith('/')) ? base + item.model_3d : item.model_3d
+  }));
 
   res.json({
     total,
@@ -94,11 +102,18 @@ router.get('/kategori/:nama', (req, res) => {
   const data = loadCollections();
   const { nama } = req.params;
 
-  const filtered = data.filter(item => {
+  let filtered = data.filter(item => {
     const k = (item.klasifikasi || '').toLowerCase();
     const target = nama.toLowerCase();
     return k === target || (target === 'etnografika' && k === 'etnografi');
   });
+
+  const base = `${req.protocol}://${req.hostname}:3001`;
+  filtered = filtered.map(item => ({
+    ...item,
+    gambar: (item.gambar && item.gambar.startsWith('/')) ? base + item.gambar : item.gambar,
+    model_3d: (item.model_3d && item.model_3d.startsWith('/')) ? base + item.model_3d : item.model_3d
+  }));
 
   res.json({
     kategori: nama,
@@ -120,6 +135,10 @@ router.get('/:id', (req, res) => {
   if (!item) {
     return res.status(404).json({ error: `Artefak dengan id ${paramId} tidak ditemukan.` });
   }
+
+  const base = `${req.protocol}://${req.hostname}:3001`;
+  if (item.gambar && item.gambar.startsWith('/')) item.gambar = base + item.gambar;
+  if (item.model_3d && item.model_3d.startsWith('/')) item.model_3d = base + item.model_3d;
 
   res.json(item);
 });

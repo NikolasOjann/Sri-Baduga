@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Loader, Volume2, VolumeX, Mic } from 'lucide-react';
+import { MessageCircle, X, Send, Loader, Volume2, VolumeX, Mic, Trash2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTTS } from '../hooks/useTTS';
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'http://' + window.location.hostname + ':3001';
 
 const Assistant = () => {
   const [isOpen, setIsOpen]   = useState(false);
@@ -21,6 +21,20 @@ const Assistant = () => {
 
   const [messages, setMessages] = useState([]);
   const [input, setInput]       = useState('');
+  const [sessionId, setSessionId] = useState(() => Math.random().toString(36).substring(7));
+
+  const handleReset = () => {
+    setMessages([{ text: t('assistantGreeting'), sender: 'nyai' }]);
+    setSessionId(Math.random().toString(36).substring(7));
+    lastSpokenIndexRef.current = -1; // Reset TTS index
+  };
+
+  const suggestedChips = [
+    "Apa itu Etnografika?",
+    "Koleksi paling unik?",
+    "Kapan museum buka?",
+    "Sejarah museum sribaduga"
+  ];
 
   // Update greeting when language changes or initially
   useEffect(() => {
@@ -112,7 +126,14 @@ const Assistant = () => {
       // Hanya speak pesan dari nyai (dan pastikan pesan pada index ini belum pernah dibacakan)
       if (lastMsg.sender === "nyai" && lastSpokenIndexRef.current !== lastIndex) {
         lastSpokenIndexRef.current = lastIndex;
-        speak(lastMsg.text, language);
+        
+        // Bersihkan teks dari Markdown sebelum dibacakan
+        const cleanText = lastMsg.text
+          .replace(/[*#_`~]/g, "") 
+          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") 
+          .replace(/\n+/g, ". ");
+          
+        speak(cleanText, language);
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -138,7 +159,10 @@ const Assistant = () => {
       const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({ 
+          message: text,
+          session_id: sessionId
+        }),
       });
       const data = await res.json();
       setMessages(prev => [...prev, { 
@@ -173,7 +197,18 @@ const Assistant = () => {
     setIsListening(false);
   };
 
+  const cancelListening = () => {
+    if (recognitionRef.current) {
+      // abort() langsung membatalkan tanpa memicu onresult
+      recognitionRef.current.abort();
+    }
+    setIsListening(false);
+  };
+
   const startListening = () => {
+    // Hentikan suara AI yang sedang berjalan agar mikrofon tidak merekam suara AI
+    stop();
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert('Maaf, browser Anda tidak mendukung fitur suara (Gunakan Chrome/Edge terbaru).');
@@ -237,6 +272,14 @@ const Assistant = () => {
                 <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 500, color: '#fff' }}>{t('assistantTitle')}</h3>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {/* Tombol Sapu Bersih */}
+                <button
+                  onClick={handleReset}
+                  title="Bersihkan Obrolan"
+                  style={{ background: 'none', color: '#a3a3a3', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '4px' }}
+                >
+                  <Trash2 size={16} />
+                </button>
                 {/* Tombol Mute/Unmute */}
                 <button
                   onClick={() => {
@@ -286,7 +329,13 @@ const Assistant = () => {
 
                   {msg.sender === 'nyai' && (
                     <button
-                      onClick={() => speak(msg.text)}
+                      onClick={() => {
+                        const cleanText = msg.text
+                          .replace(/[*#_`~]/g, "") 
+                          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") 
+                          .replace(/\n+/g, ". ");
+                        speak(cleanText);
+                      }}
                       title="Ulangi Audio"
                       style={{
                         background: 'rgba(255,255,255,0.05)',
@@ -350,6 +399,34 @@ const Assistant = () => {
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Suggested Chips */}
+            {messages.length <= 1 && (
+              <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '0 15px 15px 15px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                {suggestedChips.map((chip, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => sendMessageToAPI(chip)}
+                    disabled={isSending}
+                    style={{
+                      background: 'rgba(194, 178, 128, 0.15)',
+                      border: '1px solid rgba(194, 178, 128, 0.4)',
+                      color: '#C2B280',
+                      padding: '6px 12px',
+                      borderRadius: '16px',
+                      fontSize: '0.8rem',
+                      cursor: isSending ? 'not-allowed' : 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => { if(!isSending) e.currentTarget.style.background = 'rgba(194, 178, 128, 0.3)' }}
+                    onMouseLeave={(e) => { if(!isSending) e.currentTarget.style.background = 'rgba(194, 178, 128, 0.15)' }}
+                  >
+                    {chip}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <form onSubmit={handleSend} style={{ display: 'flex', padding: '15px', borderTop: '1px solid rgba(255,255,255,0.1)', backgroundColor: 'rgba(0,0,0,0.2)', gap: '10px' }}>
               <input
                 type="text"
@@ -369,11 +446,12 @@ const Assistant = () => {
                   opacity: isSending ? 0.5 : 1,
                 }}
               />
+
               <button
                 type="button"
                 onClick={isListening ? stopListening : startListening}
                 disabled={isSending}
-                title={isListening ? "Berhenti Suara" : "Gunakan Suara"}
+                title={isListening ? "Kirim Suara" : "Gunakan Suara"}
                 style={{
                   background: isListening ? '#ef4444' : 'rgba(255,255,255,0.05)',
                   color: isListening ? '#fff' : '#a3a3a3',
@@ -397,25 +475,46 @@ const Assistant = () => {
                   <Mic size={16} />
                 )}
               </button>
-              <button
-                type="submit"
-                disabled={isSending || !input.trim()}
-                style={{
-                  background: isSending ? '#6b7280' : '#C2B280',
-                  color: '#fff', border: 'none', borderRadius: '50%',
-                  width: '40px', height: '40px', flexShrink: 0,
-                  display: 'flex', justifyContent: 'center', alignItems: 'center',
-                  cursor: isSending ? 'not-allowed' : 'pointer',
-                  transition: 'background 0.3s',
-                }}
-                onMouseEnter={(e) => { if (!isSending) e.currentTarget.style.background = '#AD9C69'; }}
-                onMouseLeave={(e) => { if (!isSending) e.currentTarget.style.background = '#C2B280'; }}
-              >
-                {isSending
-                  ? <Loader size={16} className="spin" />
-                  : <Send size={16} style={{ marginLeft: '2px' }} />
-                }
-              </button>
+
+              {isListening ? (
+                <button
+                  type="button"
+                  onClick={cancelListening}
+                  title="Batal Bicara"
+                  style={{
+                    background: 'rgba(239, 68, 68, 0.2)',
+                    color: '#ef4444',
+                    border: '1px solid rgba(239, 68, 68, 0.5)',
+                    borderRadius: '50%',
+                    width: '40px', height: '40px', flexShrink: 0,
+                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s'
+                  }}
+                >
+                  <X size={16} />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSending || !input.trim()}
+                  style={{
+                    background: isSending ? '#6b7280' : '#C2B280',
+                    color: '#fff', border: 'none', borderRadius: '50%',
+                    width: '40px', height: '40px', flexShrink: 0,
+                    display: 'flex', justifyContent: 'center', alignItems: 'center',
+                    cursor: isSending ? 'not-allowed' : 'pointer',
+                    transition: 'background 0.3s',
+                  }}
+                  onMouseEnter={(e) => { if (!isSending) e.currentTarget.style.background = '#AD9C69'; }}
+                  onMouseLeave={(e) => { if (!isSending) e.currentTarget.style.background = '#C2B280'; }}
+                >
+                  {isSending
+                    ? <Loader size={16} className="spin" />
+                    : <Send size={16} style={{ marginLeft: '2px' }} />
+                  }
+                </button>
+              )}
             </form>
           </motion.div>
         )}

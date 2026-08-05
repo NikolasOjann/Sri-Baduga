@@ -46,7 +46,7 @@ class DatabaseManager:
     def vector_search(self, query, k=10):
         cache_key = f"{query.lower().strip()}|{k}"
         if cache_key in self._vector_cache:
-            print("⚡ [Cache HIT] vector_search:", query)
+            print("[Cache HIT] vector_search:", query)
             return self._vector_cache[cache_key]
         result = self.vectorstore.mmr_search(query=query, k=k)
         # Batasi cache agar tidak tumbuh tak terbatas
@@ -65,7 +65,7 @@ class DatabaseManager:
 
         # Kembalikan dari cache jika ada
         if keyword in self._metadata_cache:
-            print("⚡ [Cache HIT] metadata_search:", keyword)
+            print("[Cache HIT] metadata_search:", keyword)
             return self._metadata_cache[keyword]
 
         result = []

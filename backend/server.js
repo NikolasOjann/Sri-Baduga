@@ -24,6 +24,25 @@ app.use('/api/collections', require('./routes/collections'));
 app.use('/api/chat',        require('./routes/chat'));
 app.use('/api/admin',       require('./routes/admin'));
 
+const httpCore = require('http');
+
+// TTS Proxy (Bypass Firewall)
+app.get('/api/tts/speak', (req, res) => {
+  const { text, lang } = req.query;
+  // Teruskan request dari frontend (lewat port 3001) ke RAG service (port 8000)
+  const ttsUrl = `http://127.0.0.1:8000/tts/speak?text=${encodeURIComponent(text || '')}&lang=${lang || 'id'}`;
+  
+  httpCore.get(ttsUrl, (response) => {
+    res.set({
+      'Content-Type': 'audio/mpeg',
+      'Transfer-Encoding': 'chunked'
+    });
+    response.pipe(res);
+  }).on('error', (error) => {
+    res.status(500).json({ error: 'Gagal mengambil audio dari RAG Service' });
+  });
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

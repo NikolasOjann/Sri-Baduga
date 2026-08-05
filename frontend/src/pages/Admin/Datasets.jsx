@@ -38,7 +38,7 @@ function Datasets() {
   const fetchDatasets = async () => {
     setLoadingData(true);
     try {
-      let url = 'http://localhost:3001/api/collections?limit=100';
+      let url = ('http://' + window.location.hostname + ':3001/api/collections?limit=100');
       if (searchTerm) url += `&search=${encodeURIComponent(searchTerm)}`;
       if (filterKlasifikasi) url += `&klasifikasi=${encodeURIComponent(filterKlasifikasi)}`;
 
@@ -93,7 +93,7 @@ function Datasets() {
     fd.append('tanggal_upload', new Date().toISOString());
 
     try {
-      const res = await fetch('http://localhost:3001/api/admin/datasets/upload', {
+      const res = await fetch(('http://' + window.location.hostname + ':3001/api/admin/datasets/upload'), {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: fd
@@ -148,8 +148,8 @@ function Datasets() {
     setModalLoading(true);
     const token = localStorage.getItem('adminToken');
     const url = isEditMode 
-      ? `http://localhost:3001/api/admin/datasets/${editId}` 
-      : 'http://localhost:3001/api/admin/datasets';
+      ? `http://${window.location.hostname}:3001/api/admin/datasets/${editId}` 
+      : ('http://' + window.location.hostname + ':3001/api/admin/datasets');
     const method = isEditMode ? 'PUT' : 'POST';
 
     try {
@@ -186,7 +186,7 @@ function Datasets() {
     }
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`http://localhost:3001/api/admin/datasets/${id}`, {
+      const res = await fetch(`http://${window.location.hostname}:3001/api/admin/datasets/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -437,7 +437,7 @@ function Datasets() {
                 <input 
                   type="text" 
                   name="gambar"
-                  placeholder="Contoh: http://localhost:3001/images/etno/1.jpg"
+                  placeholder="Contoh: http://${window.location.hostname}:3001/images/etno/1.jpg"
                   value={formData.gambar}
                   onChange={handleModalChange}
                   style={{ width: '100%', padding: '10px', boxSizing: 'border-box', border: '1px solid #ced4da', borderRadius: '4px' }}

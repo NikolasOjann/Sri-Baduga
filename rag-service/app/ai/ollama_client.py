@@ -22,10 +22,10 @@ class OllamaClient:
         
         # Gunakan prompt sebagai cache key
         if prompt in self._cache:
-            print("⚡ [Ollama Cache HIT]")
+            print("[Ollama Cache HIT]")
             return self._cache[prompt]
 
-        print("⚡ [Ollama MISS] Generating response...")
+        print("[Ollama MISS] Generating response...")
         response = self.client.chat(
 
             model=self.model,
