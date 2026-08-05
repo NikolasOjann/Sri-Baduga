@@ -523,17 +523,6 @@ function Datasets() {
                 </select>
               </div>
               <div style={{ marginBottom: '15px' }}>
-<<<<<<< HEAD
-                <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>URL Gambar / Foto</label>
-                <input 
-                  type="text" 
-                  name="gambar"
-                  placeholder="Contoh: http://${window.location.hostname}:3001/images/etno/1.jpg"
-                  value={formData.gambar}
-                  onChange={handleModalChange}
-                  style={{ width: '100%', padding: '10px', boxSizing: 'border-box', border: '1px solid #ced4da', borderRadius: '4px' }}
-                />
-=======
                 <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Upload Gambar / Foto</label>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <input 
@@ -551,7 +540,6 @@ function Datasets() {
                     ✓ Gambar tersimpan ({formData.gambar.split('/').pop()})
                   </div>
                 )}
->>>>>>> b468aa4d096db25f52df13c49f30fecadfda9878
               </div>
               <div style={{ marginBottom: '20px' }}>
                 <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '5px' }}>Deskripsi Singkat</label>

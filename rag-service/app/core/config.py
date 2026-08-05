@@ -30,7 +30,7 @@ class Settings:
         "chroma_db/vector_db"
     )
 
-    DATASET = BASE_DIR / "data" / "museum_collection.json"
+    DATASET = BASE_DIR.parent / "backend" / "data" / "collections.json"
 
     CHUNK_SIZE = int(
         os.getenv(
