@@ -23,7 +23,8 @@ function loadCollections() {
   }
   try {
     const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-    return JSON.parse(raw);
+    const data = JSON.parse(raw);
+    return data.filter(item => item && item.gambar && typeof item.gambar === 'string' && item.gambar.trim() !== '' && item.gambar !== 'null');
   } catch {
     return [];
   }

@@ -25,7 +25,9 @@ const MUSEUM_INFO = {
 function loadCollections() {
   if (!fs.existsSync(DATA_FILE)) return [];
   try {
-    return JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+    const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+    const data = JSON.parse(raw);
+    return data.filter(item => item && item.gambar && typeof item.gambar === 'string' && item.gambar.trim() !== '' && item.gambar !== 'null');
   } catch {
     return [];
   }
@@ -154,11 +156,12 @@ router.post('/', async (req, res) => {
             nama_koleksi: match.nama_koleksi,
             klasifikasi: match.klasifikasi,
             no_inventarisasi: match.no_inventarisasi,
-          } : {
-            nama_koleksi: s.name,
-            klasifikasi: s.category,
-          };
-        });
+            gambar: match.gambar,
+          } : null;
+        }).filter(Boolean);
+
+        // Filter hanya tampilkan koleksi yang memiliki foto (sesuai aturan tampilan web)
+        const validArtifacts = rawArtifacts.filter(a => a.gambar && typeof a.gambar === 'string' && a.gambar.trim() !== '' && a.gambar !== 'null');
 
         // Cek apakah ini mode "pilihan" (nama berbeda) atau "detail" (nama sama, inventory beda)
         const uniqueSourceNames = new Set(ragData.sources.map(s => s.name));
@@ -167,7 +170,7 @@ router.post('/', async (req, res) => {
         if (isChoosingMode) {
           // Mode clarification: deduplikasi by nama agar hanya tampil 1 kartu per nama
           const seenNames = new Set();
-          artifacts = rawArtifacts.filter(a => {
+          artifacts = validArtifacts.filter(a => {
             const key = a.nama_koleksi?.toLowerCase();
             if (!key || seenNames.has(key)) return false;
             seenNames.add(key);
@@ -176,7 +179,7 @@ router.post('/', async (req, res) => {
           console.log('🗂️  [Mode: Pilihan] Deduplikasi aktif');
         } else {
           // Mode post-selection: tampilkan semua item individual (beda no. inventaris)
-          artifacts = rawArtifacts;
+          artifacts = validArtifacts;
           console.log('📋 [Mode: Detail] Semua item ditampilkan');
         }
 

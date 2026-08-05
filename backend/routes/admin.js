@@ -55,6 +55,106 @@ router.post('/login', (req, res) => {
 });
 
 // ==========================================================
+// Konfigurasi & Endpoint Upload Gambar (Manual)
+// ==========================================================
+const imgUploadDir = path.join(__dirname, '..', 'public', 'images', 'Uploads');
+if (!fs.existsSync(imgUploadDir)) {
+  fs.mkdirSync(imgUploadDir, { recursive: true });
+}
+
+const imgStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, imgUploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'manual-' + Date.now() + path.extname(file.originalname).toLowerCase());
+  }
+});
+
+const uploadImage = multer({
+  storage: imgStorage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Hanya file gambar yang diperbolehkan.'));
+    }
+  }
+});
+
+const mapKlasifikasiToFolder = (klasifikasi) => {
+  if (!klasifikasi) return 'Uploads';
+  const k = klasifikasi.toLowerCase();
+  if (k.includes('arkeo')) return 'arkeo';
+  if (k.includes('etno')) return 'etno';
+  if (k.includes('geo')) return 'geo';
+  if (k.includes('bio')) return 'bio';
+  if (k.includes('histo')) return 'histo';
+  if (k.includes('numis')) return 'numis';
+  if (k.includes('filo')) return 'filo';
+  if (k.includes('keramo')) return 'keramo';
+  if (k.includes('seni')) return 'senirupa';
+  if (k.includes('tekno')) return 'tekno';
+  return 'Uploads';
+};
+
+router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'File gambar tidak ditemukan.' });
+  }
+  
+  const originalPath = req.file.path;
+  
+  // Tentukan folder tujuan berdasarkan klasifikasi
+  const folderName = mapKlasifikasiToFolder(req.body.klasifikasi);
+  const targetDir = path.join(__dirname, '..', 'public', 'images', folderName);
+  
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
+
+  // Hitung nomor urut file berdasarkan isi folder
+  let maxSeq = 0;
+  const files = fs.readdirSync(targetDir);
+  files.forEach(f => {
+    const match = f.match(new RegExp(`^${folderName}-(\\d+)\\.(png|jpg|jpeg)$`, 'i'));
+    if (match) {
+      const num = parseInt(match[1], 10);
+      if (num > maxSeq) maxSeq = num;
+    }
+  });
+  const nextSeq = String(maxSeq + 1).padStart(3, '0');
+  
+  const finalFilename = `${folderName}-${nextSeq}.png`;
+  const finalPath = path.join(targetDir, finalFilename);
+  const fallbackFilename = `${folderName}-${nextSeq}${path.extname(req.file.originalname).toLowerCase()}`;
+  const fallbackPath = path.join(targetDir, fallbackFilename);
+  
+  const PYTHON_CMD = 'C:\\laragon\\bin\\python\\python-3.10\\python.exe';
+  const REMBG_SCRIPT = path.join(__dirname, '..', 'scripts', 'remove-single-bg.py');
+
+  try {
+    console.log(`[Admin Upload] Memanggil Python AI Remove BG untuk upload manual (Folder: ${folderName}, File: ${finalFilename})...`);
+    // Tunggu proses hapus background selesai secara sinkronus agar bisa return URL
+    const { execSync } = require('child_process');
+    execSync(`"${PYTHON_CMD}" "${REMBG_SCRIPT}" "${originalPath}" "${finalPath}"`, { stdio: 'pipe' });
+    
+    // Opsional: Hapus file asli yang belum dihapus backgroundnya untuk menghemat storage
+    if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
+
+    const fileUrl = `http://localhost:3001/images/${folderName}/${finalFilename}`;
+    res.json({ url: fileUrl });
+  } catch (err) {
+    console.error(`[ERROR] Gagal hapus background: ${err.message}`);
+    // Fallback: Jika script AI gagal, pindahkan gambar asli ke folder tujuan
+    if (fs.existsSync(originalPath)) fs.renameSync(originalPath, fallbackPath);
+    
+    const fileUrl = `http://localhost:3001/images/${folderName}/${fallbackFilename}`;
+    res.json({ url: fileUrl });
+  }
+});
+
+// ==========================================================
 // Endpoint: UPLOAD PDF & Ekstrak Data
 // Dilindungi oleh authenticateToken
 // ==========================================================
@@ -129,7 +229,7 @@ router.post('/datasets', authenticateToken, (req, res) => {
   }
 
   const data = loadCollections();
-  
+
   // Cari ID terbesar untuk increment
   let maxId = 0;
   data.forEach(item => {
@@ -160,7 +260,7 @@ router.post('/datasets', authenticateToken, (req, res) => {
     tanggal_input: new Date().toISOString()
   };
 
-  data.unshift(newItem); // Tambahkan ke paling atas
+  data.push(newItem); // Tambahkan ke paling bawah
   saveCollections(data);
 
   console.log(`[Admin] Artefak dibuat manual: ${nama_koleksi} (ID: ${newItem.id})`);
@@ -173,14 +273,14 @@ router.post('/datasets', authenticateToken, (req, res) => {
 router.put('/datasets/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
   const { nama_koleksi, no_registrasi, klasifikasi, deskripsi, gambar } = req.body;
-  
+
   if (!nama_koleksi || !no_registrasi || !klasifikasi) {
     return res.status(400).json({ error: 'Nama Koleksi, No Registrasi, dan Klasifikasi wajib diisi.' });
   }
 
   const data = loadCollections();
   const index = data.findIndex(item => String(item.id) === String(id));
-  
+
   if (index === -1) {
     return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
   }
@@ -202,7 +302,7 @@ router.put('/datasets/:id', authenticateToken, (req, res) => {
 router.delete('/datasets/:id', authenticateToken, (req, res) => {
   const { id } = req.params;
   const data = loadCollections();
-  
+
   const index = data.findIndex(item => String(item.id) === String(id));
   if (index === -1) {
     return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
