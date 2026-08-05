@@ -50,7 +50,7 @@ const CollectionCard = ({ item, index }) => {
         position: 'relative',
         textDecoration: 'none',
         backgroundImage: `url(${l1Bg})`,
-        backgroundSize: 'cover',
+        backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
