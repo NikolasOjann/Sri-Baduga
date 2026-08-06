@@ -3,7 +3,7 @@ const { chromium } = require("playwright");
 
 // GANTI INI DENGAN IP PC 1 ANDA (SERVER)
 const SERVER_URL = "http://192.168.100.204:3000";
-const CLIENT_ID = "Kiosk-interacrive";
+const CLIENT_ID = "Kiosk-Sribaduga";
 
 console.log(`[*] Connecting to Central Server at ${SERVER_URL}...`);
 const socket = io(SERVER_URL);
