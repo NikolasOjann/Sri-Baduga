@@ -24,7 +24,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "HSE 04, panjang bilah : 37,5 cm , panjang gagang : 10,5 cm , panjang sarung : 42,4 cm , panjang dalam : 47 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-001.png",
+    "gambar": "/images/etno/etno-001.png",
     "id": 1
   },
   {
@@ -51,7 +51,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "HSE 02, panjang bilah : 16,5  cm , panjang gagang : 19,5 cm , panjang sarung : 20,5 cm , panjang dalam : 27 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-002.png",
+    "gambar": "/images/etno/etno-002.png",
     "id": 2,
     "deskripsi_en": "A set of traditional stab-type sharp weapons consisting of a separate blade, hilt and sheath. The blade is made of dark gray blackish iron with an asymmetrical wavy shape and a very rough/porous surface texture due to age corrosion. The upstream (handle) is made of brown wood with a smooth circular grain pattern, thickly curved without any mendak decoration (dividing rings). The sarong (warangka) is straight, elongated and tapered at the ends, made of wood with gradations of dark brown from the middle to the ends, and light brown at the base."
   },
@@ -79,7 +79,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "HSE 06, panjang bilah : 50 cm , panjang gagang : 19,5 cm , panjang sarung : 30,5 cm , panjang dalam : 45 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-003.png",
+    "gambar": "/images/etno/etno-003.png",
     "id": 3,
     "deskripsi_en": "A set of traditional sharp weapons in the form of a spear point mounted on a short hilt, complete with a protective sheath. The blade of the spear is made of symmetrical iron, wide at the base and sharply tapered at the tip (resembling the shape of a leaf/heart), with a forged, layered pamor textured surface. The head is made of dark brown wood carved into the shape of the head of a mythological bird or dragon/giant with a sharp beak with bulging eyes and a mouth open at the end. The protective sheath is also made of matching wood, in an elongated triangular shape that matches the shape of the blade, with detailed ornate carvings with a pattern of coiled rope or thread along the outer edge."
   },
@@ -107,7 +107,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "HSE 01, panjang bilah : 34,5 cm , panjang gagang : 11 cm , panjang sarung : 46 cm , panjang dalam : 45,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-004.png",
+    "gambar": "/images/etno/etno-004.png",
     "id": 4,
     "deskripsi_en": "A set of traditional keris-type weapons removed from their sheaths. The keris blade is a straight type of keris (without scars), made of dark gray wrought iron with faint decorative streaks along the blade, and has a flat hemp (blade base). The hilt (handle) is made of dark black wood, carved in a curved shape typical of Javanese/Sundanese style carvings (puthut or similar) with fine carved details. The warangka (sarong) has a bluntly curved upper part (gayaman/ban) made of natural light brown wood, connected to the shaft of the sheath (axle) which is wrapped in a layer of dark/brown colored metal (pendok) with a faint decorative texture on the surface."
   },
@@ -135,7 +135,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "HSE 03, panjang bilah : 28,8  cm , panjang gagang : 9,5 cm , panjang sarung : 24,9  cm , panjang dalam : 21,5cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-005.png",
+    "gambar": "/images/etno/etno-005.png",
     "id": 5,
     "deskripsi_en": "A set of traditional badik type weapons shown separately from the scabbard. The badik blade is made of dark blackish gray iron with a distinctive shape in the form of a single blade that is slightly curved sharply and tapers at the tip (shoot). The tip or handle is curved (resembling a gun handle), made of hard, ivory-white material with a smooth texture. The scabbard is shaped to follow the curvature of the blade, made of wood which has unique color variations, dominated by light yellowish brown, with one segment (middle accent) being dark blackish brown."
   },
@@ -163,7 +163,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang bilah : 18 cm , panjang gagang : 10 cm , panjang sarung : 8,5 cm , panjang dalam : 27,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-006.png",
+    "gambar": "/images/etno/etno-006.png",
     "id": 6,
     "deskripsi_en": "A set of traditional Badik Luwu (Kawali Luwu) weapons shown separately from their scabbard. The badik blade is made from old black iron with a typical Luwu shape which tends to be straight at the base then curves thinly and tapers sharply at the tip (shoot). The hilt (hilt) is an upright cylinder that is slightly curved at the tip, made of hard, ivory white/bone organic material decorated with thin circular lines near the base. The protective sheath (wanua) is made from the same material as the upstream, straight along the blade and ends with a flat, square shape at the end of the sheath."
   },
@@ -191,7 +191,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang bilah : 61,5 cm , panjang gagang : 12  cm , panjang sarung : 61,5 cm , panjang dalam : 73 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-007.png",
+    "gambar": "/images/etno/etno-007.png",
     "id": 7,
     "deskripsi_en": "The main component of the sword blade is curved gently towards the top of the blade with a single tapered tip (upward-curving point), and is equipped with a longitudinal groove (fuller) along the back of the blade to reduce the weight of the weapon. The upstream or handle is made ergonomically from dark wood with a finger groove texture bordered by a brass ring, and is equipped with a thin curved hand guard (D-guard) structure made of black metal that connects from the bottom of the upstream to the top of the cross guard. The scabbard is made with a precise curve to follow the anatomy of the blade, covered with leather or thick blackish brown cloth with decorative stitching or embossed details along the body, as well as a locking metal ring at the mouth of the scabbard. The physical condition of the sword and scabbard appear intact, authentic with a natural patina, there are normal thin black corrosion spots on the metal blade as signs of age, but overall the structure is well preserved and well maintained."
   },
@@ -219,7 +219,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang bilah : 25 cm , panjang gagang : 14,2 cm , panjang sarung : 30 cm , panjang dalam : 39 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-008.png",
+    "gambar": "/images/etno/etno-008.png",
     "id": 8,
     "deskripsi_en": "The blade of this cleaver has a curved structure with a perpendicular back protrusion (tikeu) in the middle."
   },
@@ -247,7 +247,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang bilah : 27,2 cm , panjang gagang : 16 cm , panjang sarung : 30,5 cm , panjang dalam : 42,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-009.png",
+    "gambar": "/images/etno/etno-009.png",
     "id": 9,
     "deskripsi_en": "A set of traditional sharp weapons in the form of a Ciomas Golok which is placed separately from the sheath. The blade of the machete is made of light gray wrought iron with a straight, elongated shape, widening in the middle, and ending with a straight cut tip (slab/square). The tip or hilt is pitch black, carved in great detail to form the head of a creature with fine striped hair/mane, open mouth showing teeth, and has a variation of two thin white circular lines near the base of the blade. The protective sheath is made of wood with the entire trunk wrapped tightly in thick black cloth or rope, leaving the original brown wood color at the mouth/base of the sheath."
   },
@@ -275,7 +275,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Tasikmalaya, panjang bilah : 37 cm , panjang gagang : 14 cm , panjang sarung : 42,5 cm , panjang dalam : 51 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-010.png",
+    "gambar": "/images/etno/etno-010.png",
     "id": 10,
     "deskripsi_en": "The blade of the machete is designed to be long, thick and sturdy with the characteristics of a blade spine that is straight horizontally from the base and then curves up dynamically near the tip (shoot) with a sharp taper. The sharp edge of the eye is at the bottom, gently curving to follow the contour of the back. The steel surface shows natural aging in the form of dry sharpening residue, accompanied by active red rust stains that appear to cluster in the area of ​​the front third of the blade towards the tip. The handle or upper part of the machete is made using shiny black material (typical of horn or ebony) which is carved to resemble a stylized animal head (jengkolan/makara handle). This handle is decorated with a row of small silver metal pin inlays forming a motif of curved dots (nail points) that follow the contour of the upstream, providing an aesthetic function as well as a texture so that it is not slippery when held. The scabbard (warangka) is made from dark brown wooden slats designed to be slim and wrap around the metal slats. The body of the scabbard is strengthened by a network of dozens of rings or flat brass bands (hoops) which are wound tightly repeatedly along the stem of the scabbard, ending with a protective asymmetrical pointed lower edge of the scabbard.\""
   },
@@ -303,7 +303,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang bilah : 36 cm , panjang gagang : 16,7 cm , panjang sarung : 39,5 cm , panjang dalam : 52,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-011.png",
+    "gambar": "/images/etno/etno-011.png",
     "id": 11,
     "deskripsi_en": "The blade of the machete is designed to be thick and sturdy with a single edge with the contour of the blade's back straight and horizontal from the base, then slightly curved downwards as it approaches the tip of the blade (shoot). The sharp eyes are on the lower side, drawn straight flat from the direction of the sor-soran (base). The metal surface displays a solid forged texture in a dull gray color typical of dry scrap metal. The carved hilt forms a stylized head of a mythological creature or sharp-beaked bird (makara hilt or bird hilt). Made from shiny black, the carved details on the head, eyes and crest are emphasized by the application of golden yellow color between the carvings. On the upper neck near the edge of the blade, there is also a decorative ornament in the form of four neatly circular gold-colored horizontal ring lines. The scabbard (warangka) is made functional with a flat, elongated design in pitch black, strengthened by the winding of dozens of black wrapping rings (hoops) along the stem, while leaving a bright natural wood accent at the mouth of the sarong."
   },
@@ -331,7 +331,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang bilah : 25,5 cm , panjang gagang : 11,2 cm , panjang sarung : 27,5 cm , panjang dalam : 36,7 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-012.png",
+    "gambar": "/images/etno/etno-012.png",
     "id": 12,
     "deskripsi_en": "The blade of the machete displays a sturdy single-edged shape with the back of the blade straight horizontally, then bent firmly asymmetrically downwards to form a sharp, sloping lower tip (shoot). The body of the blade has a dark gray color thanks to the traditional aging and treatment process, where if you look closely there are traces of fine forging beats as well as scratches resembling tattoos or faint lines on the surface. The upper part or handle is made minimalist from solid, shiny black material. The machete sheath (warangka) is designed to be functional in the form of a flat box covered in pitch black material. The structure of the scabbard is strengthened by a coil of black flat hoops which are neatly arranged from the middle area to the bottom end of the scabbard. At the neck of the scabbard, there are various pieces of light brown softwood that are left exposed."
   },
@@ -359,7 +359,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "P.bilah: 36,6 cm ,p.gagang : 14,5  cm, p.sarung:  37,5   cm , pdalam : 51  cm , panjang seluruh: 38,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-013.png",
+    "gambar": "/images/etno/etno-013.png",
     "id": 13,
     "deskripsi_en": "The blade of this single-edged machete is designed to be thick with a back contour that is straight horizontally from the base, then curves bluntly downwards to form a sharp tip (shoot). The entire surface of the metal body is covered in fine inlay lines with tattoo motifs, geometric lines, and traditional/bare Arabic script that is densely carved along the blade. The upper part or handle is made very aesthetically pleasing using shiny black material which is carved to form a stylized head of a mythological creature or bird with a beak (makara handle/bird's hilt). The details in the eye area, hair and crest of the sculpture are emphasized with a wash of golden yellow. On the upper neck near the edge of the blade, there is also an ornament in the form of a row of horizontal, circular gold rings. The machete sheath (warangka) is made of an elongated, flat, pitch black color, strengthened by twists of dozens of black wrapping rings (hoops) which are neatly arranged tightly. At the mouth of the sheath, there is a bright white barrier layer (typical of bone or ivory material)."
   },
@@ -387,7 +387,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 26,5   cm, p.sarung:  27    cm, .dalam : 38,2 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-014.png",
+    "gambar": "/images/etno/etno-014.png",
     "id": 14,
     "deskripsi_en": "The blade of the machete is designed to be single-edged with the contour of the back of the blade being straight and horizontal at the base, then sloping down asymmetrically towards the tip or front end of the blade which has a distinctive slightly flat/blunt shape. The lower sharp edge is drawn straight and widens proportionally towards the front. The steel metal surface displays a grayish gray color remaining from clean and dry sharpening, with several spots of brownish oxidation stains in the center area. The upper part or handle is made minimalist-ergonomic from shiny black solid material with a plain downward curved model (jengkolan/elbow handle). On the upper neck near the blade border (selut), there is a variation of decoration in the form of three circular horizontal ring lines in fine brass color. The sarong (warangka) is made flat and elongated with a thick black material. The strength structure of the scabbard is maintained by coils of black hoops which are arranged tightly in chains from the middle area to the bottom end of the scabbard. On the neck of the scabbard, there is an accent piece of natural wood in a bright, asymmetrical shape which functions as a shock absorber."
   },
@@ -415,7 +415,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Tasikmalaya ( Titipan ), p.bilah: 31,3   cm, p.gagang : 13  cm, p.sarung:  36  cm, p.dalam : 44,5cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-015.png",
+    "gambar": "/images/etno/etno-015.png",
     "id": 15,
     "deskripsi_en": "The blade of this single-edged machete displays dynamic curvature characteristics; The contour of the back of the blade is drawn slightly concave, sloping in the middle and then curves up slowly towards the tip (shoot) in a blunt circular shape. The lower sharp edge is curved convexly, typical of traditional Sundanese sabet blades. The steel surface shows good maintenance quality with a clean metallic gray color and a flat surface with minimal corrosion. The head of this shiny black material is carved to resemble a stylized head of a bird with a sharp curved beak (hulu manuk or makara). On the upper neck (near the blade border), there is a border ornament in the form of a circular horizontal ring carving with a pattern of double braids/geometric lines filled with white/silver residue to emphasize the pattern. The scabbard (warangka) is made from minimalist pieces of reddish brown wood, reinforced by several thin, dark colored hoops placed at a distance along the body of the sarong."
   },
@@ -443,7 +443,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Hibah, p.bilah: 50 cm , p.gagang : 14 cm, p.sarung:  51  cm, p.dalam : 63,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-016.png",
+    "gambar": "/images/etno/etno-016.png",
     "id": 16,
     "deskripsi_en": "The blade of this single-edged machete is designed to be straight lengthwise with the contour of the back of the blade being horizontal from the base, then sloping down in a smooth curve towards the sharp front end (tip) of landau, the pamor layer is very visible, in the form of horizontal wavy lines (pamor slant / adeg) which run neatly along the body of the blade from base to tip, representing a mature traditional iron folding forging technique. There is natural reddish corrosion covering some of the metal texture on the front and base of the blade. The upper part or handle is made of dark brown hardwood with a classic ergonomic curved shape (jengkolan/elbow handle) which widens at the top near the edge of the blade (selut) then curves sharply downwards to form a plain blunt beak angle at the end to strengthen the grip. The machete sheath (warangka) is made thick and sturdy following the long shape of the blade, using old wood material that is the same color as the upstream. The surface of the holster is massively reinforced by a combination of belt buckles; consists of three thick brass hoops which are installed at the base, middle and lower end of the scabbard, and are interspersed with six metal rings/flat silver wire which are wound tightly around the body of the scabbard at regular intervals."
   },
@@ -471,7 +471,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 42 cm, p.gagang : 13,3 cm, p.sarung:  18 cm, p.dalam : 55 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-017.png",
+    "gambar": "/images/etno/etno-017.png",
     "id": 17,
     "deskripsi_en": "A set of traditional sharp weapons in the form of a machete with an elongated straight blade that is removed from its sheath. The blade of the machete is made of light gray scrap metal with a very rough and corroded surface texture due to age; The back of the blade appears straight and horizontal while the sharp part tapers gently towards the tip (shoot).  The head or handle is plain, curved downwards (jengkolan style or traditional Javanese/Sundanese handle), made of wood or fine horn, dark black in color without any decorative carvings. The protective sheath is straight and flat, following the shape of the blade, made of black wood, with variations in the form of two thin ring ties made from woven brown rope/rattan on the body."
   },
@@ -499,7 +499,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 38 cm, p.gagang : 8,8  cm, p.sarung:  48,5 cm, p.dalam : 47 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-018.png",
+    "gambar": "/images/etno/etno-018.png",
     "id": 18,
     "deskripsi_en": "The keris blade is designed to be double-edged with 9 proportional curves (luk), curving from the base (sor-soran) to tapering towards the tip (shoot). The base of the blade is equipped with a flat dome structure and a thin greneng decoration on the back. The entire metal surface displays a dark gray forged texture of old iron decorated with faint, thin curved strokes. The very distinctive Hulu (handle), in the form of a stylized figure with a beak or crouching bird that curves towards the Hulu, is finely carved with a geometric stroke motif resembling scales/feathers along the back, supported by a solid, plain round lower base. The scabbard (warangka) is made from plain dark brown, blackish hardwood slats, featuring an asymmetrical curved top (sampir) shape with sharp corners sticking upwards which is attached to functionally wrap around the heirloom blade."
   },
@@ -527,7 +527,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "ada nomor di serangka 25.469, p. bilah: 33 cm, p.sarung:  50 cm, p.dalam : 39 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-019.png",
+    "gambar": "/images/etno/etno-019.png",
     "id": 19,
     "deskripsi_en": "The blade is symmetrical and slender, wide at the base (sor-soran) then slowly tapers towards the tip (shoot). The bottom is equipped with a distinctive curved marijuana structure with a sharp corner decoration resembling a bird's beak (sirah lizard) at one end. The surface of the blade displays a faint silver snaking welded pattern on a dark gray metal base. The protective scabbard (warangka) is made of very dark brown, almost black, hardwood. The upper part of the sarong (sampire or breatplate) is shaped like a crescent moon or a compact, asymmetrical boat which is smoothly curved without complicated ornamental carvings, connected directly to the stem (axle) which is straight, elongated and blunt at the lower end."
   },
@@ -555,7 +555,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Serangka dibugkus kain merah, p.bilah: 29 cm, p.sarung:  35,5cm, p.dalam : 34 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-020.png",
+    "gambar": "/images/etno/etno-020.png",
     "id": 20,
     "deskripsi_en": "The keris blade is designed to be double-edged with a configuration of 7 curves (luk) that curve from the base (sor-soran) and taper slightly at the tip. The base side is equipped with a flat, pointed-angle, asymmetrical dowel structure, with an iron pedestal sticking out at an angle, thin and long (without a handle).  The surface of the forged steel shows a fine porous texture in dull dark gray with faint traces of prestige remaining. The top of the sarong (sampir) is made of plain medium brown hardwood and is shaped like an asymmetrical boat or crescent moon with a distinctive obtuse curved angle. The specialty of this collection lies in the shaft of the sheath (axle), the entire surface of which is neatly wrapped in dark brick red textile cloth. As a decorative complement, the neck of the warangka (right below the sampir) is given a wrapped accent in the form of a patchwork tie in a combination of dark green and red-orange cloth."
   },
@@ -583,7 +583,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "23 Juli 2018 dari Raden Yana Rastawan, p.bilah: 19 cm, p. gagang : 9 cm , p.sarung: 26,5 cm, p.dalam : 27,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-021.png",
+    "gambar": "/images/etno/etno-021.png",
     "id": 21,
     "deskripsi_en": "A set of traditional keris type weapons which are placed separately from the sheath. The keris blade is a type of straight keris (without scars) with a blade shape that is slender, asymmetrical and sharply tapered at the tip, and is equipped with a blade base that sticks out flat on one side. The hilt or handle is made of dark blackish brown wood which is carved full of carvings with figurative patterns or typical flora/fauna stylizations of the past, equipped with a small dividing ring (mendak) made of dull yellowish metal at the base. The protective sheath (warangka) is made of matching wood, featuring a bluntly curved upper part, which joins the straight sheath shaft (axle) that tapers towards the lower end."
   },
@@ -611,7 +611,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 32,5 cm, p. gagang : 10,8 cm , p.sarung:  42,5 cm, p.dalam : 41,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-022.png",
+    "gambar": "/images/etno/etno-022.png",
     "id": 22,
     "deskripsi_en": "A set of traditional keris type weapons placed separately on top of the sheath. The keris blade is a type of straight keris (without cuts) which is quite long and slender, narrowing symmetrically until it tapers sharply at the tip. At the base of the blade there is a fine serration (greneng) decorative detail on the back of the base. The handle or handle is made of light medium brown wood with a curved shape that is smoothly carved without complicated decorative motifs. Between the upstream and the blade there is a dividing ring (mendak) of silvery metal decorated with protruding beads around it. The protective sheath (warangka) is made of ladrang/gayaman style wood with a dark brown color that darkens to black along the sheath shaft (axle)."
   },
@@ -639,7 +639,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "HSE03 p.bilah: 42 cm, p.gagang :  10,6 cm, p.sarung:  47.5 cm, p.dalam : 51,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-023.png",
+    "gambar": "/images/etno/etno-023.png",
     "id": 23,
     "deskripsi_en": "A keris blade whose blade surface is filled with a very dense, tight and dominant pamor motif along the metal body from the sor-soran area to the tip of the tip. Details of the base of the blade are equipped with a separate marijuana structure, a type of wulung marijuana or with a similar appearance. The upper part or handle uses thick dark brown hardwood material, carved in a distilled Javanese style to form a typical curved figure of a bowing head, complete with vertical carvings to strengthen the grip. Between the upstream and the blade is a small yellowish/silver colored metal ring (mendak) decorated with circular bead ornaments. The keris sheath (warangka) adopts the Gayaman model which is made from a single piece of selected hardwood in light honey brown color. The surface of the scabbard is intentionally left to display contrasting natural veins and fibers of the wood, curved round at the sling and bluntly tapering symmetrically at the stem to the bottom end (axle)."
   },
@@ -667,7 +667,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "HSE04, p.bilah: 37,5 cm, p.gagang :  10,5 cm,p.sarung:  42,5 cm, .p.dalam : 47  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-024.png",
+    "gambar": "/images/etno/etno-024.png",
     "id": 24,
     "deskripsi_en": "A set of traditional keris type weapons placed separately on top of the sheath. The keris blade is a type of curved (wavy) keris with a number of curves that bend gracefully until it tapers sharply towards the tip. The surface of the blade is coated with a very contrasting light gray color in the shape of an island/cloud pattern on a black iron base. The hilt (hilt) is made of reddish brown wood with a curved shape typical of the Javanese style, equipped with a small metal barrier ring (mendak) at the base. The warangka (sheath) is made of wood that matches the Gayaman model, which blends neatly with a plain axle (sheath shaft) that extends bluntly round at the bottom end."
   },
@@ -695,7 +695,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 7,5 cm, p.gagang :  11,5 cm,p.sarung:  23,5 cm ,p.dalam : 20,4 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-025.png",
+    "gambar": "/images/etno/etno-025.png",
     "id": 25,
     "deskripsi_en": "A typical West Javanese traditional weapon, the Kujang type, which consists of a blade, handle (upstream) and protective sheath. The cleaver blade has a distinctive curved shape with a serrated back and is equipped with several small holes (eyes) that line up following the curve of the top blade. The tip of the blade is sharply tapered (papatuk). The metal texture of the blade appears uneven and shows signs of wear and natural corrosion due to the age of the object. The upper part or handle is ergonomically curved without carved ornaments (plain), the tip looks like a carved fist, firmly connected to the blade. The cleaver sheath (kowa) has a minimalist design, plain without carvings, flat in shape with a slightly tapered lower edge following the anatomical shape of the blade, and a slightly wider upper part (kowa tail) to support the upstream, the dominant color is black."
   },
@@ -723,7 +723,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-026.png",
+    "gambar": "/images/etno/etno-026.png",
     "id": 26,
     "deskripsi_en": "A traditional keris sheath or container as a keris sheath/frame (warangka) without including the blade or hilt. Made from wood, maintaining the original color of the wood, which has shades of reddish brown to dark brown, complete with an aesthetic natural wood grain pattern. This warangka model has a curved top (gandhar/gayaman) that resembles the shape of a typical blunt boat, plain without any figurative carved decoration. The part of the blade guard (axle) has a flat cylindrical shape that extends and tapers dynamically towards the blunt lower end. The connection between the upper head and lower stem is exposed using a traditional peg technique, where the boundary area of ​​the connection appears slightly worn and shows natural aging gaps."
   },
@@ -751,7 +751,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-027.png",
+    "gambar": "/images/etno/etno-027.png",
     "id": 27,
     "deskripsi_en": "A traditional Gayaman type sheath or keris case (warangka) without blade or upstream. The head of the warangka has a plain blunt curved shape without carvings, highlighting the natural wood grain in the form of black-brown striped streaks (pellets). The stem (axle) is covered by a metal sleeve of the Cantaloupe Pendok type (a pendok that has a longitudinal slit in the middle). The metal frame of this pendok is decorated with various decorative inlays/fine carvings with floral motifs (vines/lungs) surrounding the edges. Through the split in the middle of the pendok, you can see the inner axle which is made of dark brown wood with a natural spot texture, providing an aesthetic contrast between the carved metal and wood materials."
   },
@@ -779,7 +779,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 24 cm,p.gagang :  10,5 cm,p.sarung:  46 cm, p.dalam :   34,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-028.png",
+    "gambar": "/images/etno/etno-028.png",
     "id": 28,
     "deskripsi_en": "The traditional keris weapon consists of a blade, a Hulu (handle) and a warangka (sheath). The blade of the keris has a curved configuration of 9 curves with a thin, tapered tip. The surface of the metal blade is rough-textured, porous, and blackish brown in color, indicating natural corrosion and the old age of the object. The base of the blade looks contrasting, supporting the body of the keris. The tip or handle of the keris is pitch black with a smooth, shiny surface, curved in shape resembling a plain, classic-style row/dederan upstream without complicated carvings. The sarong (warangka) section displays an aesthetic combination of two materials. The head of the warangka adopts the Ladrang model (with a distinctive tapered/sharp curved tip) made from shiny plain black wood. Meanwhile, the stem (axle) is fully encased in a metal casing or Pendok Bunton in antique gold brass which is filled with various decorative inlays/relief carvings with floral motifs (vines) along its surface."
   },
@@ -807,7 +807,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 24 cm,p.gagang :  10,5cm,p.sarung:  48 cm,. pdalam :   34 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-029.png",
+    "gambar": "/images/etno/etno-029.png",
     "id": 29,
     "deskripsi_en": "The complete traditional keris weapon consists of a straight blade, Hulu (hilt) and warangka (sheath). The blade is a straight type of keris (without curves) with a dynamic tapered tip. On the surface of the metal blade, a widespread pattern is clearly visible in the form of longitudinal lines from the base to near the tip of the blade, which indicates the presence of a pamor motif (possibly a type of slanted pamor such as banyumili or wos utah). The tip of the keris is very dark brown, almost black with a shiny polished surface, in the form of a typical Javanese dederan arch with a few finely carved ornaments on the upper chin, and is equipped with a small dividing ring (mendak) at the base. The keris sheath (warangka) adopts the Ladrang model (Surakarta/Solo style) with a top shape that has a graceful and sharp curved tip on one side. The stem (axle) is covered by a metal sleeve of the Pendok Cantaloupe type, where the middle of the pendok is deliberately opened lengthwise to reveal the beauty of the axle wood inside. The metal sides of the pendok are decorated with various decorative inlays/relief carvings with floral motifs (vines) which are very detailed and delicate."
   },
@@ -835,7 +835,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 24,5 cm, p.gagang :  12,5 cm,p.sarung:  25,8 cm,.pdalam : 36,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-030.png",
+    "gambar": "/images/etno/etno-030.png",
     "id": 30,
     "deskripsi_en": "The traditional tool is a short machete, the blade is designed to be sturdy with a straight, horizontal blade at the base and a blunt curve near the tip. The sharp eye is on the lower side, widening proportionally from the gandik (base) to form a convex blade belly before tapering towards the apex (tip). The metal texture reflects the results of traditional forgings that have been aged for a long time, dry, dull, and leaving characteristic natural corrosion pores. The upstream or handle is made of selected dark brown blackish hardwood with dense grain. This head is shaped in an ergonomic curve downwards (jengkolan or elbow style handle) without much decorative carving, purely highlighting the functional aspect of the grip. The machete sheath is made using wood material similar to the upstream, designed to be slim and follow the contour of the blade precisely. The mouth of the scabbard is made flat in the shape of a square holder, while the stem to the bottom end of the scabbard is made plain and minimalist without any additional metal binding sleeves."
   },
@@ -863,7 +863,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Tanpa gagang, p.bilah: 35 cm, p. hulu: 9,5 cm, p.sarung:  36,5 cm, pdalam :   44 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-031.png",
+    "gambar": "/images/etno/etno-031.png",
     "id": 31,
     "deskripsi_en": "A keris with blade length of 35 cm, upstream length of 9.5 cm, sheath length of 36.5 cm, and overall length of 44 cm. The blade of the keris displays a stylized curved shape of 7 curves (waves) with the physical condition of the metal surface which has undergone solid corrosion with a rough texture, covered with a layer of natural rust patina which is dark grayish brown in color typical of old working blades (lawasan). At the base of the blade, there is a flat section of dowel that extends perpendicularly with a straight, pointed iron needle (pesi) extending to the right as a support for the upstream installation. The sheath of the keris (warangka) is in the style of a sangang walikat or jumper made of dark brown hardwood with mature grain, connected to a long straight axle which is wrapped in a plain metal sleeve (pendok) of faded yellow brass."
   },
@@ -891,7 +891,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Panjang Bilah: 38cm; Panjang Gagang: 9cm; Panjang Sarung: 43,5cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-032.png",
+    "gambar": "/images/etno/etno-032.png",
     "id": 32,
     "deskripsi_en": "Traditional keris berluk weapon complete with hilt and scabbard. The keris blade has 9 curves (luk) with a tapered tip. The surface of the blade is covered with a very dense, dense and complex pamor pattern, forming irregular aesthetic lines that fill the entire blade from the base to the tip. The upper part is curved in a typical Javanese style (dederan/jejeran), but is distinctive in the form of fine figurative relief carvings (patra style or coastal carvings/decorative figures) along the body, equipped with an ornate dividing ring (mendak) just below the base of the blade. The sheath (warangka) part adopts the Gayaman model, the surface of the warangka head down to the stem (axle) is filled with very complex and detailed low chisel relief carvings with decorative motifs of lung-lungan (floral tendrils) and decorative twists. The stem of the scabbard is not covered by a metal stud, but instead explores the beauty of carving directly on the wood (iras axle or carved axle)."
   },
@@ -919,7 +919,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 13,5 cm,p.gagang :  10,5 cm,p.sarung:  14,5 cm, .pdalam :   23, cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-033.png",
+    "gambar": "/images/etno/etno-033.png",
     "id": 33,
     "deskripsi_en": "A traditional tool in the form of a sickle (small sickle), the blade has a sharp curved shape (crescent-shaped) that widens in the middle to a thin tip that tapers into the typical shape of a traditional pruning tool. The metal blade is rigidly attached to the wooden handle using hidden pegs. The handle is made of light brown wood with an ergonomically shaped natural grain pattern, widening and thickening at the back end for a comfortable grip. The scabbard is made of dark brown-black wood with a dynamic curved shape specifically designed to follow the anatomy of the curve of the sickle blade. The mouth of the sheath is made slightly thicker as a safety barrier when the blade is inserted."
   },
@@ -947,7 +947,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 30,5 cm , p.gagang :  10,5 cm, p.gagang :  10,5 cm, .pdalam :   40 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-034.png",
+    "gambar": "/images/etno/etno-034.png",
     "id": 34,
     "deskripsi_en": "The traditional keris weapon is straight without curves (luk) which extends dynamically to a rounded tip which is slightly tapered at the end. The surface of the metal blade is predominantly dark gray with a mature forged texture. The upstream part is made of glossy medium brown wood with a smooth classic Javanese arch style, equipped with a simple carved border (lung) at the bottom of the chin upstream and a small complementary metal ring (mendak) at the base of the blade. The protective cover adopts a plain Gayaman model without carvings on the wooden head. The stem (axle) is covered by a metal sleeve of the Cantaloupe Pendok type, where thin brass metal frames the outside of the axle and leaves a longitudinal open gap in the middle to expose the inner axle wood. The metal sides of this pendok are decorated with various decorative inlays or neat relief carvings with floral motifs (vines/lungs) along the edges."
   },
@@ -975,7 +975,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 11,5 cm, p.sarung:  16 cm, .pdalam :   13 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-035.png",
+    "gambar": "/images/etno/etno-035.png",
     "id": 35,
     "deskripsi_en": "The keris blade is made of a double edge with 3 sloping curves (luk), curving thinly from the base to tapering towards the tip. The blade structure is designed to be very minimalist and simple (simple/tugel) without being equipped with complicated details. At the bottom of the base, a short straight iron stick sticks out as the seat of the original head which has now been lost. The metal surface displays a natural dull taupe color. This blade is equipped with a protective sheath (warangka) made of blackish dark brown hardwood which is made proportional to the size of the blade. The top of the sarong (sampir) adopts the Javanese Style Gayaman model with a blunt, asymmetric curved shape that resembles the shape of a leaf, without any external carved ornaments. The axle or stem of the scabbard is made together, narrows straight, and ends in a blunt plate to enclose the entire small blade."
   },
@@ -1003,7 +1003,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "diameter 1 : 17 cm, diameter 2 : 16 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-036.png",
+    "gambar": "/images/etno/etno-036.png",
     "id": 36,
     "deskripsi_en": "Made from a mixture of clay molds and traditional cement with dimensions of 45 cm long and 24 cm high, this object has a sturdy, massive body structure and is shaped like a sloping curved block at the bottom, resembling a mini bridge with two main supporting legs on the front and back sides. On the flat top surface, there are two rounded cylindrical holes (furnace coasters) measuring Hole 1 with a diameter of 17 cm, and hole 2 with a diameter of 16 cm which functions as a place to place cooking containers such as a kettle or steamer. The entire outer surface of the hawu displays a very rough, porous texture, has cracks of mature natural hair, and is covered with the remains of a grayish-white layer resembling burning residue or ash after daily use. The physical condition of this furnace appears to be intact, very stable, has no structural cracks that could cause it to break, and is well maintained."
   },
@@ -1031,7 +1031,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 27 cm, p.gagang : 12  cm, p.sarung:  28,5 cm, p.dalam : 38 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-037.png",
+    "gambar": "/images/etno/etno-037.png",
     "id": 37,
     "deskripsi_en": "The traditional Golok Ciomas weapon is typical of Banten, the blade has a typical straight-backed shape with a belly (blade) that is slightly convex and widens dynamically towards the tip, then cuts at an angle like most machetes. On the surface of the middle metal blade, there are various decorations in the form of inscription strokes in the form of letters or geometric patterned designs (rhombuses and parallel lines) which are forged directly on the metal body. The handle of the machete is curved sharply downwards, resembling the shape of a jengkolan or typical Jawara handle, dark black in color with a smooth, shiny surface. There is a variation in the form of three thin silver/white ring lines near the base of the blade (sulah). The part of the scabbard that is covered in dark black covering material. The bottom half of the scabbard is equipped with coils of black rope that are tightly lined up horizontally for reinforcement as well as protective aesthetics. The mouth of the sarong (keukan) is made to widen perpendicularly with the color of the wood/natural material being light brown."
   },
@@ -1059,7 +1059,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 37 cm , p.gagang : 12  cm, p.sarung:  47,5 cm, p.dalam : 47,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-038.png",
+    "gambar": "/images/etno/etno-038.png",
     "id": 38,
     "model_3d": "/models/keris_berluk_13.glb",
     "deskripsi_en": "An heirloom keris with dynamic curves with 13 curves (luk teulas). The blade of the keris curves symmetrically, decreasing from the base area (sor-soran) towards the tip (shoot) which naturally tapers bluntly. The anatomy of the base is equipped with strong curved strokes. The surface of the iron shows an ancient porous forged texture covered in a thin gray patina devoid of fresh oil, where streaks of prestige are faintly visible beneath the surface. The head of the keris uses honey brown hardwood material with a natural circular vein pattern, finely carved using a variety of Javanese floral stylization (cecekan) at the base of the curve. The upper border and blade are decorated with a mendak ring ornate with rows of metal beads interspersed with small red and green decorative stones. Sarong (warangka) styled Gayaman. The top of the scabbard features a piece of solid wood with a smooth texture. The sheath shaft (axle) is covered by a bunton type brass metal protective sleeve which covers it completely down to the bottom end. The entire surface of the brass pendok is decorated with relief carvings of interwoven plants (lung-lungan or kesit) which are carved in a comprehensive manner."
@@ -1088,7 +1088,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 11 cm, p.gagang : 7,8 cm, p.sarung:  - ,p.dalam : 18,8 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-039.png",
+    "gambar": "/images/etno/etno-039.png",
     "id": 39,
     "deskripsi_en": "The Raut knife is a small traditional tool. The blade has a very distinctive curved shape (curved blade), where the base near the handle tends to be slender, then widens at the belly of the blade, and ends at the top tip which tapers sharply asymmetrically. This curved blade design is specifically designed for whittling, carving or cutting light materials such as bamboo and rattan. The metal blade is connected to the handle using a traditional peg system. The handle is made of medium brown wood, cylindrical in shape, ergonomically curved to follow the contrast of the curve of the blade, with the back end of the handle made evenly blunt for a comfortable hand grip."
   },
@@ -1116,7 +1116,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 15,6 cm ,p.gagang : 6,6 cm, p.sarung:  8,3 cm, p.dalam : 21 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-040.png",
+    "gambar": "/images/etno/etno-040.png",
     "id": 40,
     "deskripsi_en": "A traditional stabbing weapon of the Badik type, the blade has a flat, straight shape with a pointed tip with one sharp edge (single-edged). The dorsal side of the blade appears thick and straight. The upper part or handle is made of medium brown wood with a sharp downward curved shape resembling a gun handle, equipped with a thick black guard ring (kaliasa) at the base of the upstream to strengthen the position of the blade. Badik scabbards are made of wood with a straight, slender shape following the anatomy of the blade, and widen to form a thin square corner at the mouth of the scabbard (kali). In the middle of the scabbard stem, there is a trace of dark brown black adhesive material which functions as an additional structural binder."
   },
@@ -1144,7 +1144,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 34 cm, p.gagang : 11,5 cm, p.sarung:  39,5 cm, p.dalam : 45 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-041.png",
+    "gambar": "/images/etno/etno-041.png",
     "id": 41,
     "deskripsi_en": "The traditional keris weapon has a straight blade, the keris blade has a straight shape without curves, has a dull texture with a thick layer of traditional black coloring (warangan) on the entire surface. The base of the blade is made flat without many ornaments (straight blade). The tip of the keris is made of medium brown wood with a curved Javanese dederan style shape, featuring faint figurative patterned carvings on the inner curves, and is equipped with a metal ring divider (mendak) decorated with small beads at the base. complete keris clothing that uses the Sandang Walikat model warangka. The head of this dark brown-black wooden scabbard is in incomplete condition because it is broken at the back corner. The shaft of the sheath (axle) is covered by a Pendok Cantaloupe made of faded brass which wraps around the wooden axle, leaving a single strip of longitudinal gap in the middle that exposes the inner wood material."
   },
@@ -1172,7 +1172,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Tanpa Gagang, p.bilah: 15 cm, p.dalam : 17,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-042.png",
+    "gambar": "/images/etno/etno-042.png",
     "id": 42,
     "deskripsi_en": "This small cleaver's blade is designed to curve to resemble the shape of a large bird's beak or the stylization of leaves. The dorsal or outer side (papatuk/shoot) curves gently and tapers sharply towards the bottom. On the widened part of the body (tumbu), there is a small through hole (cleaver eye) which is made manually, as well as several notches (siih) along the inner sharp edge. The base of the blade narrows to form a neck (tread) before connecting to a thin, straight and elongated iron shaft (pesi) as the seat of the handle. The character of the metal material is very dry and naturally porous."
   },
@@ -1200,7 +1200,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang bilah: 30 cm, panjang gagang: 18,5 cm, p.sarung:  , p.dalam : 48,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-043.png",
+    "gambar": "/images/etno/etno-043.png",
     "id": 43,
     "deskripsi_en": "A traditional sharp tool or tool typical of the Javanese people (especially the Banyumasan area) is known as Kudhi. The metal blade has a very unique and specific anatomy, reflecting its dual function as an agricultural tool as well as self-defense. The lower side of the abdomen (blades) appears straight and slender near the base, then curves convexly and widens dynamically towards the top. At the upper end (shoot), there is a sharp protrusion that curves downwards, resembling a bird's beak or a small axe, which is the main characteristic of kudi morphology. The blade is connected to the handle via a short, thick piece of metal neck (methuk). The handle is made of straight, cylindrical wood which is plain without carvings, slightly narrowed at the base area near the metal and thickened evenly at the back end to ensure a strong grip when used to cut or slash hard materials."
   },
@@ -1228,7 +1228,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Tanpa gagang, p.bilah: 31  cm, p.sarung:  36,5 cm,  p.dalam : 36 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-044.png",
+    "gambar": "/images/etno/etno-044.png",
     "id": 44,
     "deskripsi_en": "A straight keris blade that has lost its hilt or handle, but is still equipped with an intact protective sheath. The blade is a straight type of keris without curves (luk) which tapers bluntly at the tip (shoot). The condition of the blade looks plain without any remaining warang coating, leaving a dull blackish wrought iron texture. The part of the iron handle supporting the handle (pesi) looks intact, straight and sharply tapered. Gayaman style sarong. Warangka wood has a distinctive natural dark striped pattern. The axle part of the sheath is completely covered by a Pendok Bunton (closed metal sleeve without gaps) made from dull silver metal with very dense floral relief carvings (tendrils of leaves and flowers). The paper label left over from the old registration circled under the warangka's neck. The label, written in black ink, records the history of the object's acquisition, identifying it as an item \"Donated, Pa. Widodo unregistered jl. Pratista../.., Antapani 11/25/07\"'."
   },
@@ -1256,7 +1256,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Tanpa Sarangka, panjang bilah: 39 cm, panjang gagang: 10 cm, p.dalam : 48 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-045.png",
+    "gambar": "/images/etno/etno-045.png",
     "id": 45,
     "deskripsi_en": "The keris blade has an anatomical 9 grooves (luk sanga). The curve curves dynamically from the base to the tip (shoot) which naturally tapers due to age corrosion. The surface of the blade appears very dull, dry, and shows the texture of rough pores of ancient forged metal covered with thin rust without a layer of protective oil. The prestige lines are hidden faintly under the layer of oxidation. The base of the blade (sor-soran) is equipped with basic ornaments such as borders that appear to be integrated with the structure of the blade. The tip or handle of the keris is made of dark brown-black hardwood with a curved shape typical of the Javanese style, finished plainly without complicated relief carvings. Between the upper limit of the wood and the base of the metal blade, there is a small, dull silver colored dividing ring (mendak) with decorative details of textured beads lined up neatly along the circle."
   },
@@ -1284,7 +1284,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Panjang 255 cm, Lebar 105 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-046.png",
+    "gambar": "/images/etno/etno-046.png",
     "id": 46,
     "deskripsi_en": "The basic fabric is white, the colors are cream and light blue using technical writing and synthetic dyes.  \"Sitinggil\" describes the part of the Kasepuhan palace building located at the front, used by the Sultan to supervise war soldiers during training, court proceedings, preaching, and holding saketi gamelan. The pattern is divided into three rows with different decorations, which are stylized in a symbolic form. The motifs in the bottom row are larger than those in the middle and top rows. The decorative motifs in the middle lane are wadasan, gunungan, water spinach, pandan, mouse deer and birds. Meanwhile, the motif in the upper lane consists of three pairs of candles, wadasan and alit trees flanking the wings of the garuda. The \"Sitinggil\" motif is a building in the form of a wadasan decorative niche, made by Batik craftsman Trusmi Cirebon in 1970."
   },
@@ -1312,7 +1312,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-047.png",
+    "gambar": "/images/etno/etno-047.png",
     "id": 47,
     "deskripsi_en": "The collection is in the form of a cukil (large wooden spoon/spoon) with a length of 33 cm and a width of 8.8 cm made from one whole piece of wood without joints. The head of the object is wide oval, flat, and rounded at the tip, then narrows to form a straight handle that tapers towards the base. The surface of the object displays a dominant light brown natural wood grain, with contrasting dark brown-black tones in the center of the head and dark spots in the transition area to the handle. At the base end of the hilt there is a small circular piercing hole which functions as a hanging hole, and on the lower left side of the head is attached a square white paper label containing identification writing. In general, the physical condition of the object appears intact with a smooth surface, although there are natural stains and light scratches due to use or storage."
   },
@@ -1340,7 +1340,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-048.png",
+    "gambar": "/images/etno/etno-048.png",
     "id": 48,
     "deskripsi_en": "The collection is a traditional grater in the form of a vertical rectangular board with a length of 34 cm and a width of 11 cm made from whole wood. The top of the board has a symmetrical curved edge at both corners (resembling a sloping crown), while the bottom is cut straight and flat. The working area of ​​the grater is in the middle to the bottom, filled with hundreds of small chopping spikes (possibly made of metal wire or nails without heads) which are neatly embedded in a dense geometric row pattern. The wood surface displays a medium brown color with clearly visible natural grain, as well as a lighter yellowish degradation along the right side of the board. In the upper left corner of the object, attach a square white paper label with collection identification writing. In general, the condition of the object appears to be good and intact, with minimal stains from use or aging of the material around the scarred eye area."
   },
@@ -1368,7 +1368,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-049.png",
+    "gambar": "/images/etno/etno-049.png",
     "id": 49,
     "deskripsi_en": "The collection is a traditional cutting board measuring 29.8 cm long and 15 cm wide which is carved from one whole wooden board in the form of a vertical rectangle with rounded corners. At the top of the cutting board body, there is a neck that narrows and transitions into a symmetrical vertical oval handle with a rounded top end. In the center of the handle there is a small circular piercing hole which functions as a hanging hole. The wooden surface displays a dominant light yellowish brown color with a natural wood grain texture, accompanied by a vertical grayish gradation on the left side and a few dark brown spots on the bottom of the cutting board body. In general, the physical condition of the object appears intact and sturdy, with signs of wear in the form of light scratches and faint stains on the cutting surface due to long use."
   },
@@ -1396,7 +1396,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-050.png",
+    "gambar": "/images/etno/etno-050.png",
     "id": 50,
     "deskripsi_en": "The collection consists of traditional drinking vessels (glasses) with a height of 8.7 cm, a diameter of 8.7 cm, and a handle/base length of around 8 cm, which is composed of two main parts made from coconut shell material. The body of the container is a hemispherical bowl (coconut shell) that is dark brown in color with streaks of natural coarse fiber that run vertically across the surface. This container is supported by the legs/bottom pedestal in the form of a wide, tapered cone, light brown in color with a texture of natural spots, which is connected to the body of the glass using woven or thin yellowish cream colored rattan/bamboo rope ties at the neck of the connection. On the front wall of the glass body, there is a small square white paper label containing collection identification writing. Overall, the physical condition of the object appears to be intact, stable, and well maintained without any large visible cracks."
   },
@@ -1424,7 +1424,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-051.png",
+    "gambar": "/images/etno/etno-051.png",
     "id": 51,
     "deskripsi_en": "The collection consists of traditional drinking containers (glasses) with a height of 9 cm, a diameter of 7.5 cm, and a length/width of around 9 cm, made from coconut shell material. The structure of the object consists of a glass body in the shape of an oval cup resembling a bell with a dominant dark brown-black color and dense natural fiber streaks. The bottom of the cup is supported by a short, wide conical disk-shaped pedestal with a dark brown color that matches the body. These two parts are joined at the neck joint using ties or dividing rings made of thin rattan/bamboo material in a contrasting yellowish cream color. On the front wall of the glass body, there is a small square white paper label attached to identify the collection number. In general, the physical condition of the object appears to be good, sturdy and intact with the outer surface appearing smooth and polished."
   },
@@ -1452,7 +1452,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "2 teko 6 gelas , tinggi : 7 cm (cangkir) 13 cm (teko), diameter : 7,5 cm (cangkir) 10 cm (teko), panjang seluruh : 10 cm(cangkir) 20cm(teko) SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-052.png",
+    "gambar": "/images/etno/etno-052.png",
     "id": 52,
     "deskripsi_en": "A collection of traditional green and white striped/coral patterned enamel (blurik) drinking utensils, consisting of 2 midget teapots with lids and 6 cups (handled glasses), all of which are arranged on a large oval tray with a matching pattern with a floral accent in the middle. Each teapot has dimensions of 13 cm in height, 10 cm in body diameter, and an overall length from the tip of the spout to the handle of around 20 cm. It features a cylindrical body shape with a short curved spout, a circular handle, and a blunt conical lid with a knob. Meanwhile, the cups have dimensions of 7 cm in height, 7.5 cm in diameter, and a total length including the handle of 10 cm. They are straight cylindrical with a cup rim framed in a thin layer of dark blue/black. Several cup objects are stacked and placed asymmetrically in the center of the tray between the two teapots, and on one of the cups on the back right you can see a small white paper label marking the registration number. In general, the condition of the collection set looks intact and well maintained with the enamel shine still well maintained."
   },
@@ -1480,7 +1480,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-053.png",
+    "gambar": "/images/etno/etno-053.png",
     "id": 53,
     "deskripsi_en": "The collection is a traditional drinking vessel (cup) made from coconut shell with dimensions of 9.4 cm in height, lip diameter of 7.5 cm, and overall length including the handle reaching 11 cm. The structure of this object consists of three main components made of coconut shell with a uniform medium brown color and vertical natural fiber veins that are faintly visible throughout its surface. The body part of the cup is in the shape of an oval half ball which is supported directly by a pedestal leg in the form of a conical disc, angled upside down at the base and equipped with a lateral grip handle in the form of a rigid triangular corner which is firmly attached to one side of the cup wall. In general, the physical condition of the object appears intact, stable and well maintained with a smooth outer surface texture without significant structural cracks."
   },
@@ -1508,7 +1508,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-054.png",
+    "gambar": "/images/etno/etno-054.png",
     "id": 54,
     "deskripsi_en": "The collection is a traditional drinking vessel (cup) made from coconut shell with dimensions of 8 cm in height, lip diameter of 7.88 cm, and overall length including the handle reaching 7.8 cm. The structure of this object consists of three main components made of coconut shell with a uniform medium brown color and vertical natural fiber veins that are faintly visible throughout its surface. The body part of the cup is in the shape of an oval half ball which is supported directly by a pedestal leg in the form of a conical disc, angled upside down at the base and equipped with a lateral grip handle in the form of a rigid triangular corner which is firmly attached to one side of the cup wall. In general, the physical condition of the object appears intact, stable and well maintained with a smooth outer surface texture without significant structural cracks."
   },
@@ -1536,7 +1536,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-055.png",
+    "gambar": "/images/etno/etno-055.png",
     "id": 55,
     "deskripsi_en": "The collection consists of 3 cup lids (represented by 1 sample in the photo) in a flat, symmetrical round shape with dimensions of 8.3 cm in diameter and a total height of 2.5 cm including the knob. This object is made of a metal material such as stainless steel or aluminum which is shiny silver in color. On the outer/top surface, there is a small handle knob in the form of a graduated cylinder that stands out at the center point, surrounded by a printed decorative motif in the form of faint circles that intersect each other to form a flower petal pattern (rosette). The circular scratch pattern can also be seen in the inner base area of ​​the object which has a downward curved lip (rim lip) to support its position when cupped. On one side of the top surface near the knob, there is a small square white paper label attached with the identification name of the collection. Overall, the physical condition of the object appears intact, clean, and free from significant structural corrosion or dents."
   },
@@ -1564,7 +1564,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-056.png",
+    "gambar": "/images/etno/etno-056.png",
     "id": 56,
     "deskripsi_en": "The collection consists of 2 cups (handled glasses) made from ancient enamel with dimensions each 7 cm high and 7.5 cm lip diameter. Both objects have a perpendicular cylindrical shape coated with a plain cream (very light yellowish green) color which is dominant on the entire outer and inner surfaces of the cup body. On the top lip of the cup, there is a frame accent in the form of a thin dark blue (navy blue) circle that is completely circular symmetrically. Each cup is equipped with a curved handle (D-shaped handle) in body color attached to the side. On the front wall of each object, stick a square white paper label containing the identification number of the collection. Overall, the physical condition of both cups appears to be intact, stable and well maintained without any cracks, dents or chipping of the enamel layer that is visible on the surface."
   },
@@ -1592,7 +1592,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "8 buah, tinggi : 10 cm, 12,7 cm , 10,3 cm, diameter : 7 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-057.png",
+    "gambar": "/images/etno/etno-057.png",
     "id": 57,
     "deskripsi_en": "A set of drinking utensils collection consisting of a container in the form of a tray (tray) made of thick zinc/galvanized material and containing 8 truly transparent glass glasses with a diameter of 7 cm. The zinc tray has a square box shape"
   },
@@ -1620,7 +1620,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-058.png",
+    "gambar": "/images/etno/etno-058.png",
     "id": 58,
     "deskripsi_en": "The collection consists of accessories or nesta decorations (traditional weapon frames/holsters) with dimensions of 5.5 cm long and 3.5 cm wide in the form of asymmetrical metal plates resembling small shields with obtuse angles. This object is made of metal (possibly old brass or bronze) with a dull dark golden brown color due to natural patination. The entire front surface of this decoration is filled with embossed relief decorations with floral ornamental motifs in the form of carved tendrils of leaves and flowers that are carved very tightly and intricately. The edges are framed by thin border lines that follow the curve of the object's outer silhouette. Overall, the physical condition of this decorative component appears intact and the relief details still catch the eye very clearly, even though the metal texture shows natural surface distortion and normal aging of antique objects."
   },
@@ -1648,7 +1648,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-059.png",
+    "gambar": "/images/etno/etno-059.png",
     "id": 59,
     "deskripsi_en": "Sangka decoration (traditional weapon sheath) with dimensions of 10.8 cm long and 8 cm wide, which is inside"
   },
@@ -1676,7 +1676,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-060.png",
+    "gambar": "/images/etno/etno-060.png",
     "id": 60,
     "deskripsi_en": "The Pakinangan container is made of varnished wood, has an elliptical shape, at the top it is divided into six lids which have six chambers. Decorated with rectangular wooden strips along the sides and lid. The Pakinangan container functions as a container for storing ingredients for eating betel. On the side there are two pieces of wood that have come off."
   },
@@ -1704,7 +1704,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Diameter lingkaran penutup: 22,5 cm, Tinggi dari pegangan sampai bawah penutup: 7 cm. SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-061.png",
+    "gambar": "/images/etno/etno-061.png",
     "id": 61,
     "deskripsi_en": "The collection consists of traditional container covers (such as cauldron or pot covers) made from earthenware or baked clay (terracotta) with dimensions of a circle diameter of 22.5 cm. This object has a convex shape resembling a symmetrical sloping dome that rests on a thin circular bottom edge. At the top of the center of the object, there is a handle (knob) in the form of a short, flat cylindrical circle which has a slightly concave surface in the middle to make it easier to grip. The entire outer surface of the object displays a dominant reddish brown (terracotta) color with faint gradations of dark brown blackish spots on several sides, typical of traditional clay firing. On the left edge of the convex area, there is a small square white paper label attached to indicate the collection registration number. Overall, the physical condition of the object appears to be intact, thick and well maintained with a smooth surface that is free from structural cracks or large chips."
   },
@@ -1732,7 +1732,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "ada nomor  reg 03.733 di databse kursi goyang, p.bilah  : 25,7  cm,p.gagang  11,4  cm, p.sarung  : 28,5 cm, panjang dalam : 37,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-062.png",
+    "gambar": "/images/etno/etno-062.png",
     "id": 62,
     "deskripsi_en": "A traditional Badik type sharp weapon, the blade has a slender elongated shape with a straight blade back, while the edge of the sharp edge curves slightly upwards dynamically towards a sharply tapered tip (shoot). At the base of the blade near the upstream neck, there is an old white inventory code written with the code '03.733'. The badik handle is made of dark brown hardwood with a distinctive angled curved shape that resembles an inverted 'L' (traditional pistol style handle), providing an ergonomic grip function. The scabbard is made straight and slim following the shape of the blade with a natural light brown wood color that contrasts with the color of the upstream. The mouth of the sarong is designed to be wide with a curved accent that sticks out downwards (tail of the sheath). Along the shaft of the scabbard, there are structural variations in the form of 6 rows of winding reinforcing rings made of dark brown rattan that are spaced tightly horizontally."
   },
@@ -1760,7 +1760,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Hibah, p.bilah  : 33,5   cm, p.gagang  9,5  cm, p.sarung  : 8,5 cm ,panjang dalam : 42  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-063.png",
+    "gambar": "/images/etno/etno-063.png",
     "id": 63,
     "deskripsi_en": "Keris Imas Sundari, the blade of the keris is designed with a straight model without curves (bener) which extends slenderly until it ends at a tip (shoot) which tapers bluntly due to age corrosion. The entire metal surface looks dull, has rough pores, and is experiencing active corrosion in the form of brownish rust which obscures the original prestigious texture. The tip of the keris is made from horn or pitch black hardwood with an erogically curved shape, decorated with relief carvings of faint flora typical of the Javanese/Sundanese style, and equipped with a thin metal ring border at the base. The keris sheath uses the Gayaman model or the coastal area of ​​West Java/Sunda, made from medium brown wood. The sheath shaft (axle) is made plain without a metal covering, showing natural wood grain with a combination of black spots in several corners of the wood surface."
   },
@@ -1788,7 +1788,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Sumbangan p.bilah  : 26 cm, p.gagang  7,2 cm, p.sarung  : 28 cm, panjang dalam : 33,2  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-064.png",
+    "gambar": "/images/etno/etno-064.png",
     "id": 64,
     "deskripsi_en": "Keris Imas Sundari, a slender, straight keris blade with a base (sor-soran) that widens sharply, highlighting the straight portion of the hemp, then slowly tapers symmetrically until it reaches the tip (shoot) of the sharp, tapering blade. The forged metal surface appears ancient, dull, and has a texture of natural corrosion pores that absorb light. The upstream (dederan) is made of medium brown wood with an ergonomic curve typical of Javanese style, featuring fine carved details on the inner curve of the handle. Between the upstream and the blade is bounded by a metal spike ring with a neat beaded texture. This warangka is made from a piece of selected wood which shows the aesthetic beauty of real wood grain with dark brown stripes on a light golden brown base. The shaft of the sheath (axle) is designed plain (axle wungkul) without a protective metal sleeve (pendok), narrowing proportionally to the bluntly rounded bottom end."
   },
@@ -1816,7 +1816,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "tanpa sarangka, p.bilah  : 42,5 cm,  p.gagang  12,5  cm, panjang dalam : 54,5  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-065.png",
+    "gambar": "/images/etno/etno-065.png",
     "id": 65,
     "deskripsi_en": "Long-barreled sword (sharpoon sword), the blade of the sword is designed to be straight and single-edged with military characteristics in the form of a blood groove (fuller/blood groove) that extends wide on both sides of the blade, widening from the base and stopping several centimeters before reaching the tip (shoot) which is sharply curved. The handle structure is designed for dual function (hand grip or mounted on the tip of the rifle). The crossguard is equipped with a muzzle ring hole at the top. The handrail uses two pieces of dark brown hardwood which are clamped directly to the upstream plate using two circular iron screws/rivets. The end of the handle (pommel) is made of rounded solid iron with an internal locking slot mechanism and a press button at the end which functions as a mechanical hook on the rifle mount."
   },
@@ -1844,7 +1844,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p. bilah 27,5 cm, p.gagang  8,5  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-066.png",
+    "gambar": "/images/etno/etno-066.png",
     "id": 66,
     "deskripsi_en": "A traditional Keris Naga type weapon measuring 36 cm which was made using the monolith casting technique (hilt and blade fused). The keris blade is designed to be double-edged with a configuration of 3 curves (luk) which are completely distilled to form the body of a dragon which has dense scales from the base to the tip (shoot). At the base (sor-soran), there is a figure in the form of a god or mythological creature with a crown (Naga Raja) in an upright position facing outwards. The upper part (handle) of the keris displays carvings in the form of anthropomorphic figures with strong facial expressions.  The body of the figure on this handle is decorated with horizontal geometric lines, the ends curved downwards to form an ergonomic angle for grip."
   },
@@ -1872,7 +1872,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-067.png",
+    "gambar": "/images/etno/etno-067.png",
     "id": 67,
     "deskripsi_en": "The medium is woven natural sharpened bamboo blades with a decorative geometric pattern with dimensions of 18 cm in height and 20 cm in diameter at the mouth of the container. This object consists of two main components, namely the container (boboko) and the lid. The round body of the container is convex in the middle with a lip reinforced with thick woven coils, and is supported by legs (soko) in the form of massive rectangular blocks made of sturdy bamboo slats at the bottom. The lid of the container is designed to be precisely convex, having a small handle hook at the top. The physical condition of this traditional woven bamboo craft looks very intact, the woven fibers are neat with nothing broken or sticking out, the structure is precise, and very well maintained."
   },
@@ -1900,7 +1900,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "3443124 SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-068.png",
+    "gambar": "/images/etno/etno-068.png",
     "id": 68,
     "deskripsi_en": "The medium is woven natural sharpened bamboo blades with dimensions of 16 cm high and 28 cm diameter at the mouth of the container. This container has a solid rectangular basic construction, but dynamically convexes at the body to form a rounded cylindrical mouth hole at the top. The weaving technique applied is traditional braided braiding (single/double sasak) which is very tight and the lip or top circumference of the container is reinforced with circular bamboo slats which are tied neatly using twists of bright yellow synthetic fiber rope to support the structure so that it does not loosen easily. The physical condition of this tolombong craft looks very intact, clean, the woven fibers are not broken or sticking out, and are in good condition."
   },
@@ -1928,7 +1928,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-069.png",
+    "gambar": "/images/etno/etno-069.png",
     "id": 69,
     "deskripsi_en": "The collection consists of traditional serving containers in the form of deep concave plates or resembling sloping mortars made from earthenware or baked clay (terracotta) with dimensions of 22 cm in diameter and 5 cm in height. This object has a symmetrical round shape with the walls sloping downwards, resting on a flat base. The top edge (rim) is made thick and rounded out consistently along the entire circumference of the plate. The entire surface of the object displays a bright and even reddish brown (terracotta) color typical of clay material without a layer of glaze. On the inside of the container, precisely at the bottom of the middle plate slightly upwards, there is a small square white paper label attached to identify the collection number. Overall, the physical condition of the object appears to be intact, sturdy and in good condition without any visible signs of structural cracks or chipping on the surface or edges."
   },
@@ -1956,7 +1956,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-070.png",
+    "gambar": "/images/etno/etno-070.png",
     "id": 70,
     "deskripsi_en": "The collection consists of 11 glass glasses without handles made from transparent clear glass with uniform dimensions of 13 cm in height and an upper lip diameter of 7 cm. All objects have an upright cylindrical shape (tumbler) with a body diameter that decreases slightly consistently towards the base, and rests on a glass circular base that thickens at the bottom. In general, the overall physical condition of the object appears to be intact and sturdy without any major structural cracks or chipping on the edge of the upper lip, although some glasses show signs of wear, faint grayish cloudy stains, as well as traces of yellowish stains on the bottom of the glass due to long storage."
   },
@@ -1984,7 +1984,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-071.png",
+    "gambar": "/images/etno/etno-071.png",
     "id": 71,
     "deskripsi_en": "The jar is made from thick, clear, transparent glass with dimensions of a total height of 24 cm and a body diameter of 10 cm. The object structure consists of two separate parts, namely the main container and the lid. The main container has an upright cylindrical shape with shoulders (jar) with a short cylindrical neck that narrows and ends with a thick circular upper lip that widens outwards (flared rim). The cover is in the form of a thick glass round disc with a circular step pattern with a central handle (knob) in the shape of a small ball-shaped knob. Overall, the physical condition of the object appears to be intact, stable, and free from major structural cracks, although the glass surface shows signs of natural aging in the form of light dust dullness and a faint grayish cloudy stain at the bottom of the container due to long storage."
   },
@@ -2012,7 +2012,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-072.png",
+    "gambar": "/images/etno/etno-072.png",
     "id": 72,
     "deskripsi_en": "The medium is an animal skin membrane and a dark red colored wooden body with dimensions of 15 cm in height and a bat diameter of 46 cm. This musical instrument has a rounded, circular shape resembling a large bowl or convex saucer with a flat lower base. The top surface is covered by a thick, natural cream-brown leather membrane that is stretched taut, then secured around the rim of the instrument using a tangle of small square wooden pegs, rattan dividers, and horizontal reinforcing woven ties. The lower wooden body is painted with a layer of red which has faded and thinned on several sides due to natural aging. The physical condition of this tambourine generally looks strong in the main structure of the body and the skin membrane."
   },
@@ -2040,7 +2040,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-073.png",
+    "gambar": "/images/etno/etno-073.png",
     "id": 73,
     "deskripsi_en": "Using woven natural sharpened bamboo slats with a hardwood support axle, it has dimensions of a total length of 117.5 cm, a container height of 32 cm, and a container mouth diameter of 29 cm. This object consists of a pair of woven baskets symmetrically on the left and right sides which are connected by a straight pole (axle) in the middle. Each container features a rectangular base construction with a cylindrical convex body structure that extends to the circumference of the upper mouth. The woven technique uses a tight braid pattern with a natural golden brown color that is mature and uniform. The upper lip of the basket is strengthened by a layer of thick dark brown bamboo circles which are clamped tightly, and is equipped with a support board on the outside where the support rod rests. At the outer ends of the left and right axles, there are small vertical wooden pegs which function as locks. The physical condition of this sundung looks very intact, sturdy, the woven fibers are neat without defects, and very well maintained."
   },
@@ -2068,7 +2068,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-074.png",
+    "gambar": "/images/etno/etno-074.png",
     "id": 74,
     "deskripsi_en": "Made from animal skin membranes and a lathe wood body with dimensions of 12 cm in height and a punch area diameter of 27.5 cm. This musical instrument features a circular, cylindrical construction with a bottom that rests on a flat, slightly tapered circular foot structure. The top surface is covered by a stretch of thick, natural cream or ivory-brown leather membrane, which is pulled tightly around the top lip of the container using a network of vertical pins made of short sections of bamboo or rattan that line tightly around the walls. The network of stakes is then locked and held in tension by a horizontal metal wire ring that encircles the lower waist of the wooden body. The wooden body of this instrument displays a dark reddish brown (mahogany) color with the natural wood grain texture still visible under the aging layer of varnish. The overall physical condition of the object appears to be very intact, the structure is precise without any loose parts, there are no tears in the skin, and it is well maintained."
   },
@@ -2096,7 +2096,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-075.png",
+    "gambar": "/images/etno/etno-075.png",
     "id": 75,
     "deskripsi_en": "The main medium is pieces of natural bamboo tubes with acoustic geometric patterns with dimensions of 69 cm long, 20 cm wide and 13 cm high. The main body (resonator) is made using a cylindrical cavity of solid yellowish brown bamboo, complete with a composition of symmetrical curved sound holes (f-holes) on the left and right sides of the top surface for sound resonance. A straight handle (neck) of the bamboo blade is firmly attached extending towards the bottom left, ending in a traditional pegbox equipped with four horizontal wooden pegs to fasten the strings. On top of the bamboo body, a thick wooden string bridge component is installed to support the stretch of four metal strings tied to the bottom base of the instrument. At the base of the instrument's tail, there is a transverse horizontal support bar structure which functions to maintain the stability of the instrument when placed. The physical condition of this bamboo violin appears to be very intact, the bamboo fiber is well preserved, all the main components - including the four strings - are still installed precisely in a stable structural unit."
   },
@@ -2124,7 +2124,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-076.png",
+    "gambar": "/images/etno/etno-076.png",
     "id": 76,
     "deskripsi_en": "Bamboo musical instruments are long tube-shaped and have a small diameter. There are six air holes to adjust the tone. The flute is a traditional musical instrument originating from West Java."
   },
@@ -2152,7 +2152,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-077.png",
+    "gambar": "/images/etno/etno-077.png",
     "id": 77,
     "deskripsi_en": "Natural hardwood media with relief sculpture decoration, has dimensions of 25 cm long, 24 cm wide and 6 cm high. This square-shaped object is designed to have a massive fibrous interior construction which is divided into several partition compartments, including one large square box in the center surrounded by dozens of small partition boxes along the inner edges. The covering board components are made separately, displaying high-level carving skills in the form of stylized motifs of symmetrical curved leaf tendrils (lung-lungan) carved embossed within a triangular frame resembling a mountain. The physical condition of the wooden container and cover is in a very intact, sturdy condition, free from structural cracks."
   },
@@ -2180,7 +2180,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "tanpa gagang, lebar sarung : 17 cm , panjang sarung ; 37 cm, panjang keris ; 31 cm, lebar keris : 7 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-078.png",
+    "gambar": "/images/etno/etno-078.png",
     "id": 78,
     "deskripsi_en": "The blade of the keris displays a stylized curved shape of 7 curves with the condition of the metal surface being solidly corroded and covered in a natural grayish brown rust patina typical of ancient forged blades (lawasan). At the base of the blade, there is a section of marijuana that extends perpendicular to a straight iron needle (pesi) extending to the left which functions as a grip for upstream support. The keris sheath (warangka) features a model of a spring jumper/sandang walikat made of dark wood with mature natural fiber, connected to a straight axle section which is wrapped in a plain metal sleeve (pendok) of faded golden yellow color. The physical condition of the blade is experiencing massive surface corrosion wear but the structure remains intact, while the sheath components are in a sturdy, stable and well-maintained condition."
   },
@@ -2208,7 +2208,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan : kuningan  ,banyak lubang cetakan : 12 cm, oval 6, bunga 6 SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-079.png",
+    "gambar": "/images/etno/etno-079.png",
     "id": 79,
     "deskripsi_en": "Brass metal media, has dimensions of 3.5 cm in height and a disk diameter of 28 cm. This cooking utensil is in the form of a flat, rounded circular disc with a slightly raised outer edge, and is equipped with two small curved handles on the left and right sides for easy lifting. In the main cross-sectional area of ​​the mold, there are 11 hollow holes in the thick dough container which are divided into two variations of geometric-organic motifs, including 6 holes in the form of a stylized eight-petaled blooming flower in the center and 5 holes in the shape of a layered oval (similar to a starfruit or shell motif) along the outer edge circle. The physical condition of this brass mold is in a very intact condition, shiny clean, free from massive soot crust, has no cracked casting defects, and is very well maintained."
   },
@@ -2236,7 +2236,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-080.png",
+    "gambar": "/images/etno/etno-080.png",
     "id": 80,
     "deskripsi_en": "The assembly media is a cylindrical iron or zinc metal plate with dimensions of 11 cm in height and a body diameter of 7.5 cm. This lamp has a fuel container construction in the form of an upright cylinder, colored dark moss green or greenish gray, with a top cover surface that slopes convexly towards the neck of the central shaft. At the top of the shaft, a small wick pipe with decorative red and yellow stripes sticks out which holds a wick of thick white cotton fiber ready to burn at the end. On the right side of the cempor body, a hand grip (handle) is attached from a folded flat metal plate that angles downwards to make it easier to mobilize the tool. The physical condition of this traditional cempor looks very intact."
   },
@@ -2264,7 +2264,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-081.png",
+    "gambar": "/images/etno/etno-081.png",
     "id": 81,
     "deskripsi_en": "The implant (spatula/sodet) is made of metal (stainless steel) in shiny silver (glossy silver) with a total length of up to 36.5 cm. This object consists of two main parts that are integrated, namely the handle and the cross-section of the sodette. The cross-section of the end of the sodette is flat rectangular with rounded top corners and has a cross-sectional width of 7.5 cm at the end. The section is firmly connected to a long cylindrical handle that tapers consistently towards the base of the handle. At the end of the base of the handle, there is a flat, vertical hollow structure which functions as a hook or hanging hole. On the upper surface of the sodette section to the left of the center, a small square white paper label is attached containing the collection number identification. Overall, the physical condition of the object appears intact, straight and sturdy without any significant structural deformation or dents, with faint fine scratches on the metal surface due to previous use."
   },
@@ -2292,7 +2292,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-082.png",
+    "gambar": "/images/etno/etno-082.png",
     "id": 82,
     "deskripsi_en": "Tebok cangkingan is a container used to sell wet cakes in the Cirebon area. Made from woven brown bamboo in a circular shape like a nyiru. However, the edge is higher than the nyiru, and has a handle that functions as a handle. The handle is made of bamboo which at each end branches into two to function as the legs of the handle. The handle and edges are varnished."
   },
@@ -2320,7 +2320,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-083.png",
+    "gambar": "/images/etno/etno-083.png",
     "id": 83,
     "deskripsi_en": "Nyiru (tampah) is made from woven bamboo with dimensions of 49.5 cm in diameter and 7 cm in height. This object has a symmetrical round shape with a base that slopes gently towards the slightly raised edge wall. The entire woven surface displays a mature natural medium brown color, with a decorative variation in the form of an arrangement of woven bamboo slats in a lighter (yellowish) color that forms a geometric crosshatch pattern in the center of the base of the container. The outer edge (rim) is reinforced by a double ring frame of thick bamboo or rattan slats which are tied tightly using a technique of winding flat, brightly colored rattan fibers consistently, neatly and tightly along the circumference. The physical condition of the object appears to be very intact, sturdy and well-maintained with the density of the woven structure still well maintained without any signs of broken damage or blades sticking out."
   },
@@ -2348,7 +2348,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-084.png",
+    "gambar": "/images/etno/etno-084.png",
     "id": 84,
     "deskripsi_en": "The filter material is a combination of metal and wood with overall dimensions of 56.5 cm and a filter cross-sectional diameter of 26.5 cm. The main cross-section has a sloping concave circular shape filled with a concentric arrangement of small circular perforations as oil drainage channels. The metal surface displays a silver-gray hue accompanied by a striking gradation of purplish and brownish rainbow stains (heat stain) due to the intensity of exposure to oil heat, especially clearly visible on the outer back which is reinforced by a flat triangular joint structure. The metal section is firmly connected to a long cylindrical handle made of medium brown laminate wood through a supporting metal pipe sleeve. Overall, the physical condition of the object appears to be intact, stable, and structurally strong without any signs of structural cracks in the wood or large dents on the metal plate, showing traces of natural wear that are normal from previous use."
   },
@@ -2376,7 +2376,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.bilah: 11,5  cm, p.gagang : 11,3 cm, p.sarung:  -, p.dalam : 22,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-085.png",
+    "gambar": "/images/etno/etno-085.png",
     "id": 85,
     "deskripsi_en": "Household utility kitchen knives produced by modern manufacturers. The knife blade is made of shiny silver stainless steel with a straight, horizontal blade back, while the sharp edge is on the lower side. The middle side of the blade contains printed material markings in the form of the word 'STAINLESS'. The handle is made ergonomic with a geometric square cut that widens to the rear end. The sturdy handle clamps the blade's core iron plate (full-tang) using two silver metal rivets installed horizontally parallel at the base of the blade, providing good stability when the knife is used for cutting activities."
   },
@@ -2404,7 +2404,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-086.png",
+    "gambar": "/images/etno/etno-086.png",
     "id": 86,
     "deskripsi_en": "Figura made from classic wood from China with a brown base color and an arbitrary rectangular shape. This figure is usually used to store photos as home decoration."
   },
@@ -2432,7 +2432,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-087.png",
+    "gambar": "/images/etno/etno-087.png",
     "id": 87,
     "deskripsi_en": "It is shaped like a tube that tapers downwards and has a lid at the top. Dark brown in color, made from woven bamboo. The trap generally functions to filter dirt at the bottom of the pool and maintain the water volume so that it does not overflow."
   },
@@ -2460,7 +2460,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-088.png",
+    "gambar": "/images/etno/etno-088.png",
     "id": 88,
     "deskripsi_en": "A set of small eating and cooking utensils and a container made of thick, plain dark green plastic with a height of 8.5 cm and a top lip diameter of 4.2 cm. The storage container has a vertical cylindrical shape resembling a mini basket with rectangular perforated walls (slotted grid) arranged regularly around the body of the container, and has a thick top edge that slightly flares out (flared rim). In this container, various kinds of silver metal spoons are stored in a standing position sticking upwards, which includes a dinner spoon with an oval cross-section, a fork, and several small vegetable spoons (irus) with a round, concave cross-section with a curved tank. On the outside of the bottom left of the container, attach a square white paper label to identify the collection number. Overall,"
   },
@@ -2488,7 +2488,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-089.png",
+    "gambar": "/images/etno/etno-089.png",
     "id": 89,
     "deskripsi_en": "Yellowish brown in color, made from woven bamboo which functions as a food wrapper when traveling (carrying lunch). Rectangular shape with both ends folded down."
   },
@@ -2516,7 +2516,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-090.png",
+    "gambar": "/images/etno/etno-090.png",
     "id": 90,
     "deskripsi_en": "The collection consists of traditional wall decorations or rectangular feng shui mirrors with dimensions of 14.5 cm long and 9 cm wide. This object is framed by simple flat wood in plain bright red on all four sides. In the center of the mirror area with a transparent white background, there are two main illustrations arranged vertically; the upper part features a colorful (red, blue, green, yellow) octagonal mirror (bagua) symbol with a black-and-white yin yang symbol at the center, while the lower part features an illustration of a tiger's head with open jaws biting a short sword. At the top of the top frame, a small triangular wire hook is attached which functions as a wall hanger. Overall, the physical condition of the object appears intact, stable and well maintained, although there are slight traces of natural wear in the form of thin red paint peeling on several corners of the wooden frame due to age or storage."
   },
@@ -2544,7 +2544,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-091.png",
+    "gambar": "/images/etno/etno-091.png",
     "id": 91,
     "deskripsi_en": "Tube-shaped, used the same as a flute, only shorter and larger. There are five air holes that function as tone generators. At the top there is a lid, underneath which there is a hole for blowing."
   },
@@ -2572,7 +2572,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-092.png",
+    "gambar": "/images/etno/etno-092.png",
     "id": 92,
     "deskripsi_en": "Made from melted copper then printed with a floral motif, at the bottom of the container there is a flower petal motif, it has legs with stem and leaf motifs. Functions as a container for fruit, accessories and other items."
   },
@@ -2600,7 +2600,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-093.png",
+    "gambar": "/images/etno/etno-093.png",
     "id": 93,
     "deskripsi_en": "Decorations in the form of anthropomorphic monkeys made from carved wood with dimensions of 10 cm wide and 15.5 cm high. These two forms of monkeys are depicted in a symmetrical squatting position on a thin round base, with both hands raised to the sides of the shoulders holding something, and covered with the dominant dark red (lipp) gilding. The back part of the two objects where there is a vertical recess cavity in the form of an upright rectangle which was deliberately created as a slot or support for other structures. The surface of all objects shows very clear signs of aging (weathered look) in the form of peeling layers of red, outcrops of grayish original wood grain in the corners, as well as spots of natural wear."
   },
@@ -2628,7 +2628,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Tangan Kanan Tidak Ada, kain batik coklat, ada aksesoris oren. badan : 20 cm, p.kepala : 17 cm, p.tangan : 22 cm, p.seluruh :  46,2 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-094.png",
+    "gambar": "/images/etno/etno-094.png",
     "id": 94,
     "deskripsi_en": "Aladara is one of the wayang golek characters who has a firm facial expression, red eyes, green face, fanged teeth, pot belly, who usually plays giant or blind characters."
   },
@@ -2656,7 +2656,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain kotak seperti sarung berwarna biru, P.badan : 12,5  cm, p.kepala : 13,5 cm, p.tangan : 24 cm, p.seluruh :  43 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-095.png",
+    "gambar": "/images/etno/etno-095.png",
     "id": 95,
     "deskripsi_en": "Samba is a character who is the son of Putra Batara Kresna. This character depicts a handsome knight who is clever, good at talking but is arrogant, timid and goes around on his own terms"
   },
@@ -2684,7 +2684,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "berkain batik coklat cream, p.badan : 14  cm, p.kepala : 16 cm, p.tangan : 23 cm, p.seluruh :  47 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-096.png",
+    "gambar": "/images/etno/etno-096.png",
     "id": 96,
     "deskripsi_en": "Antareja is a character who is the first son of Bima and Dewi Nagagini. Known as a powerful knight, honest, loyal, willing to sacrifice and very devoted. Characterized by a red face, red eyes, thick mustache. as well as a dragon-scaled body."
   },
@@ -2712,7 +2712,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "berkain batik coklat tua p.badan : 14  cm, p.kepala : 19 cm, p.tangan : 23,5 cm, p.seluruh :  41 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-097.png",
+    "gambar": "/images/etno/etno-097.png",
     "id": 97,
     "deskripsi_en": "Dursasana is a character who is the son of King Dustrarastra. This character has a light blue face, red eyes, a wide mouth, a thick mustache, sideburns, a pot belly, and has an arrogant nature and acts arbitrarily."
   },
@@ -2740,7 +2740,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "berkain polos warna oren p.badan : 13 cm, p.kepala : 14 cm, p.tangan : 22 cm, seluruh :  35,2 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-098.png",
+    "gambar": "/images/etno/etno-098.png",
     "id": 98,
     "deskripsi_en": "He is the 3rd Pandava knight figure who has a beautiful face. This character is skilled at using arrows"
   },
@@ -2768,7 +2768,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": ", p.badan : 15 cm, p.kepala : 13,5 cm, p.tangan : 20 cm, p.seluruh :  43,2 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-099.png",
+    "gambar": "/images/etno/etno-099.png",
     "id": 99,
     "deskripsi_en": "Wearing a red scarf and plain red cloth, dashing posture, handsome and dignified face"
   },
@@ -2796,7 +2796,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 20,5 cm, p.kepala : 15 cm, p.tangan : 24 cm, p.seluruh :  37 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-100.png",
+    "gambar": "/images/etno/etno-100.png",
     "id": 100,
     "deskripsi_en": "Green cloth with white floral pattern and green checkered sarong. Red face, wide eyes, red eyeballs, big body"
   },
@@ -2824,7 +2824,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": ", p.badan : 17,5 cm, p.kepala : 15 cm ,p.tangan : 24 cm, p.seluruh :  39 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-101.png",
+    "gambar": "/images/etno/etno-101.png",
     "id": 101,
     "deskripsi_en": "The dominant batik cloth is peach and uses an orange scarf. Gallant posture, handsome and dignified face, pot-bellied"
   },
@@ -2852,7 +2852,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 20 cm, p.kepala : 20,5 cm, p.tangan : 26 cm ,p.seluruh :  50 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-102.png",
+    "gambar": "/images/etno/etno-102.png",
     "id": 102,
     "deskripsi_en": "Brown Batik cloth clothing and orange tie. He is the figure of the 2nd Pandava knight who has a black body, wide red eyes, long thumbnails, pot belly, fanged teeth. This character is tough, brave, brave"
   },
@@ -2880,7 +2880,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 17 cm, p.kepala : 19 cm, p.tangan : 24 cm, p.seluruh :  44 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-103.png",
+    "gambar": "/images/etno/etno-103.png",
     "id": 103,
     "deskripsi_en": "He has a red face, wide eyes, red eyeballs, big body, thick mustache and beard. Green batik cloth, blue motif"
   },
@@ -2908,7 +2908,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 15 cm, p.kepala : 18 cm, p.tangan : 23 cm, p.seluruh :  40cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-104.png",
+    "gambar": "/images/etno/etno-104.png",
     "id": 104,
     "deskripsi_en": "The character comes from Indonesia which is another name for the character Antasena, son of Bima. Green face, wide red eyes, mustache and beard, brown batik side cloth."
   },
@@ -2936,7 +2936,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 15 cm, p.kepala : 16 cm, p.tangan : 23 cm, p. seluruh :  48 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-105.png",
+    "gambar": "/images/etno/etno-105.png",
     "id": 105,
     "deskripsi_en": "He has a red face, wide eyes, red eyeballs, big body, thick mustache and beard. The dominant blue checkered sarong."
   },
@@ -2964,7 +2964,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 16 cm, p.kepala : 16  cm, p.tangan : 18,5  cm, p. seluruh : 41 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-106.png",
+    "gambar": "/images/etno/etno-106.png",
     "id": 106,
     "deskripsi_en": "Gallant posture, handsome and dignified face, dominant maroon sarong and wearing a red scarf"
   },
@@ -2992,7 +2992,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 13 cm. p.kepala : 25 cm , p.tangan : 21 cm , p.seluruh : 34,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-107.png",
+    "gambar": "/images/etno/etno-107.png",
     "id": 107,
     "deskripsi_en": "Symbolizes spiritual perfection and leader education. He is a prince with a gentle soul, loyal and authoritative. Maroon colored sarong, wearing clothes, scarves and accessories."
   },
@@ -3020,7 +3020,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": ", tangan sebelah kiri copot, p.badan : 13,5 cm, p.kepala : 15 cm ,p.tangan : 23 cm, p. seluruh :  39 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-108.png",
+    "gambar": "/images/etno/etno-108.png",
     "id": 108,
     "deskripsi_en": "A wise, powerful figure and a spiritual teacher. Their roles are implied through the wisdom of other characters. Green batik sarong, green scarf"
   },
@@ -3048,7 +3048,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "lengan bagian bawah kiri tidak ada, p.badan : 16,5  cm, p.kepala : 15cm, p.tangan : 23 cm, p.seluruh :  34 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-109.png",
+    "gambar": "/images/etno/etno-109.png",
     "id": 109,
     "deskripsi_en": "5th Pandawa figure. Orange sarong, blue scarf."
   },
@@ -3076,7 +3076,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 16,5  cm, p.kepala : 15 cm, p.tangan : 23 cm, p.seluruh :  34 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-110.png",
+    "gambar": "/images/etno/etno-110.png",
     "id": 110,
     "deskripsi_en": "Royal side character. Dressed in black and brown batik cloth, wearing batik blanks, pangsi clothes"
   },
@@ -3104,7 +3104,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 16,5  cm, p.kepala : 15 cm, p.tangan : 23 cm, p. seluruh :  34 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-111.png",
+    "gambar": "/images/etno/etno-111.png",
     "id": 111,
     "deskripsi_en": "Symbolizes the character of a noble princess, has the values ​​of loyalty, beauty, wisdom and courage as well as elegance in Sundanese wayang stories. Wearing a black tank top with red trim, green Stagen, burgundy skirt with gold trim, batik cloth"
   },
@@ -3132,7 +3132,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 14  cm, p.kepala : 17 cm, p.tangan : 18 cm, p.seluruh :  41 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-112.png",
+    "gambar": "/images/etno/etno-112.png",
     "id": 112,
     "deskripsi_en": "Gallant posture, handsome and dignified face. Brown batik cloth, green clothes with red ribbon, pink scarf."
   },
@@ -3160,7 +3160,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": ", p.badan : 15  cm, p.kepala : 14 cm, p.tangan : 22 cm, p.seluruh :  38 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-113.png",
+    "gambar": "/images/etno/etno-113.png",
     "id": 113,
     "deskripsi_en": "Red-faced, mustachioed. Known as a blind/giant figure, usually found in traditional Sundanese wayang golek performances that highlight Sundanese mythology. Wearing pangsi, red sarong."
   },
@@ -3188,7 +3188,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 12,5 cm, p.kepala : 13 cm, p.tangan : 21,5  cm ,p.seluruh :  41 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-114.png",
+    "gambar": "/images/etno/etno-114.png",
     "id": 114,
     "deskripsi_en": "Gallant posture, handsome dignified face, red face, wide red eyes. Cream brown batik sarong, with orange belt."
   },
@@ -3216,7 +3216,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 17 cm, p.kepala : 23 cm, p.tangan : 22  cm, p.seluruh :  39 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-115.png",
+    "gambar": "/images/etno/etno-115.png",
     "id": 115,
     "deskripsi_en": "He has a rough face, red face, wide eyes, red eyeballs, big body, thick mustache and beard. Wearing white and blue batik."
   },
@@ -3244,7 +3244,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 17 cm, p.kepala : 17 cm, p.tangan : 22  cm, p.seluruh : 42 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-116.png",
+    "gambar": "/images/etno/etno-116.png",
     "id": 116,
     "deskripsi_en": "His face was red, his eyes were wide red, he had a frown and beard. Wearing black clothes combined with batik. Wearing cream tank tops. Orange plain cloth."
   },
@@ -3272,7 +3272,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 15 cm ,p.kepala : 12 cm, p.tangan : 22  cm, p.seluruh : 45 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-117.png",
+    "gambar": "/images/etno/etno-117.png",
     "id": 117,
     "deskripsi_en": "He is the opening figure as an entertainer, wearing a flower motif, eyes wide red, wearing red earrings, wearing a hairpin, wearing a plain orange cloth, black kebaya, scarf with gradient floral motifs."
   },
@@ -3300,7 +3300,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 10,5 cm, p.kepala : 13 cm, p.tangan : 20,5  cm, p.seluruh : 36 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-118.png",
+    "gambar": "/images/etno/etno-118.png",
     "id": 118,
     "deskripsi_en": "Red face, red eyes, mustache, thin beard, wearing green blanks. Is a supporting role. Wear black cloth"
   },
@@ -3328,7 +3328,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 14 cm, p.kepala : 13,5cm, p.tangan : 20,5  cm, p.seluruh : 43,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-119.png",
+    "gambar": "/images/etno/etno-119.png",
     "id": 119,
     "deskripsi_en": "Gallant posture, handsome and dignified face. Wearing a blue striped cloth."
   },
@@ -3356,7 +3356,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 15 cm, p.kepala : 11 cm, p.tangan : 24 cm, p.seluruh : 34 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-120.png",
+    "gambar": "/images/etno/etno-120.png",
     "id": 120,
     "deskripsi_en": "Rough face, red eyes, red mustache, beard, wrinkled forehead. Wearing black janggang with pink trim, wearing black blank with cream motif, black and brown batik cloth."
   },
@@ -3384,7 +3384,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "P.kepala : 14 cm, p.tangan : 13 cm, p.ekor : 21 cm, p.seluruh :  36,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-121.png",
+    "gambar": "/images/etno/etno-121.png",
     "id": 121,
     "deskripsi_en": "Gallant posture, handsome dignified face, red face, wide red eyes. Wearing an orange sarong."
   },
@@ -3412,7 +3412,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "p.badan : 14,5 cm, p.kepala : 16 cm, p.tangan : 24 cm, p.seluruh : 47,5  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-122.png",
+    "gambar": "/images/etno/etno-122.png",
     "id": 122,
     "deskripsi_en": "His face is red, his eyes are red, he has a beard. He is a mighty figure of the monkey king (wanara). Described as having an angry, strong and greedy character because of his supernatural powers. Wearing brown floral motif batik cloth."
   },
@@ -3440,7 +3440,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain batik coklat cream, panjang seluruh : 77 cm, p.sarung : 47 cm, p.badan : 13,5 cm, p.kepala : 19 cm, p.tangan : 22  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-123.png",
+    "gambar": "/images/etno/etno-123.png",
     "id": 123,
     "deskripsi_en": "Faded red face, beard, wide red eyes, red lips. He was Prabukresna's older brother, the white king of Mandura, who had a tough but wise character, Ahligada, had the Manggala and Alugara heirlooms, and was the teacher of Bima and Duryudana who eventually became the king's advisor after Baratayuda and achieved moksha."
   },
@@ -3468,7 +3468,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain batik coklat ungu, panjang seluruh : 73  cm, p.sarung : 48 cm, p.badan : 13 cm, p.kepala : 18 cm, p.tangan : 23 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-124.png",
+    "gambar": "/images/etno/etno-124.png",
     "id": 124,
     "deskripsi_en": "Is a central figure who symbolizes truth, loyalty and justice. He is the incarnation of the god Vishnu"
   },
@@ -3496,7 +3496,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain polos coklat, terdapat selendang strip hitam merah,  panjang seluruh : 61 cm, p.sarung :  39,5 cm, p.badan : 15 cm, p.kepala : 13,5 cm, p.tangan : 21 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-125.png",
+    "gambar": "/images/etno/etno-125.png",
     "id": 125,
     "deskripsi_en": "Red face, narrow eyes. This is another name for Abhimanyu, the brave young knight, son of Arjuna and Dewi Subadra, who was famous for his heroism in the Baratayuda war. Died tragically after fighting many Kaurava enemies. It carries the fragrance of the Pandavas"
   },
@@ -3524,7 +3524,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain salur hijau, panjang seluruh : 56 cm, p.sarung :  33  cm,p.badan : 14 cm , p.kepala : 15 cm, p.tangan : 24 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-126.png",
+    "gambar": "/images/etno/etno-126.png",
     "id": 126,
     "deskripsi_en": "He has a thin mustache, beard, his eyes are red. Soldiers in wayang cepak symbolize fidelity, faithfulness and hard work. They are representatives of the people who are ready to protect the sovereignty of their homeland"
   },
@@ -3552,7 +3552,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain batik coklat, Memakai kain batik coklat, panjang seluruh : 73 cm, p.sarung :  44,5 cm, p.badan : 16 cm, p.kepala : 19 cm, p.tangan : 24 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-127.png",
+    "gambar": "/images/etno/etno-127.png",
     "id": 127,
     "deskripsi_en": "Red face, wide eyes, red eyeballs, big body, thick mustache and sideburns, turquoise colored body."
   },
@@ -3580,7 +3580,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain batik coklat, memakai sabuk besi, lengan kanan tidak ada Sebagian, panjang seluruh : 64 cm, p.sarung :  44 cm, p.badan : 14,5 cm ,p.kepala : 11,5 cm, p.tangan : 21 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-128.png",
+    "gambar": "/images/etno/etno-128.png",
     "id": 128,
     "deskripsi_en": "He is the 3rd Pandava knight figure who has a beautiful face. This character is skilled at using arrows. Red face, red eyes, mustache, frowning forehead, knitted eyebrows"
   },
@@ -3608,7 +3608,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain polos oren, memakai kemben hitam, serta selendang biru, memakai rok hijau. p.seluruh : 56 cm, p.sarung :  37 cm, p.badan : 13,5 cm, p.kepala : 11 cm, p.tangan : 19 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-129.png",
+    "gambar": "/images/etno/etno-129.png",
     "id": 129,
     "deskripsi_en": "Symbolizes the character of a noble princess, has the values ​​of loyalty, beauty, wisdom and courage as well as elegance in Sundanese wayang stories. Slant-eyed"
   },
@@ -3636,7 +3636,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain batik coklat, selendang hitam, panjang seluruh : 64 cm, p.kepala ; 21,5 cm, p.badan : 17 cm, p.tangan ; 25 cm, bahan : kayu, campurit : 45 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-130.png",
+    "gambar": "/images/etno/etno-130.png",
     "id": 130,
     "deskripsi_en": "Red face, wide red eyes, pot belly, beard. A giant with a warrior spirit from the kingdom of Lanka"
   },
@@ -3664,7 +3664,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain sarung kotak coklat, Berkain sarung kotak coklat, panjang seluruh : 55 cm, p.kepala ; 14,5 cm, p.badan : 18 cm, p.tangan ; 25 cm, bahan : kayu, campurit : 47 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-131.png",
+    "gambar": "/images/etno/etno-131.png",
     "id": 131,
     "deskripsi_en": "The body and face are red, bearded, glazed eyes, red eyeballs, fangs, pot belly, puffy chest. Kalabejana is described as a people's soldier with a unique appearance, namely a humorous but firm face."
   },
@@ -3692,7 +3692,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik coklat, memakai selendang kuning, baju kotak merah, panjang seluruh : 39,5 cm, p.kepala ; 12,5 cm, p.badan : 17cm, p.tangan ; 23cm, bahan : kayu, campurit : 23  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-132.png",
+    "gambar": "/images/etno/etno-132.png",
     "id": 132,
     "deskripsi_en": "They are a class of knights or magical nobles, with red faces, thin mustaches and beards, and red eyes"
   },
@@ -3720,7 +3720,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain merah, memakai selempang coklat yang dililitkan sebagai baju, panjang seluruh : 57 cm, p.kepala ; 17,5 cm, p.badan : 15 cm, p.tangan ; 21 cm, bahan : kayu, campurit :  42,5  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-133.png",
+    "gambar": "/images/etno/etno-133.png",
     "id": 133,
     "deskripsi_en": "Red face, thin mustache, narrow eyes, dashing posture, handsome and dignified face"
   },
@@ -3748,7 +3748,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain Jingga, memakai selempang dililitkan di badan, panjang seluruh : 34 cm, , p.kepala ;  8 cm, p.badan :  11 cm,p.tangan ; 16,5 cm, bahan : kayu, campurit :  27,5  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-134.png",
+    "gambar": "/images/etno/etno-134.png",
     "id": 134,
     "deskripsi_en": "White face, narrow eyes, puffy chest"
   },
@@ -3776,7 +3776,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain coklat, memaka baju motif bunga yang sudah rusak, panjang seluruh : 41  cm, p.kepala ;  12,5 cm, p.badan :  13,5cm, p.tangan ; 19 cm, bahan : kayu, campurit :  32  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-135.png",
+    "gambar": "/images/etno/etno-135.png",
     "id": 135,
     "deskripsi_en": "Red face, eyes wide red. Not the standard type of wayang golek, it is a unique nickname or play on new creations from puppeteer artists"
   },
@@ -3804,7 +3804,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain kuning, berbaju putih, panjang seluruh : 44,5 cm, p.kepala ;  12 cm, p.badan :  13,5cm, p.tangan ; 26  cm, bahan : kayu, campurit :  35,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-136.png",
+    "gambar": "/images/etno/etno-136.png",
     "id": 136,
     "deskripsi_en": "Red face, red eyes, thin beard.  It is the embodiment of a contradictory professor. Reflects an intelligent character but has political tactics. This figure symbolizes the dark side of humans who are easily swayed by affection for children, namely Ashwatthama and worldly ambitions"
   },
@@ -3832,7 +3832,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain batik hijau, baju berwarna putih, panjang seluruh : 45 cm, p.kepala ;  12 ,5cm, p.badan :  13,5 cm, p.tangan ; 22,5  cm, bahan : kayu, campurit :  36 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-137.png",
+    "gambar": "/images/etno/etno-137.png",
     "id": 137,
     "deskripsi_en": "An additional figure that complements the clown, has a pot belly, a beard, red eyes"
   },
@@ -3860,7 +3860,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain batik warna coklat cream, memakai baju hitam aksesoris motif bunga, panjang seluruh : 40 cm, p.kepala ;  , p.badan :  16  cm, p.tangan ; 26  cm, bahan : kayu, campurit :  40 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-138.png",
+    "gambar": "/images/etno/etno-138.png",
     "id": 138,
     "deskripsi_en": "An important character in the wayang golek menak story, he is an antagonist with a cunning nature full of ambition."
   },
@@ -3888,7 +3888,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Memakai kain sarung ungu hijau, memakai selendang merah putih, panjang keseluruhan: 54 cm, p.kepala ;  13,5 cm, p.badan :  14  cm, p.tangan ; 20,5 cm, bahan : kayu, campurit : 31,8 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-139.png",
+    "gambar": "/images/etno/etno-139.png",
     "id": 139,
     "deskripsi_en": "Has a puffy chest, white face, narrow eyes. It is a representation of a ruler who has a dashing and firm visual character, showing a brave, temperamental and energetic nature."
   },
@@ -3916,7 +3916,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik dominan putih, memakai kemben rajut, lengan kiri tidak ada, panjang seluruh :  54,5 cm, p.kepala ;  15 cm, p.badan :  14  cm, p.tangan ; 20,5 cm, bahan : kayu, campurit :  41,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-140.png",
+    "gambar": "/images/etno/etno-140.png",
     "id": 140,
     "deskripsi_en": "Red face, thin mustache, narrow eyes"
   },
@@ -3944,7 +3944,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain sarung hijau, memakai baju pangsi salur, panjang seluruh: 45 cm, p.kepala ;  11 cm, p.badan :  14  cm, p.tangan ; 21 cm, bahan : kayu, campurit :  35 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-141.png",
+    "gambar": "/images/etno/etno-141.png",
     "id": 141,
     "deskripsi_en": "He has a red face, mustache, thin beard, wide red eyes, has a patch on his right cheek. They are a class of knights or powerful nobles."
   },
@@ -3972,7 +3972,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain sarung oren, memakai kemben hitam dan berselendang hijau, bahan : kayu, panjang seluruh :  46 cm, p.kepala ;  12,5 cm, p.badan :  13,5  cm, p.tangan ; 19 cm, campurit :  37 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-142.png",
+    "gambar": "/images/etno/etno-142.png",
     "id": 142,
     "deskripsi_en": "White face, narrow eyes. Symbolizes the character of a noble princess, has the values ​​of loyalty, beauty, wisdom and courage as well as elegance in Sundanese wayang stories."
   },
@@ -4000,7 +4000,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik coklat cream motif bunga, kemben hitam, selendang motif bunga, panjang seluruh :  49,5 cm, p.kepala ;  13,5 cm, p.badan :  13,5  cm, p.tangan ; 21 cm, bahan : kayu, campurit :  37 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-143.png",
+    "gambar": "/images/etno/etno-143.png",
     "id": 143,
     "deskripsi_en": "White face, narrow eyes. Symbolizes the character of a noble princess, has the values ​​of loyalty, beauty, wisdom and courage as well as elegance in Sundanese wayang stories."
   },
@@ -4028,7 +4028,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik dominan coklat, PANJANG SELURUH :  53 CM, P.KEPALA ;  15 CM, P.BADAN :  14 CM, P.TANGAN ; 22 CM, BAHAN : KAYU, CAMPURIT :  42 CM SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-144.png",
+    "gambar": "/images/etno/etno-144.png",
     "id": 144,
     "deskripsi_en": "He has a puffy chest, a red face, narrow eyes, a thin mustache"
   },
@@ -4056,7 +4056,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain sarung dominan coklat, badan berwarna kuning biru, panjang seluruh :  54 cm, p.kepala ;  14 cm, p.badan :  16,5  cm, p.tangan : 24 cm, bahan : kayu, campurit :  41 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-145.png",
+    "gambar": "/images/etno/etno-145.png",
     "id": 145,
     "deskripsi_en": "Pink face, thick mustache, beard, fanged teeth, wide eyes. He is an iconic character as an antagonist and entertainer"
   },
@@ -4084,7 +4084,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik coklat, memakai kemben hitam, selendang hitam, panjang seluruh :  52 cm, p.kepala ;  13 cm, p.badan :  15  cm, p.tangan : 23 cm, bahan : kayu, campurit :  44,2 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-146.png",
+    "gambar": "/images/etno/etno-146.png",
     "id": 146,
     "deskripsi_en": "Red body and face, fanged teeth, wide red eyes, firm facial features. He is the antagonist, the son of Prabusalya"
   },
@@ -4112,7 +4112,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain sarung kotak coklat, memakai sabuk abu motif bunga, selendang merah, panjang seluruh :  53 cm, p.kepala ;  12 cm, p.badan :  16,5 cm, p.tangan : 23 cm, bahan : kayu, campurit :  44,2 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-147.png",
+    "gambar": "/images/etno/etno-147.png",
     "id": 147,
     "deskripsi_en": "Black body, puffy chest, white face, narrow eyes. Symbolizes the character of a noble princess, has the values ​​of loyalty, beauty, wisdom and courage and elegance in Sundanese wayang stories."
   },
@@ -4140,7 +4140,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain Batik coklat, Pangsi hitam, memakai dasi kupu kupu merah, blankon merah, panjang seluruh : 38 cm, p.kepala ;  11 cm, p.badan :  12,5 cm, p.tangan : 19 cm, bahan : kayu, campurit :  28,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-148.png",
+    "gambar": "/images/etno/etno-148.png",
     "id": 148,
     "deskripsi_en": "White face, thin mustache and beard, narrow eyes. Is a supporting role."
   },
@@ -4168,7 +4168,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain hijau, sabuk biru, panjang seluruh : 43 cm, p.kepala ;  10,5 cm,p.badan :  13,5 cm, p.tangan : 19,5 cm, bahan : kayu, campurit :  34 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-149.png",
+    "gambar": "/images/etno/etno-149.png",
     "id": 149,
     "deskripsi_en": "White face, narrow eyes. Symbolizes the character of a noble princess, has the values ​​of loyalty, beauty, wisdom and courage as well as elegance in Sundanese wayang stories."
   },
@@ -4196,7 +4196,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain warna jingga, rok hitam, memakai kemben pink, panjang seluruh : 42 cm, p.kepala ;  9 cm, p.badan :  10,5 cm, p.tangan : 16 cm, bahan : kayu, campurit :  33 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-150.png",
+    "gambar": "/images/etno/etno-150.png",
     "id": 150,
     "deskripsi_en": "White face, narrow eyes. He is a patient and steadfast figure in facing life's trials. Loyal, virtuous, nurturing, wise"
   },
@@ -4224,7 +4224,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain sarung ungu hijau, berkebaya hijau, panjang seluruh : 37 cm, p.kepala ;  10 cm, p.badan :  14,5 cm, p.tangan : 20 cm, bahan : kayu, campurit :  28 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-151.png",
+    "gambar": "/images/etno/etno-151.png",
     "id": 151,
     "deskripsi_en": "White face, narrow eyes. It is the embodiment of a great knight depicted with a pure white face which symbolizes the purity of his soul and the steadfastness of his vow to live a celibate life."
   },
@@ -4252,7 +4252,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik coklat cream, berbaju salur abu, selendang hijau, panjang seluruh : 42 cm, p.kepala ;  10,5 cm, p.badan :  14 cm, p.tangan : 18 cm, bahan : kayu, campurit :  36 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-152.png",
+    "gambar": "/images/etno/etno-152.png",
     "id": 152,
     "deskripsi_en": "The white face with narrow eyes symbolizes the character of a noble princess, who has the values ​​of loyalty, beauty, wisdom and courage as well as elegance in Sundanese wayang stories."
   },
@@ -4280,7 +4280,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain dominan abu, bersabuk abu, selendang oren, panjang seluruh : 52 cm, p.kepala ;  12,5 cm, p.badan :  16,5 cm, p.tangan : 21,5 cm, bahan : kayu, campurit :  43,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-153.png",
+    "gambar": "/images/etno/etno-153.png",
     "id": 153,
     "deskripsi_en": "White face, narrow eyes. Symbolizes the character of a noble princess, has the values ​​of loyalty, beauty, wisdom and courage as well as elegance in Sundanese wayang stories."
   },
@@ -4308,7 +4308,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain dominan coklat strip hijau, selendang corak hijau, panjang seluruh : 54 cm, p.kepala ;  16 cm, p.badan :  14 cm, p.tangan : 24 cm, bahan : kayu, campurit :  45,5 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-154.png",
+    "gambar": "/images/etno/etno-154.png",
     "id": 154,
     "deskripsi_en": "The face resembles a white monkey, eyes wide red, wearing earrings, with a tail. Depicted as a brave white warrior, with the visual characteristics of a pure white body and face as a symbol of purity, agility, determination in defending the truth"
   },
@@ -4336,7 +4336,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain sarung kotak strip coklat, panjang seluruh : 43 cm, p.kepala ;  11 cm, p.badan :  14 cm, p.tangan : 20 cm, bahan : kayu, campurit :  40  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-155.png",
+    "gambar": "/images/etno/etno-155.png",
     "id": 155,
     "deskripsi_en": "Stocky black body, white face, red eyes, big butt. A fat body as a symbol of the earth, a white face that is always smiling but with eyes that appear to be crying, symbolizes the relationship between humans and the creator. Even though he appears to be a humorous person, Semar is actually the incarnation of god."
   },
@@ -4364,7 +4364,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik coklat cream, berselendang oren, panjang seluruh : 49 cm, p.kepala ;  14 cm, p.badan :  14,5 cm, p.tangan : 19 cm, bahan : kayu, campurit :  40  cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-156.png",
+    "gambar": "/images/etno/etno-156.png",
     "id": 156,
     "deskripsi_en": "Red face, droopy eyes, thin mustache. Ravana's younger brother, who has a very contrasting character, is depicted with a handsome knight's face, calm and dignified and has an honest heart."
   },
@@ -4392,7 +4392,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain batik oren,cream, panjang seluruh : 49 cm, p.kepala ;  15 cm, p.badan :  17 cm, p.tangan : 22 cm, bahan : kayu, campurit :  36 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-157.png",
+    "gambar": "/images/etno/etno-157.png",
     "id": 157,
     "deskripsi_en": "The face resembles a white monkey, eyes wide green, tail wrapped around the body. Depicted as a brave white warrior, with the visual characteristics of a pure white body and face as a symbol of purity, agility and determination in defending the truth."
   },
@@ -4420,7 +4420,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Berkain cream hijau tosca, membawa busur, panjang seluruh : 52 cm, p.kepala ;  16 cm, p.badan :  13,5 cm, p.tangan : 21 cm, bahan : kayu, campurit :  39 cm, panjang pusaka, tinggi : 41 cm, lebar : 24 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/etno/etno-158.png",
+    "gambar": "/images/etno/etno-158.png",
     "id": 158,
     "deskripsi_en": "White face, narrow grinning eyes, bow attached to hand."
   },
@@ -5764,7 +5764,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan : kertas daluang SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI Koleksi Sedang dalam konservasi",
-    "gambar": "http://localhost:3001/images/filo/filo-001.png",
+    "gambar": "/images/filo/filo-001.png",
     "id": 206,
     "deskripsi_en": "\"Al Mubarak\", using ink scratches on sheets of daluang paper, has a brownish hue due to natural aging (patina). This manuscript is handwritten using Pegon Arabic script and Javanese Arabic."
   },
@@ -5819,7 +5819,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan : daluang SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-003.png",
+    "gambar": "/images/filo/filo-003.png",
     "id": 208,
     "deskripsi_en": "\"Majmuatul Mukhtasharat\" manuscript, written in hand-drawn ink on sheets of daluang paper, brownish due to age. Written using the Pegon Arabic script in Javanese Arabic with dark black main ink, and enriched with accents of emphasis in the form of dark red in the opening words of the chapter (rubrication) and the underline of the text marker."
   },
@@ -5847,7 +5847,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-004.png",
+    "gambar": "/images/filo/filo-004.png",
     "id": 209,
     "deskripsi_en": "Hardback, full text, European paper, translation of the book Nahwu from Arabic to Javanese-Cirebon. The text uses black ink with red ink rubrication (marking or grouping). The manuscript was written in 1280 Hijriyah."
   },
@@ -5875,7 +5875,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Bahan : Daluang SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-005.png",
+    "gambar": "/images/filo/filo-005.png",
     "id": 210,
     "deskripsi_en": "An ancient manuscript in the form of a palm leaf that tells the history of the founding of Indramayu Regency, West Java. This text tells the story of Raden Arya Wiralodra's spiritual journey until his discovery with Nyi Endang Darma Ayu."
   },
@@ -5903,7 +5903,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-006.png",
+    "gambar": "/images/filo/filo-006.png",
     "id": 211,
     "deskripsi_en": "\"Jatiswara\", as a medium of writing characters on strands of palm leaf blades with a pair of wooden flanking boards (cakepan). This manuscript consists of dozens of thin horizontal palm leaf plates of straw yellow or ivory brown color, which are written using traditional script (patterned with ancient Javanese or Balinese script) in the form of thin lines that are firm and neatly lined up. The structure of the manuscript uses a traditional binding system, where each palm leaf has a pivot hole in the center to insert a vertical binding strap that holds the entire series together from the first sheet to the last. At the very bottom, the strap appears to be connected to an ancient metal coin with a hole (similar to a kepeng coin or penny from the Dutch East Indies era with the inscription \"NEDERLANDSCH INDIE 1945\") which functions as a pendulum to lock the binding."
   },
@@ -5931,7 +5931,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-007.png",
+    "gambar": "/images/filo/filo-007.png",
     "id": 212,
     "deskripsi_en": "\"Mantra I\", as a medium of writing characters on strands of natural palm leaf blades with a pair of wooden clamping boards (cakepan). This manuscript consists of a stack of dozens of horizontal palm leaf plates colored golden brown or dark straw yellow containing traditional script strokes (patterned with ancient Javanese or Balinese script) neatly lined up on its surface. The binding system is in the classical tradition, where a white mattress string is threaded through the central pivot hole on each blade to hold the entire set of text together."
   },
@@ -5959,7 +5959,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan : kertas pabrik SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-008.png",
+    "gambar": "/images/filo/filo-008.png",
     "id": 213,
     "deskripsi_en": "No cover, no first sheet, still in good condition, writing clearly legible, pegon script, made from factory paper, language used is Javanese-Cirebon. The text content is in the form of a canto. Written in black ink, the pupuh is marked in red ink."
   },
@@ -5987,7 +5987,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan : kertas pabrik SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-009.png",
+    "gambar": "/images/filo/filo-009.png",
     "id": 214,
     "deskripsi_en": "The \"Nazam translation\", originating from Indramayu, is based on ink scratches on sheets of old factory paper with a yellowish brown color faded due to age oxidation (patina). This manuscript in an open position is written using Pegon script (Arabic script modified for Javanese or Sundanese) which is written neatly and regularly in the format of paired stanzas (couplets). The main ink used is pitch black for writing the text, while the initial words of the stanza, chapter markers, and correction annotations or glossaries on the outer margin of the left page and the bottom of the right page use bright red ink accents (rubrication)."
   },
@@ -6015,7 +6015,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan : daluang , kertas eropa SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-010.png",
+    "gambar": "/images/filo/filo-010.png",
     "id": 215,
     "deskripsi_en": "Hardback, using European paper and daluang, complete text, the top right corner of the manuscript is torn from beginning to end, but the text is still clearly legible. The writing is clearly legible, written using black ink with red ink rubrication (marking or grouping). Year of writing 1271 Hijriyah. The contents of the interpretation of the Al-Qur'an use Arabic with Pegon sharia script and Javanese-Cirebon language. At the end there is Juz'Amma (Juz 30) with a Javanese-Cirebon translation."
   },
@@ -6043,7 +6043,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan : daluang , kertas eropa SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-011.png",
+    "gambar": "/images/filo/filo-011.png",
     "id": 216,
     "deskripsi_en": "\"The Book of Translation of Faraid's Science in the Field of Fiqh\" which comes from Indramayu, is a hand-written manuscript (manuscript) on a combination of sheets of daluang paper and old European paper which has a yellowish cream color faded due to aging oxidation (patina). This manuscript is written using Pegon Arabic script (Cirebon Javanese) which is written thickly, directly and regularly in a wide horizontal line format."
   },
@@ -6071,7 +6071,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "bahan :  kertas pabrik SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-012.png",
+    "gambar": "/images/filo/filo-012.png",
     "id": 217,
     "deskripsi_en": "Hardback, first page missing, title in Carub Kandha. Tells the genealogy of the Prophets, the genealogy of the Sundanese kings. The complete manuscript uses Javanese script, the Javanese-Cirebon language. On the final sheet there are loose notes outside the main text using Sundanese and Latin script. The loose notes are in the form of scribbled letters"
   },
@@ -6099,7 +6099,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-013.png",
+    "gambar": "/images/filo/filo-013.png",
     "id": 218,
     "deskripsi_en": "Made from lontar, written using Javanese script, Javanese language, ancient lontar manuscripts are very rare to find, some of the attachments are weathered and fragile. The text is mixed and incomplete."
   },
@@ -6127,7 +6127,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/filo/filo-014.png",
+    "gambar": "/images/filo/filo-014.png",
     "id": 219,
     "deskripsi_en": "The text is written on palm leaf media measuring 28.5 cm x 2.9 cm with a total of 78 attachments (156 pages), written in Balinese script. The way of writing is by scratching with a cracker knife, in Middle Javanese language. The texts are in the form of pupuh, including Maskumambang, Dhurma, Semaran (Asmarandana) and tang (pangkur). Tells about the Rengganis shop. The figures mentioned include Ni Rengganis, Sang Jayengtati, Tambaklayung, Jayengrana, Umar Maya, Jayengsatru, Sang Ratna Ayu, Sangyang Antaboga, Gajah Mina, and Cakra Kusuma. The places mentioned include Arabia. The plot in this manuscript cannot be put together in its entirety, considering that the composition of the plates is not complete. The finished manuscript was copied on the day of the sweet sukra (Wispuput Tinutdina Sukra Manis) which is stated on the last line of plate 78 recto."
   },
@@ -6155,7 +6155,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "Koleksi berada di pameran tetap Museum Sri Baduga SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI Koleksi Sedang dalam konservasi",
-    "gambar": "http://localhost:3001/images/filo/filo-015.png",
+    "gambar": "/images/filo/filo-015.png",
     "id": 220,
     "deskripsi_en": "The media for palm leaf throws measuring 50 cm x 3.5 cm totals 50 throws. Using Javanese script (Carakan). The condition is still clearly legible. It was written by scratching using a special knife (pengitu/kerupak). Speaks Middle Javanese. Tells the story of the Prophet Yusuf Nangbi Yusup), the text is in the form of pupuh songs, including Asmarandana, Pangkor (Pangkur), Balobok (Balakbak and Dhurma). Part of the story in Asmarandana's pupuh is in line with the story in the Serat Yusup manuscript, a collection from the Surakarta museum. The figures mentioned include, Nangbi Yusup/bagenda yusup (Prophet Yusup), sekakim (Sheikh Akim), Malik, Jabarail, Raja Jiad. In the places mentioned include Egypt. The beginning and end are missing, so the text is not complete. The text begins with pupuh asmarandana on the story of the Prophet Yusup who was sold by his brothers to traders (adagang)."
   },
@@ -6211,7 +6211,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "lukisan kanvas karya meiliana chandra (ada keterangan angka 2) SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-001.png",
+    "gambar": "/images/seni/seni-001.png",
     "id": 222,
     "deskripsi_en": "The Flower and Vase painting uses oil paint on canvas by Meiliana Chandra which has vertical dimensions measuring 63 cm long and 52 cm wide. This painting shows the main object in the form of a series of various types of colorful flowers including bluish white, bright yellow, purplish red and green strokes arranged randomly in a slender cylindrical vase of yellowish orange color. There is text in the lower right corner (Andi/Ana?? 17/21). Overall, the physical condition of the canvas appears to be intact and attached to the spanram, although there is a little natural wear in the form of fine threads sticking out on the outer edge of the canvas."
   },
@@ -6239,7 +6239,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "(ada keterangan nomer 7) SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-002.png",
+    "gambar": "/images/seni/seni-002.png",
     "id": 223,
     "deskripsi_en": "\"Canvas painting depicting a dragon\" using oil paint on canvas, with dimensions measuring 68 cm long and 94.4 cm wide (vertical/portrait position). This painting shows the personification of a dragon figure or a mythological creature resembling a giant snake which is depicted in an abstract-decorative manner that fills the canvas. In the lower right corner of the canvas, the artist's initials and the year number \"Anna'08\" are written using black paint strokes. Based on observations on photo 7074 (2).jpg, the physical condition of the painting appears to be intact, thick, and neatly attached to the frame without any massive damage or cracks in the paint layer."
   },
@@ -6267,7 +6267,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "karya  a. rusadi (2015) SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-003.png",
+    "gambar": "/images/seni/seni-003.png",
     "id": 224,
     "deskripsi_en": "\"Canvas painting depicting fish\" created by artist A. Rusadi in 2015, using oil paint on canvas with vertical dimensions measuring 60.5 cm long and 50.3 cm wide. This painting shows a composition of several aquatic fauna figures deconstructed geometrically and stylatively, where in the center left there are two yellow fish objects arranged on top of each other in a blue square area. The composition of the image is divided by a green vertical line in the middle, surrounded by various abstract shapes resembling marine life, striped motifs, dotted patterns, and a decorative red tendril pattern on the upper right side. In the lower left corner of the canvas, there is the painter's signature along with the year of manufacture which is clearly written \"A. Rusadi 2015\" using light cream colored oil paint. The physical condition of the painting appears to be intact, flat and well maintained on its frame without signs of structural damage or significant cracking of the paint medium."
   },
@@ -6295,7 +6295,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "karya Anna, 2007 (ada keterangan nomor 16) SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-004.png",
+    "gambar": "/images/seni/seni-004.png",
     "id": 225,
     "deskripsi_en": "The \"abstract painting\" created by artist Anna in 2007, is in mixed media, possibly in the form of colored pencils, ink and watercolor on paper, with dimensions of the image area measuring 41 cm long and 29.5 cm wide. This work displays a very complex and dense woven geometric composition, composed of a combination of triangles, circles, small squares and symmetrical curved patterns. All image objects are neatly framed by a layer of wide black matboard (paspartu) and finished with a minimalist plain black outer frame. In the lower right corner of the image area, there is the artist's signature along with the year of manufacture which is clearly written \"ANNA 2007\" using black ink. The physical condition of the work and its frame appears to be very intact, sturdy, even and well maintained."
   },
@@ -6323,7 +6323,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-005.png",
+    "gambar": "/images/seni/seni-005.png",
     "id": 226,
     "deskripsi_en": "Abstract painting by Anna, 1987\" made by artist Anna in 1987, using a mixture of oil paint and spray paint on canvas with horizontal dimensions measuring 142.2 cm long and 109.3 cm wide. This painting displays a visual narrative which is divided into two main parts; on the left side there is a stylized figure resembling a mother holding or protecting a child under the shade of a curved object resembling a large umbrella in the midst of raindrops. Meanwhile on the right side, there is a composition of abstract decorative curves. resembling plant tendrils or a dynamic winged mythological creature. In the lower left corner of the image area, the artist's signature is written along with the year of creation which is written prominently \"ANNA 1987\" using light blue paint. The physical condition of the painting and its frame appear to be very intact, sturdy and well maintained."
   },
@@ -6351,7 +6351,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "ada keretangan angka 4 SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-006.png",
+    "gambar": "/images/seni/seni-006.png",
     "id": 227,
     "deskripsi_en": "\"Abstract painting by Anna, 2003\" made by artist Anna in 2003, using a mixture of oil paint and spray paint on canvas with horizontal dimensions measuring 140 cm long and 109.4 cm wide. This painting shows two figures of human faces in the lower half; the figure on the left has green hair with a calm, downcast expression, while the figure on the right is depicted with open eyes and a vertical paint melting effect (dripping) resembling tears all over his face. In the upper background, there is a series of dynamic organic-abstract objects, including a shell-like shape with a pink striped pattern, an oval shape with black and white spots, and a large, bright yellow dome shape on the top right side. In the lower right corner of the canvas, the year of creation and the artist's signature are clearly written \"2003 ANNA\" using white paint strokes. The physical condition of this painting without an outer frame appears intact, flat and neatly attached to its frame."
   },
@@ -6379,7 +6379,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-007.png",
+    "gambar": "/images/seni/seni-007.png",
     "id": 228,
     "deskripsi_en": "\"Abstract painting by Anna, 2009\" made by artist Anna in 2009, using oil paint on canvas with horizontal dimensions measuring 136.3 cm long and 107.7 cm wide. This painting shows the main object in the form of a headless human body from the neck to the thighs, which is decorated exotically and dominated by bright mustard yellow. The figure is depicted wearing a beaded neck ornament, green-yellow striped shoulder pads, a pattern of green spots resembling scales or tattoos on the stomach area, and lower clothing resembling black shorts whose edges are decorated with rows of small yellow squares. On the lower right side, there is a supporting object in the form of a grayish flower plant in a small pot with white stems. The background of the painting uses a mixture of dark, muted colors between deep moss green, gray and faded brick red gradations. In the lower left corner of the canvas, the year of creation and the artist's signature are clearly written \"2009 ANNA\" using light blue oil paint. The physical condition of this painting without an outer frame appears to be intact, the surface is flat, and is well attached to the supporting frame."
   },
@@ -6407,7 +6407,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "ada keterangan anggka 20 di frame lukisannya SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-008.png",
+    "gambar": "/images/seni/seni-008.png",
     "id": 229,
     "deskripsi_en": "\"Abstract painting by Anna, 2009\" made by artist Anna in 2009, using oil paint on canvas with horizontal dimensions measuring 135 cm long and 117.3 cm wide. This painting displays the main object in the form of a stylized piece of the human body or torso from the shoulders to the thighs which is dominated by a thick bright green color. The figure's chest area is decorated with a series of curved red-brown and white lines that resemble the anatomy of a rib cage or chest protector. The structure of the shoulders, forearms, and the area around the stomach are filled with a pattern of prominent decorative spots in white, light green, and faded blue that resemble scales or beads. On the lower hips, there is a curved shape that resembles plain black clothing with a row of small red dots along the top edge.  The background of the object uses a plain black color which provides contrast to the main figure. In the lower right corner of the canvas, there is the artist's signature along with the year of manufacture which is clearly written \"ANNA 2009\" using dark green paint. The physical condition of this painting without an outer frame appears intact, stable and neatly attached to its frame."
   },
@@ -6435,7 +6435,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-009.png",
+    "gambar": "/images/seni/seni-009.png",
     "id": 230,
     "deskripsi_en": "\"Abstract painting by Anna, 2007\" made by artist Anna in 2007, using oil paint on canvas with vertical dimensions measuring 135.5 cm long and 117.6 cm wide. This painting shows the main object in the form of a silhouette of a woman with long, wistful hair depicted from a high angle. The female figure appears to be in a bent or lying position while hugging a square object with a red-brown checkered pattern resembling a pillow or book. She is depicted wearing clothing consisting of a bright yellow top and a short, brick red pleated skirt. The background of the painting is filled with a dense and textured pointillism/stippling technique, combining tones of olive green, brown, earthy yellow, and a slight dark red accent in the top corner. In the lower right corner of the canvas, the year of manufacture and the artist's signature are clearly written \"2007 Anna\" using dark blue paint. The physical condition of this unframed painting appears to be intact, the surface is flat, and is well attached to the supporting frame."
   },
@@ -6463,7 +6463,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "ada keterangan angka 15 SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-010.png",
+    "gambar": "/images/seni/seni-010.png",
     "id": 231,
     "deskripsi_en": "\"Abstract painting by Anna, 2007\" made by artist Anna, in mixed media in the form of colored pencils, ink and watercolor on paper with dimensions of the image area measuring 38.1 cm long and 30 cm wide. This painting displays a large circular composition (circle) in the center which is densely packed with pieces of colorful figurative objects, such as stylized human faces, clothing patterns, and other decorative elements arranged to resemble an abstract collage. The circle appears to be supported or surrounded by several external living creature figures, including a yellow-faced human face at the bottom, as well as yellow fowl-like or bird-like figures on the left and top sides. The background of the image uses dark blue-black strokes with dense fine line shading techniques. In the lower right corner of the image area, there is the artist's signature along with the titimangsa number written \"Anna 12/5 '07\" using turquoise green ink. All image objects are neatly framed using a wide white matboard (paspartu) and finished with a minimalist plain black outer frame. The physical condition of the work and its frame appears to be very intact, even and well maintained."
   },
@@ -6491,7 +6491,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "karya Grey Darmawan tahun 2013 SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-011.png",
+    "gambar": "/images/seni/seni-011.png",
     "id": 232,
     "deskripsi_en": "\"Peacock canvas painting\" created by artist Gray Darmawan in 2013, using acrylic paint on canvas with vertical dimensions measuring 90.4 cm long and 75 cm wide. This painting shows the single object of a peacock which is depicted decoratively facing to the right with its body curved gracefully among the branches of a deciduous tree. The peacock's body and neck are dominated by a scaly light blue hue, while its hanging down tail is decorated with a striking pattern of feather circles (ocelli) a combination of bright yellow, orange and black dots. The peacock is surrounded by a stylization of five orange-yellow blooming flowers atop brown twigs curved with black tendrils.  The background of the painting uses a thin gradient of plain bluish white which gives a clean impression and highlights the thick black contour lines (outlining) on ​​each image object. The physical condition of this unframed painting looks very intact, clean, has a flat surface, and is securely attached to the frame."
   },
@@ -6519,7 +6519,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-012.png",
+    "gambar": "/images/seni/seni-012.png",
     "id": 233,
     "deskripsi_en": "\"Abstract painting by Anna, 2005\" made by artist Anna in 2005, using a mixture of oil paint and spray paint on canvas with vertical dimensions measuring 132 cm long and 100 cm wide. This painting displays a composition of objects resembling a stylized human face from a side profile looking up with eyes closed and a faint smile in the middle. The figure appears to be wearing a large decorative headdress or crown with detailed red curved lines and a series of glowing yellow dots. Directly below the main figure, separated by a sweep of curved white spray lines, there is a second, smaller, rounded figure with a face staring straight ahead, surrounded by a glow of bright blue spray paint dots resembling an aura. The painting's color palette combines light pastel hues on the facial area with cool colors such as bluish green and midnight blue on the background and ornaments. In the lower right corner of the canvas, the year of manufacture and the artist's signature are clearly written \"2005 ANNA\" using white paint strokes. The physical condition of the painting and its frame appears to be very intact, even and well maintained."
   },
@@ -6547,7 +6547,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang frame : 160 cm, lebar frame:    , 124,5  cm, panjang kanvas : 143,5  cm, lebar kanvas :  108,8 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-013.png",
+    "gambar": "/images/seni/seni-013.png",
     "id": 234,
     "deskripsi_en": "\"Abstract Painting\", created in 2005 by an artist named Anna, uses paint on canvas with dimensions of 143.5 cm long and 108.8 cm wide. This painting displays an expressive non-representational composition dominated by a dark moss green background combined with accents of strokes of brick red, yellow, orange and hints of white."
   },
@@ -6575,7 +6575,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang frame : 158,5 cm, lebar frame:  110,5 cm, panjang kanvas : 142,5 cm, lebar kanvas : 94 cm SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-014.png",
+    "gambar": "/images/seni/seni-014.png",
     "id": 235,
     "deskripsi_en": "\"Abstract Painting\", the work of an artist named Anna, created in 2005, uses paint on canvas with dimensions of canvas length 142.5 cm and canvas width 94 cm. This painting displays an emotional narrative-figurative composition dominated by a dark background combined with bright yellow, green, red and blue colors. In the lower left corner of the canvas, the artist's signature is written with the words \"ANNA\" followed by the number for the year of manufacture \"2005\" in bluish white."
   },
@@ -6603,7 +6603,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-015.png",
+    "gambar": "/images/seni/seni-015.png",
     "id": 236,
     "deskripsi_en": "\"Abstract painting by Anna, 2006\" made by artist Anna in 2006, using oil paint on canvas with horizontal dimensions measuring 139.5 cm long and 108 cm wide. This painting shows the main object in the form of three half-bodied human figures depicted in a row filling the canvas. Above the heads of the three figures, there are decorative elements in the form of rows of round flower petal motifs and leaves circled by red and white lines resembling crowns or background decorations. The background of the painting is dominated by muted dark tones between black, midnight blue and purplish brown. In the lower right corner of the canvas, the artist's signature is written along with the year of manufacture which is clearly written \"ANNA 2006\" using black paint strokes. The physical condition of this painting without an outer frame appears to be intact, the surface is flat, and is well attached to the supporting frame."
   },
@@ -6631,7 +6631,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-016.png",
+    "gambar": "/images/seni/seni-016.png",
     "id": 237,
     "deskripsi_en": "\"Abstract Painting\", created in 2010 by an artist named Anna, uses paint on canvas with dimensions of 141 cm long and 110 cm wide. The composition of this painting is very dense and theatrical, showing a representation of a greenish human face in the center surrounded by various organic shapes and geometric patterns, including a series of ethnic triangular motifs and repetitive writing."
   },
@@ -6659,7 +6659,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-017.png",
+    "gambar": "/images/seni/seni-017.png",
     "id": 238,
     "deskripsi_en": "\"Temple Painting\" (unknown artist, created around 1981), using oil paint on canvas with large vertical dimensions, namely 199 cm long and 138.5 cm wide. This painting shows a landscape of tourist activities in a cultural heritage complex which represents the architecture of Prambanan Temple. The physical condition of the painting appears intact, stable and well maintained on its frame."
   },
@@ -6687,7 +6687,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "SATUAN PELAYANAN MUSEUM SRI BADUGA REGISTRASI KOLEKSI",
-    "gambar": "http://localhost:3001/images/seni/seni-018.png",
+    "gambar": "/images/seni/seni-018.png",
     "id": 239,
     "deskripsi_en": "\"Abstract painting by Anna, 2004\" made by artist Anna in 2004, using oil paint on canvas with horizontal dimensions measuring 135.3 cm long and 108 cm wide. This painting displays the main object in the center in the form of a stylized figure of a mask or abstract face with a strong character. In the lower right corner of the canvas, there is the artist's signature along with the year of manufacture which is clearly written \"ANNA 2004\" using light blue oil paint. The physical condition of this painting without an outer frame appears to be intact, the surface is flat, and is well attached to the supporting frame."
   },
@@ -6715,7 +6715,7 @@
     "nama_petugas": "",
     "acuan": "",
     "keterangan": "panjang kanvas : 140 cm, lebar kanvas : 137 cm",
-    "gambar": "http://localhost:3001/images/seni/seni-019.png",
+    "gambar": "/images/seni/seni-019.png",
     "id": 240,
     "deskripsi_en": "\"Goddess of the Sun\" by artist Sopandi, created in 1990, using ink/paint on canvas with dimensions of canvas length 140 cm and canvas width 137 cm. This painting applies a very dense decorative pictogram style (horror vacui), centered on the iconography of a sun figure with a human face (anthropomorphic) in the upper center which emits sharp straight rays and symmetrical tendrils of flame. In the lower right corner of the painting, there is an inscription marking authenticity that reads \"AING DI BADUY JERO CIKEUSIK Sopandi 1990\". This work is mounted on a massive log frame in a rustic-exotic style with notched accents in an ancient triangular geometric pattern, where the ends of the wooden beams are made to cross each other at each outer corner."
   },

@@ -29,26 +29,29 @@ socket.on("execute_command", async (command) => {
             const { url } = command.payload;
             console.log(`[*] Opening browser to URL: ${url}`);
 
-            // KODE ANTI ERROR (Telah Diperbarui)
             if (!browser || !browser.isConnected()) {
                 console.log(`[*] Launching new browser instance...`);
-                // Buka otomatis layar penuh (fullscreen)
-                // Buka otomatis layar penuh dan lepaskan paksaan MUTE
-                browser = await chromium.launch({
+
+                // Gunakan profil permanen agar Chrome mengingat bypass keamanan kita
+                browser = await chromium.launchPersistentContext('C:\\kiosk-profile', {
                     headless: false,
-                    ignoreDefaultArgs: ['--mute-audio'], // INI YANG MENGEMBALIKAN SUARA
+                    channel: 'chrome',
+                    ignoreDefaultArgs: ['--mute-audio'],
                     args: [
                         '--start-fullscreen',
-                        '--autoplay-policy=no-user-gesture-required'
-                    ]
+                        '--autoplay-policy=no-user-gesture-required',
+                        '--use-fake-ui-for-media-stream',
+                        '--unsafely-treat-insecure-origin-as-secure=http://192.168.100.204:5173' // Pastikan IP ini sesuai dengan Laptop 1
+                    ],
+                    permissions: ['microphone'] // Izin mutlak microphone
                 });
-                // Biarkan resolusinya mengikuti ukuran monitor (tidak terpotong)
-                const context = await browser.newContext({ viewport: null });
-                page = await context.newPage();
+
+                // Ambil halaman (tab) pertama yang terbuka
+                page = browser.pages()[0] || await browser.newPage();
+
             } else if (!page || page.isClosed()) {
                 console.log(`[*] Opening new tab...`);
-                const context = await browser.newContext({ viewport: null });
-                page = await context.newPage();
+                page = await browser.newPage();
             }
 
             await page.goto(url);

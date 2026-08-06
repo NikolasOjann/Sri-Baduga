@@ -79,6 +79,25 @@ class MuseumPipeline:
         question,
         session_id
     ):
+        q_lower = (question or "").strip().lower()
+        
+        # =====================================================
+        # FAST GREETING INTERCEPT
+        # =====================================================
+        # Jika input sangat pendek dan merupakan sapaan, langsung balas tanpa LLM
+        greetings = {"halo", "hallo", "haloo", "halloo", "helo", "hai", "hay", "alow", "allow", "hello", "hei", "hi", "pagi", "siang", "sore", "malam", "selamat", "punten", "sampurasun"}
+        q_words = re.sub(r'[^\w\s]', '', q_lower).split()
+        if len(q_words) <= 3 and any(w in greetings for w in q_words):
+            answer = "Halo! Perkenalkan, saya Nyai, asisten virtual Museum Sri Baduga. Ada yang bisa saya bantu tentang koleksi atau informasi museum hari ini?"
+            self.memory.add_user(session_id, question)
+            self.memory.add_ai(session_id, answer)
+            return {
+                "answer": answer,
+                "documents": [],
+                "sources": [],
+                "session_id": session_id
+            }
+
         selected_document = self.memory.get_document(session_id)
         
         # =====================================================
@@ -312,8 +331,6 @@ class MuseumPipeline:
         # PRE-CHECK: Pertanyaan daftar / klasifikasi koleksi
         # Pola: "klasifikasi", "jenis koleksi", "ada apa saja", dll.
         # =====================================================
-        import re
-        import difflib
         from app.tools.museum_collection_tool import CATEGORY_INFO, MuseumCollectionTool
 
         q_clean = (question or "").strip().lower()

@@ -27,6 +27,7 @@ from app.agent.tool_registry import ToolRegistry
 from app.tools.museum_search_tool import MuseumSearchTool
 from app.tools.museum_collection_tool import MuseumCollectionTool
 from app.tools.museum_info_tool import MuseumInfoTool
+from app.tools.remote_control_tool import RemoteControlTool
 
 
 # =====================================================
@@ -79,6 +80,14 @@ def get_retriever():
         ToolRegistry.register(
 
             MuseumInfoTool(retriever)
+
+        )
+
+    if not ToolRegistry.exists("remote_control"):
+
+        ToolRegistry.register(
+
+            RemoteControlTool()
 
         )
 

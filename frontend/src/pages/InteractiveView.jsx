@@ -83,7 +83,7 @@ const dummyArtifacts = [
   }
 ];
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'http://' + window.location.hostname + ':3001';
 
 const InteractiveView = () => {
   const { id } = useParams();
@@ -232,19 +232,19 @@ const InteractiveView = () => {
           } else {
             navigate('/catalog');
           }
-        }} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
+        }} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#1a1a1a', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', padding: '0.7rem 1.4rem', borderRadius: '30px', cursor: 'pointer', fontWeight: 500, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
           <ArrowLeft size={16} /> {t('back')}
         </button>
 
         {/* Mode Toggle Button */}
-        <div style={{ display: 'flex', backgroundColor: '#D2B48C', backdropFilter: 'blur(10px)', borderRadius: '30px', padding: '3px', border: '1px solid rgba(0,0,0,0.1)' }}>
+        <div style={{ display: 'flex', backgroundColor: '	#eee0ca', backdropFilter: 'blur(10px)', borderRadius: '30px', padding: '3px', border: '1px solid rgba(0,0,0,0.1)' }}>
           <button
             onClick={() => setViewMode('image')}
             style={{
               display: 'flex', alignItems: 'center', gap: '0.4rem',
               padding: '0.45rem 1rem', borderRadius: '25px', border: 'none',
-              backgroundColor: viewMode === 'image' ? '#1a1a1a' : 'transparent',
-              color: viewMode === 'image' ? '#fff' : '#1a1a1a',
+              backgroundColor: viewMode === 'image' ? '#fff' : 'transparent',
+              color: viewMode === 'image' ? '#1a1a1a' : '#1a1a1a',
               cursor: 'pointer', fontSize: '0.82rem', fontWeight: 500, transition: 'all 0.3s'
             }}
           >
@@ -255,8 +255,8 @@ const InteractiveView = () => {
             style={{
               display: 'flex', alignItems: 'center', gap: '0.4rem',
               padding: '0.45rem 1rem', borderRadius: '25px', border: 'none',
-              backgroundColor: viewMode === '3d' ? '#1a1a1a' : 'transparent',
-              color: viewMode === '3d' ? '#fff' : '#1a1a1a',
+              backgroundColor: viewMode === '3d' ? '#fff' : 'transparent',
+              color: viewMode === '3d' ? '#1a1a1a' : '#1a1a1a',
               cursor: 'pointer', fontSize: '0.82rem', fontWeight: 500, transition: 'all 0.3s'
             }}
           >
@@ -275,7 +275,7 @@ const InteractiveView = () => {
         </div>
 
         {/* Language Toggle Button */}
-        <button onClick={toggleLanguage} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', color: '#1a1a1a', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '50%', cursor: 'pointer', fontWeight: 600, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
+        <button onClick={toggleLanguage} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', color: '#1a1a1a', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '50%', cursor: 'pointer', fontWeight: 600, backdropFilter: 'blur(10px)', transition: 'background 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
           {language === 'id' ? 'EN' : 'ID'}
         </button>
       </div>
@@ -284,19 +284,19 @@ const InteractiveView = () => {
 
       {/* Slide Arrows */}
       {categoryItems.length > 0 && currentIndex > 0 && (
-        <button onClick={handlePrevItem} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
+        <button onClick={handlePrevItem} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
           <ChevronLeft size={24} color="#1a1a1a" />
         </button>
       )}
       {categoryItems.length > 0 && currentIndex < categoryItems.length - 1 && (
-        <button onClick={handleNextItem} style={{ position: 'absolute', left: 'calc(55% - 65px)', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '#D2B48C', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#D2B48C'}>
+        <button onClick={handleNextItem} style={{ position: 'absolute', left: 'calc(55% - 65px)', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
           <ChevronRight size={24} color="#1a1a1a" />
         </button>
       )}
 
       {/* Progress/Thumbnails Bar (Bottom of Image) */}
       {categoryItems.length > 0 && (
-        <div className="thumbnail-bar" style={{ position: 'absolute', transform: 'translateX(-50%)', zIndex: 60, display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.6rem 1.2rem', backgroundColor: '#D2B48C', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.1)', overflowX: 'auto' }}>
+        <div className="thumbnail-bar" style={{ position: 'absolute', transform: 'translateX(-50%)', zIndex: 60, display: 'flex', alignItems: 'center', gap: '0.8rem', padding: '0.6rem 1.2rem', backgroundColor: '	#eee0ca', backdropFilter: 'blur(15px)', borderRadius: '40px', border: '1px solid rgba(0,0,0,0.1)', overflowX: 'auto' }}>
           {categoryItems.slice(Math.max(0, currentIndex - 5), currentIndex + 6).map((art, idx) => {
             const isSelected = String(art.id) === String(id);
             return (
@@ -337,6 +337,11 @@ const InteractiveView = () => {
               <div style={{ position: 'relative', width: '100%', height: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
                 {activeArtifact.gambar ? (
                   <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '2rem',
                     overflow: 'hidden',
                     borderRadius: '20px',
                     boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
@@ -344,7 +349,9 @@ const InteractiveView = () => {
                     maxWidth: '85%',
                     position: 'relative',
                     border: '4px solid rgba(255,255,255,0.3)',
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'rgba(234, 214, 178, 0.6)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)'
                   }}>
                     <img
                       src={activeArtifact.gambar}
@@ -353,7 +360,6 @@ const InteractiveView = () => {
                         maxHeight: '60vh',
                         maxWidth: '100%',
                         display: 'block',
-                        mixBlendMode: 'lighten',
                         filter: 'contrast(1.06) brightness(1.03)',
                         transform: `scale(${imageScale})`,
                         transition: 'transform 0.3s ease',
@@ -370,7 +376,7 @@ const InteractiveView = () => {
 
                 {/* Image Zoom Controls Overlay */}
                 {activeArtifact.gambar && (
-                  <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: '#D2B48C', backdropFilter: 'blur(10px)', padding: '0.4rem', borderRadius: '25px', border: '1px solid rgba(0,0,0,0.1)', zIndex: 10 }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', backgroundColor: '	#eee0ca', backdropFilter: 'blur(10px)', padding: '0.4rem', borderRadius: '25px', border: '1px solid rgba(0,0,0,0.1)', zIndex: 10 }}>
                     <button onClick={() => setImageScale(s => Math.min(s + 0.3, 3))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom In"><ZoomIn size={16} /></button>
                     <button onClick={() => setImageScale(s => Math.max(s - 0.3, 1))} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Zoom Out"><ZoomOut size={16} /></button>
                     <button onClick={() => setImageScale(1)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }} title="Reset Zoom"><RotateCcw size={16} /></button>
@@ -418,9 +424,16 @@ const InteractiveView = () => {
 
           {/* Right Side: Description & Metadata */}
           <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '6rem 3rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
-            <div style={{ borderLeft: '1px solid rgba(0,0,0,0.15)', paddingLeft: '2.5rem', position: 'relative' }}>
-
-              <div style={{ position: 'absolute', left: '-1px', top: 0, width: '3px', height: '80px', backgroundColor: '#1a1a1a' }}></div>
+            <div style={{
+              backgroundColor: 'rgba(234, 214, 178, 0.7)',
+              backdropFilter: 'blur(15px)',
+              WebkitBackdropFilter: 'blur(15px)',
+              borderRadius: '24px',
+              padding: '2.5rem',
+              boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+              border: '1px solid rgba(255,255,255,0.6)',
+              position: 'relative'
+            }}>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
                 <span style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.75rem', color: '#4a4a44', fontWeight: 600 }}>
@@ -446,56 +459,13 @@ const InteractiveView = () => {
               </h1>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
-                <p style={{ margin: 0 }}>
+                <p style={{ margin: 0, textAlign: 'justify' }}>
                   {language === 'en'
                     ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))
                     : (activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))}
                 </p>
 
-                {/* Grid Metadata Lengkap */}
-                <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: 'rgba(255,255,255,0.25)', padding: '1.2rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  {activeArtifact.no_inventarisasi && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Inventory No.' : 'No. Inventarisasi'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600, fontFamily: 'monospace' }}>{activeArtifact.no_inventarisasi}</p>
-                    </div>
-                  )}
 
-                  {activeArtifact.dimensi && activeArtifact.dimensi.panjang && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Dimension' : 'Dimensi'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.dimensi.panjang}</p>
-                    </div>
-                  )}
-
-                  {activeArtifact.tempat_penyimpanan && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Storage Location' : 'Tempat Penyimpanan'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tempat_penyimpanan}</p>
-                    </div>
-                  )}
-
-                  {activeArtifact.tanggal_pengamatan && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Observation Date' : 'Tanggal Pendataan'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tanggal_pengamatan}</p>
-                    </div>
-                  )}
-                </div>
-
-                {activeArtifact.keterangan && (
-                  <div style={{ marginTop: '0.5rem', fontSize: '0.82rem', color: '#555', fontStyle: 'italic' }}>
-                    {language === 'en' ? 'Note: ' : 'Catatan: '} {activeArtifact.keterangan}
-                  </div>
-                )}
               </div>
             </div>
           </div>

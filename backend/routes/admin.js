@@ -217,6 +217,16 @@ function loadCollections() {
 
 function saveCollections(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+  
+  // Sinkronisasi otomatis ke Python RAG (Vector Database)
+  try {
+    fetch('http://127.0.0.1:8000/admin/reindex', { method: 'POST' })
+      .then(res => res.json())
+      .then(resData => console.log('[RAG Sync] Database vector berhasil diperbarui secara otomatis:', resData))
+      .catch(err => console.error('[RAG Sync Error] Gagal menghubungi Python RAG:', err.message));
+  } catch (e) {
+    console.error('[RAG Sync Error]', e);
+  }
 }
 
 // ==========================================================

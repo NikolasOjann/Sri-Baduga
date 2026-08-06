@@ -34,7 +34,7 @@ const KATEGORI_COLORS = {
   'default': 'linear-gradient(135deg, #3A3A34 0%, #6B6B60 50%, #9A9A8A 100%)',
 };
 
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'http://' + window.location.hostname + ':3001';
 
 const CollectionCard = ({ item, index }) => {
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -50,7 +50,7 @@ const CollectionCard = ({ item, index }) => {
         position: 'relative',
         textDecoration: 'none',
         backgroundImage: `url(${l1Bg})`,
-        backgroundSize: 'cover',
+        backgroundSize: '100% 100%',
         backgroundPosition: 'center',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
@@ -380,7 +380,7 @@ const CollectionImages = () => {
             <AlertCircle size={48} strokeWidth={1} />
             <p style={{ fontFamily: 'Kalnia', fontSize: '1.5rem' }}>Gagal memuat koleksi</p>
             <p style={{ color: '#8c8c82', fontSize: '0.95rem' }}>
-              Pastikan backend berjalan di <code style={{ backgroundColor: 'rgba(0,0,0,0.1)', padding: '2px 6px', borderRadius: '4px' }}>http://localhost:3001</code>
+              Pastikan backend berjalan di <code style={{ backgroundColor: 'rgba(0,0,0,0.1)', padding: '2px 6px', borderRadius: '4px' }}>http://${window.location.hostname}:3001</code>
             </p>
           </div>
         )}

@@ -12,6 +12,16 @@ class Planner:
     # =====================================================
 
     def plan(self, question):
+        
+        # BYPASS LLM UNTUK PERINTAH REMOTE CONTROL (Mencegah salah paham "buka")
+        lower_q = question.lower()
+        if any(keyword in lower_q for keyword in ["buka koleksi", "buka klasifikasi", "buka photobooth", "mainkan kuis", "buka layar"]):
+            return {
+                "tool": "remote_control",
+                "arguments": {
+                    "question": question
+                }
+            }
 
         prompt = f"""
 Kamu adalah AI Planner Museum Sri Baduga.
@@ -52,8 +62,8 @@ Contoh:
 Digunakan untuk pertanyaan umum tentang Museum Sri Baduga itu sendiri (BUKAN tentang koleksi spesifik).
 
 Contoh:
-- museum buka jam berapa
 - jam operasional museum
+- jadwal operasional museum
 - harga tiket / HTM museum
 - berapa tiket masuk
 - dimana lokasi museum
@@ -63,7 +73,24 @@ Contoh:
 - apa yang dipamerkan di museum
 - telepon museum / kontak museum
 - museum tutup hari apa
-- koleksi museum ada apa saja (dalam konteks umum, bukan nama spesifik)
+- daftar lengkap yang ada di museum
+
+-------------------------------------
+
+4. remote_control
+
+Digunakan jika pengguna meminta untuk MEMBUKA, MENYALAKAN, MENAMPILKAN, atau MEMAINKAN sesuatu di layar komputer (layar photobooth, layar koleksi, layar kuis).
+
+Contoh:
+- tolong buka photobooth
+- mainkan kuis
+- buka katalog koleksi di layar
+- buka koleksi
+- buka koleksi museum
+- buka klasifikasi
+- tolong buka kamera
+- nyalakan layar koleksi
+- tutup browser
 
 -------------------------------------
 
@@ -75,6 +102,7 @@ Selamat pagi
 Terima kasih
 
 PENTING: Jika pengguna hanya mengetik satu atau dua kata (misalnya "golok", "kujang", "ciomas"), itu adalah nama koleksi. Gunakan museum_search.
+PENTING: JIKA MENGANDUNG KATA "buka koleksi" ATAU "buka klasifikasi" ATAU "buka photobooth", WAJIB GUNAKAN remote_control! JANGAN PERNAH GUNAKAN museum_info!
 
 Jawab HARUS berupa JSON.
 
@@ -102,6 +130,24 @@ atau
     "tool":"museum_info",
     "arguments":{{
         "question":"museum buka jam berapa"
+    }}
+}}
+
+atau
+
+{{
+    "tool":"museum_info",
+    "arguments":{{
+        "question":"museum buka jam berapa"
+    }}
+}}
+
+atau
+
+{{
+    "tool":"remote_control",
+    "arguments":{{
+        "question":"tolong buka photobooth"
     }}
 }}
 
