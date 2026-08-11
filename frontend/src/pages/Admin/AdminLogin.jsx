@@ -20,7 +20,12 @@ function AdminLogin() {
         body: JSON.stringify({ username, password })
       });
 
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch (parseError) {
+        throw new Error('Koneksi ke server gagal atau server bermasalah.');
+      }
 
       if (!res.ok) {
         throw new Error(data.error || 'Gagal login');
