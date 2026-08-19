@@ -122,9 +122,9 @@ const CollectionCard = ({ item, index }) => {
             style={{
               width: '100%',
               height: 'auto',
+              maxHeight: '220px', // add to limit height and avoid too much cropping if tall
+              objectFit: 'contain',
               display: 'block',
-              WebkitMaskImage: 'radial-gradient(ellipse 92% 88% at 50% 50%, black 65%, transparent 100%)',
-              maskImage: 'radial-gradient(ellipse 92% 88% at 50% 50%, black 65%, transparent 100%)',
               filter: 'contrast(1.06) brightness(1.02)',
               transition: 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease',
               opacity: imgLoaded ? 1 : 0,

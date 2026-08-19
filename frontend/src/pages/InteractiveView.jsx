@@ -314,7 +314,7 @@ const InteractiveView = () => {
                 }}
               >
                 <div style={{ width: '45px', height: '32px', borderRadius: '6px', overflow: 'hidden', boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.25)' : 'none', border: isSelected ? '2px solid #1a1a1a' : '1px solid transparent', backgroundColor: '#ddd' }}>
-                  <img src={art.gambar || dummyArtifacts[0].thumbnail} alt={art.nama_koleksi} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={art.gambar || dummyArtifacts[0].thumbnail} alt={art.nama_koleksi} style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: '#ddd' }} />
                 </div>
               </Link>
             );

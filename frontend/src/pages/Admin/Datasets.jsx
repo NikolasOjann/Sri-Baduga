@@ -194,6 +194,9 @@ function Datasets() {
     const fd = new FormData();
     fd.append('gambar_file', file);
     fd.append('klasifikasi', formData.klasifikasi);
+    if (isEditMode && formData.gambar) {
+      fd.append('old_gambar', formData.gambar);
+    }
     
     try {
       const token = localStorage.getItem('adminToken');
