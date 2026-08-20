@@ -4,17 +4,19 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Pie } from 'react-chartjs-2';
 
 // Registrasi komponen ChartJS
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -84,8 +86,82 @@ function Dashboard() {
       },
       title: {
         display: true,
-        text: 'Statistik Klasifikasi Artefak Museum',
+        text: 'Statistik Klasifikasi Artefak Museum (Bar)',
         font: { size: 16 }
+      },
+    },
+  };
+
+  const pieColors = [
+    '#2196F3', // blue
+    '#FF4081', // pink
+    '#FF9800', // orange
+    '#FFC107', // amber
+    '#00BCD4', // cyan
+    '#9C27B0', // purple
+    '#BDBDBD', // grey
+    '#03A9F4', // light blue
+    '#E91E63', // deeper pink
+    '#FF5722', // deep orange
+    '#4CAF50'  // green for Lainnya
+  ];
+
+  // Pie chart 1
+  const pieData1 = {
+    labels: Object.keys(stats),
+    datasets: [
+      {
+        data: Object.values(stats),
+        backgroundColor: pieColors,
+        borderWidth: 1,
+        borderColor: '#ffffff',
+      },
+    ],
+  };
+
+  const pieOptions1 = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { boxWidth: 20, padding: 15 }
+      },
+      title: {
+        display: true,
+        text: 'Total Koleksi Berdasarkan Klasifikasi',
+        font: { size: 16 },
+        padding: { top: 10, bottom: 20 }
+      },
+    },
+  };
+
+  // Pie chart 2 (Mockup data untuk Konservasi Tahun 2026)
+  const pieData2 = {
+    labels: ['Etnografika'],
+    datasets: [
+      {
+        data: [49],
+        backgroundColor: ['#2196F3'],
+        borderWidth: 1,
+        borderColor: '#ffffff',
+      },
+    ],
+  };
+
+  const pieOptions2 = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { boxWidth: 20, padding: 15 }
+      },
+      title: {
+        display: true,
+        text: 'Total Koleksi Konservasi Tahun 2026',
+        font: { size: 16 },
+        padding: { top: 10, bottom: 20 }
       },
     },
   };
@@ -112,7 +188,28 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Area Grafik */}
+      {/* Area Grafik Pie */}
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '30px', flexWrap: 'wrap' }}>
+        <div style={{ 
+          flex: '1 1 45%', backgroundColor: 'white', padding: '20px', borderRadius: '4px', 
+          boxShadow: '0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2)' 
+        }}>
+          <div style={{ height: '400px' }}>
+            <Pie data={pieData1} options={pieOptions1} />
+          </div>
+        </div>
+        
+        <div style={{ 
+          flex: '1 1 45%', backgroundColor: 'white', padding: '20px', borderRadius: '4px', 
+          boxShadow: '0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2)' 
+        }}>
+          <div style={{ height: '400px' }}>
+            <Pie data={pieData2} options={pieOptions2} />
+          </div>
+        </div>
+      </div>
+
+      {/* Area Grafik Bar (Yang lama tetap dipertahankan di bawah) */}
       <div style={{ 
         backgroundColor: 'white', padding: '20px', borderRadius: '4px', 
         borderTop: '3px solid #007bff', boxShadow: '0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2)' 

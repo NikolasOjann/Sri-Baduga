@@ -39,9 +39,9 @@ function AdminLogin() {
   };
 
   return (
-    <div style={{
+    <div className="admin-container" style={{
       display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh',
-      backgroundColor: '#f4f6f9', fontFamily: '"Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+      backgroundColor: '#f4f6f9'
     }}>
       <div style={{
         width: '360px', padding: '30px', background: 'white', borderRadius: '4px', boxShadow: '0 0 10px rgba(0,0,0,0.1)'

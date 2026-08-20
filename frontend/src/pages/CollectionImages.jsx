@@ -171,6 +171,14 @@ const CollectionCard = ({ item, index }) => {
         gap: '0.75rem',
         zIndex: 2,
       }}>
+        {/* Pembatas antara gambar dan judul */}
+        <div style={{
+          width: '100%',
+          height: '1.5px',
+          background: 'linear-gradient(90deg, rgba(212, 175, 55, 0.8) 0%, rgba(212, 175, 55, 0.2) 70%, transparent 100%)',
+          borderRadius: '1px',
+        }} />
+
         <h2 style={{
           fontSize: '1.22rem',
           color: '#637c36', 

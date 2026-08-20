@@ -13,7 +13,7 @@
 
   --color-text: #000000;
   /* Black text */
-  --color-text-muted: #333333;
+  --color-text-muted: #000000;
 
   --color-accent: #000000;
   /* Black accent for headings */
@@ -44,6 +44,19 @@ h6 {
   font-family: 'Kalnia', serif;
   font-weight: 500;
   color: var(--color-accent);
+}
+
+.admin-container {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.admin-container h1,
+.admin-container h2,
+.admin-container h3,
+.admin-container h4,
+.admin-container h5,
+.admin-container h6 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 a {
