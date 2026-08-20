@@ -46,23 +46,22 @@ class DocumentSelector:
         # ==========================================
 
         groups = defaultdict(list)
+        unique_names = []
 
         for doc in documents:
 
             if doc is None:
                 continue
 
-            name = doc.metadata.get(
+            name = doc.metadata.get("name", "")
 
-                "name",
-
-                ""
-
-            )
+            if not name:
+                continue
+                
+            if name not in groups:
+                unique_names.append(name)
 
             groups[name].append(doc)
-
-        unique_names = sorted(groups.keys())
 
         print()
         print("Unique Collection :", len(unique_names))
@@ -81,7 +80,7 @@ class DocumentSelector:
 
         # 1. Cek apakah keyword adalah nama kategori (dengan fuzzy)
         categories = {self.normalize(doc.metadata.get("category", "")) for doc in documents if doc and doc.metadata.get("category")}
-        cat_matches = difflib.get_close_matches(question, categories, n=1, cutoff=0.7)
+        cat_matches = difflib.get_close_matches(question, categories, n=1, cutoff=0.85)
         if cat_matches:
             matched_cat = cat_matches[0]
             # Jika user mencari kategori, maka kembalikan semua nama unik dalam kategori tersebut
@@ -99,18 +98,19 @@ class DocumentSelector:
             matched = name_matches
 
         # ==========================================
-        # TIDAK ADA
+        # TIDAK ADA (FALLBACK TO TOP SEMANTIC MATCH)
         # ==========================================
 
         if len(matched) == 0:
-
-            return {
-
-                "status": "empty",
-
-                "documents": []
-
-            }
+            if len(unique_names) > 0:
+                # Retriever found documents via Vector Search, but fuzzy string match failed.
+                # Trust the #1 semantic match from the retriever.
+                matched = [unique_names[0]]
+            else:
+                return {
+                    "status": "empty",
+                    "documents": []
+                }
 
         # ==========================================
         # SATU

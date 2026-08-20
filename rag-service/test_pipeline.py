@@ -1,6 +1,10 @@
 import sys
 import os
 
+# Memaksa Windows terminal menggunakan UTF-8 agar tidak crash saat ada karakter emoji
+if sys.stdout.encoding.lower() != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+
 # Menambahkan root project ke sys.path
 sys.path.append(os.path.abspath("."))
 

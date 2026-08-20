@@ -46,10 +46,7 @@ class Settings:
         )
     )
 
-    LLM_MODEL = os.getenv(
-        "LLM_MODEL",
-        "qwen2.5:1.5b"
-    )
+    LLM_MODEL: str = os.getenv("LLM_MODEL", "qwen2.5:1.5b")
 
     OLLAMA_URL = os.getenv(
         "OLLAMA_URL",

@@ -22,6 +22,9 @@ def normalize_query_for_cache(q: str) -> str:
     words = [w for w in words if w not in stopwords]
     return " ".join(sorted(words))
 
+def clear_llm_cache():
+    _LLM_CACHE.clear()
+
 def find_cached_result(question: str, selected_document):
     """Mencari cache dengan tingkat kemiripan pertanyaan yang tinggi setelah dinormalisasi."""
     q_norm = normalize_query_for_cache(question)
@@ -84,10 +87,17 @@ class MuseumPipeline:
         # =====================================================
         # FAST GREETING INTERCEPT
         # =====================================================
-        # Jika input sangat pendek dan merupakan sapaan, langsung balas tanpa LLM
+        # Jika input sangat pendek dan merupakan sapaan atau test, langsung balas tanpa LLM
         greetings = {"halo", "hallo", "haloo", "halloo", "helo", "hai", "hay", "alow", "allow", "hello", "hei", "hi", "pagi", "siang", "sore", "malam", "selamat", "punten", "sampurasun"}
+        test_words = {"tes", "test", "testing", "coba", "nyoba", "ping", "cek"}
+        
         q_words = re.sub(r'[^\w\s]', '', q_lower).split()
-        if len(q_words) <= 3 and any(w in greetings for w in q_words):
+        
+        # Intercept jika merupakan sapaan pendek ATAU hanya berisi kata-kata test
+        is_greeting = len(q_words) <= 3 and any(w in greetings for w in q_words)
+        is_test_only = len(q_words) > 0 and all(w in test_words for w in q_words)
+        
+        if is_greeting or is_test_only:
             answer = "Halo! Perkenalkan, saya Nyai, asisten virtual Museum Sri Baduga. Ada yang bisa saya bantu tentang koleksi atau informasi museum hari ini?"
             self.memory.add_user(session_id, question)
             self.memory.add_ai(session_id, answer)
@@ -110,6 +120,11 @@ class MuseumPipeline:
             print("="*60)
             self.memory.add_user(session_id, question)
             self.memory.add_ai(session_id, cached_result["answer"])
+            
+            # PENTING: Kembalikan konteks dokumen dari cache agar pertanyaan lanjutan (follow-up) tetap berfungsi
+            if cached_result.get("documents") and len(cached_result["documents"]) > 0:
+                self.memory.set_selected_document(session_id, cached_result["documents"][0])
+                
             return cached_result
 
         q_lower = (question or "").strip().lower()
@@ -132,7 +147,15 @@ class MuseumPipeline:
         # =====================================================
         # FOLLOW-UP QUESTION: gunakan dokumen yang sudah dipilih
         # =====================================================
-        if selected_document and any(keyword in q_lower for keyword in follow_up_keywords):
+        def is_follow_up(text):
+            import re
+            text_lower = text.lower()
+            for kw in follow_up_keywords:
+                if re.search(r'\b' + re.escape(kw) + r'\b', text_lower):
+                    return True
+            return False
+
+        if selected_document and is_follow_up(q_lower):
 
             # -------------------------------------------------------
             # Deteksi topic-switch: jika user menyebut nama koleksi
@@ -146,15 +169,24 @@ class MuseumPipeline:
             retriever = get_retriever()
             extracted = retriever.extract_keyword(q_lower)
             
-            # Jika hasil ekstraksi menghasilkan nama barang yang valid di database
-            # dan nama tersebut berbeda dari konteks saat ini, maka user telah berpindah topik
             from app.rag.database_manager import get_database
             db = get_database()
             all_names = list(db.name_index.keys())
             
-            mentioned_other = False
-            if extracted in all_names and extracted != current_name:
-                mentioned_other = True
+            # Ambil semua kata dari database koleksi (panjang > 2)
+            db_words = set()
+            for name in all_names:
+                for w in name.replace("/", " ").replace("-", " ").split():
+                    if len(w) > 2: db_words.add(w)
+                    
+            current_words = set(current_name.replace("/", " ").replace("-", " ").split())
+            extracted_words = set(extracted.split())
+            
+            ignore_words = {"bisa", "ceritakan", "letak", "simpan", "bentuk", "asal", "terbuat", "bahan", "koleksi", "museum", "ini", "itu", "yang", "dari", "pada", "untuk", "dengan", "dan", "alat", "benda", "kapan", "siapa", "dimana", "berapa", "sejarah", "cerita"}
+            
+            new_entity_words = (extracted_words.intersection(db_words) - current_words) - ignore_words
+            
+            mentioned_other = len(new_entity_words) > 0
 
             if mentioned_other:
                 # User ingin tanya tentang koleksi LAIN → reset selected_document
@@ -210,7 +242,7 @@ class MuseumPipeline:
         # FOLLOW-UP FALLBACK: jika selected_document kosong,
         # tambahkan konteks dari riwayat chat ke pertanyaan
         # =====================================================
-        if not selected_document and any(keyword in q_lower for keyword in follow_up_keywords):
+        if not selected_document and is_follow_up(q_lower):
             history = self.memory.history(session_id)
             
             # Ambil pertanyaan user terakhir sebelum follow-up ini
@@ -290,10 +322,7 @@ class MuseumPipeline:
 
                     self.memory.set_document(session_id, candidate_docs[0])
 
-                    prompt_question = (
-                        f"Jelaskan koleksi bernama {selected_name} secara detail dan mengalir. "
-                        "Jika ada lebih dari satu, jelaskan perbedaannya secara natural tanpa menyebutkan kata 'Nomor Registrasi', 'Inventarisasi', atau 'Dokumen'."
-                    )
+                    prompt_question = f"Jelaskan koleksi {selected_name} secara singkat, ramah, dan menarik."
 
                     prompt = PromptService.create(prompt_question, candidate_docs)
 
@@ -456,9 +485,10 @@ class MuseumPipeline:
         if result is None:
             extracted_item = get_retriever().extract_keyword(q_clean)
             from app.rag.database_manager import get_database
-            db_names = list(get_database().name_index.keys())
+            db_inst = get_database()
+            db_targets = list(db_inst.name_index.keys()) + list(db_inst.category_index.keys())
             
-            if extracted_item in db_names:
+            if extracted_item in db_targets:
                 print(f"\n[PIPELINE] EXACT ITEM BYPASS ACTIVATED for: {extracted_item}")
                 from app.tools.museum_search_tool import MuseumSearchTool
                 search_tool = MuseumSearchTool(get_retriever())
@@ -609,7 +639,7 @@ class MuseumPipeline:
             # Jika user hanya mengetik kata kunci singkat tanpa kalimat tanya (misal: "tombak", "golok"),
             # bantu LLM (terutama model literal seperti Gemini) dengan kalimat perintah agar dijawab lengkap.
             if len(question.split()) <= 3 and not any(w in question.lower() for w in ["apa", "siapa", "dimana", "kapan", "bagaimana", "mengapa", "jelaskan", "ceritakan", "?"]):
-                prompt_q = f"Jelaskan informasi lengkap mengenai {question} berdasarkan dokumen yang ada."
+                prompt_q = f"Jelaskan apa itu {question} secara singkat dan ramah."
                 
             prompt = PromptService.create(
                 prompt_q,

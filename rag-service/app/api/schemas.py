@@ -17,3 +17,7 @@ class ChatResponse(BaseModel):
     sources: list
 
     session_id: str
+
+    options: Optional[list] = None
+
+    artifacts: Optional[list] = None

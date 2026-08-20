@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Loader, Volume2, VolumeX, Mic, Trash2 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTTS } from '../hooks/useTTS';
 
 const API_BASE = 'http://' + window.location.hostname + ':3001';
+
+const KATEGORI_NAME_TO_ID = {
+  'geologika/geografika': '1', 'geologika': '1', 'biologika': '2', 'etnografika': '3', 
+  'arkeologika': '4', 'historika': '5', 'numismatika/heraldika': '6', 'numismatika': '6', 
+  'filologika': '7', 'keramologika': '8', 'seni rupa': '9', 'teknologika': '10'
+};
 
 const Assistant = () => {
   const [isOpen, setIsOpen]   = useState(false);
@@ -13,6 +19,7 @@ const Assistant = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { t, language } = useLanguage();
   const messagesEndRef = useRef(null);
   const lastSpokenIndexRef = useRef(-1); // Mencegah TTS terpicu dua kali untuk pesan yang sama
@@ -94,13 +101,6 @@ const Assistant = () => {
       if (categoryId && categoryId !== 'undefined' && categoryId !== 'null') {
         categoryId = decodeURIComponent(categoryId).toLowerCase();
         
-        // Mapping jika navigasi kembali menggunakan nama kategori, bukan ID angka
-        const KATEGORI_NAME_TO_ID = {
-          'geologika': '1', 'biologika': '2', 'etnografika': '3', 
-          'arkeologika': '4', 'historika': '5', 'numismatika': '6', 
-          'filologika': '7', 'keramologika': '8', 'seni rupa': '9', 'teknologika': '10'
-        };
-        
         if (KATEGORI_NAME_TO_ID[categoryId]) {
           categoryId = KATEGORI_NAME_TO_ID[categoryId];
         }
@@ -157,10 +157,12 @@ const Assistant = () => {
 
   // Auto-scroll ke pesan terbaru
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current && isOpen) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     }
-  }, [messages]);
+  }, [messages, isOpen]);
 
   const sendMessageToAPI = async (text) => {
     if (!text.trim()) return;
@@ -335,14 +337,6 @@ const Assistant = () => {
                   }}>
                   {msg.text}
 
-                  {msg.source && (
-                    <div style={{ marginTop: '10px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px', borderTop: '1px solid rgba(255,255,255,0.15)', paddingTop: '8px' }}>
-                      {msg.source === 'ollama_rag' && <span style={{ color: '#4ade80', fontWeight: '500' }}>⚡ Dijawab oleh AI Ollama & RAG</span>}
-                      {msg.source === 'local_fuse' && <span style={{ color: '#fbbf24', fontWeight: '500' }}>🔍 Dijawab oleh Pencarian Lokal (Fallback)</span>}
-                      {msg.source === 'museum_faq' && <span style={{ color: '#60a5fa', fontWeight: '500' }}>ℹ️ Informasi Umum Museum</span>}
-                    </div>
-                  )}
-
                   {msg.sender === 'nyai' && (
                     <button
                       onClick={() => {
@@ -377,12 +371,137 @@ const Assistant = () => {
                   {msg.artifacts && msg.artifacts.length > 0 && (
                     <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                       {msg.artifacts.map((art, aIdx) => (
-                        <div key={aIdx} style={{ backgroundColor: 'rgba(0,0,0,0.35)', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)', fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div style={{ overflow: 'hidden' }}>
-                            <strong style={{ color: '#fff', display: 'block' }}>{art.nama_koleksi}</strong>
-                            {art.klasifikasi && <span style={{ color: '#a3a3a3', fontSize: '0.75rem' }}>{art.klasifikasi}</span>}
-                          </div>
-                          {art.no_inventarisasi && <span style={{ background: 'rgba(194,178,128,0.2)', color: '#C2B280', padding: '2px 6px', borderRadius: '4px', fontSize: '0.7rem', flexShrink: 0, marginLeft: '8px' }}>{art.no_inventarisasi}</span>}
+                        <div key={aIdx} style={{ display: 'flex', gap: '4px', width: '100%', alignItems: 'stretch' }}>
+                          <button 
+                            onClick={() => {
+                              if (!isSending) sendMessageToAPI(art.nama_koleksi);
+                            }}
+                            disabled={isSending}
+                            style={{ 
+                              backgroundColor: 'rgba(0,0,0,0.35)', 
+                              padding: '6px 8px', 
+                              borderRadius: '8px', 
+                              border: '1px solid rgba(255,255,255,0.1)', 
+                              fontSize: '0.8rem', 
+                              display: 'flex', 
+                              justifyContent: 'space-between', 
+                              alignItems: 'center',
+                              cursor: isSending ? 'not-allowed' : 'pointer',
+                              textAlign: 'left',
+                              transition: 'all 0.2s',
+                              flex: 1,
+                              minWidth: 0
+                            }}
+                            onMouseEnter={(e) => {
+                              if (!isSending) {
+                                e.currentTarget.style.backgroundColor = 'rgba(194, 178, 128, 0.2)';
+                                e.currentTarget.style.borderColor = 'rgba(194, 178, 128, 0.5)';
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (!isSending) {
+                                e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.35)';
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                              }
+                            }}
+                          >
+                            <div style={{ wordBreak: 'break-word', paddingRight: '4px' }}>
+                              <strong style={{ color: '#fff', display: 'block', lineHeight: '1.2', marginBottom: '2px' }}>{art.nama_koleksi}</strong>
+                              {art.klasifikasi && <span style={{ color: '#a3a3a3', fontSize: '0.7rem' }}>{art.klasifikasi}</span>}
+                            </div>
+                            {art.no_inventarisasi && <span style={{ background: 'rgba(194,178,128,0.2)', color: '#C2B280', padding: '2px 4px', borderRadius: '4px', fontSize: '0.65rem', flexShrink: 0 }}>{art.no_inventarisasi}</span>}
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              setIsOpen(false);
+                              navigate(`/interactive/${art.id}`);
+                            }}
+                            title="Tampilkan Halaman Rincian"
+                            style={{
+                              backgroundColor: 'rgba(194, 178, 128, 0.25)', 
+                              border: '1px solid rgba(194, 178, 128, 0.5)',
+                              color: '#fff',
+                              padding: '0 6px',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              transition: 'all 0.2s',
+                              fontSize: '0.7rem',
+                              whiteSpace: 'nowrap',
+                              flexShrink: 0
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(194, 178, 128, 0.4)' }}
+                            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(194, 178, 128, 0.25)' }}
+                          >
+                            Rincian
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {msg.options && msg.options.length > 0 && (
+                    <div style={{ marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {msg.options.map((opt, oIdx) => (
+                        <div key={oIdx} style={{ display: 'flex', gap: '4px', width: '100%', alignItems: 'stretch' }}>
+                          <button 
+                            onClick={() => {
+                              if (!isSending) sendMessageToAPI(opt);
+                            }}
+                            disabled={isSending}
+                            style={{ 
+                              background: 'rgba(194, 178, 128, 0.15)',
+                              border: '1px solid rgba(194, 178, 128, 0.4)',
+                              color: '#fff',
+                              padding: '6px 8px',
+                              borderRadius: '8px',
+                              fontSize: '0.8rem',
+                              cursor: isSending ? 'not-allowed' : 'pointer',
+                              textAlign: 'left',
+                              transition: 'all 0.2s',
+                              flex: 1,
+                              wordBreak: 'break-word',
+                              lineHeight: '1.2',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '6px'
+                            }}
+                            onMouseEnter={(e) => { if(!isSending) e.currentTarget.style.background = 'rgba(194, 178, 128, 0.3)' }}
+                            onMouseLeave={(e) => { if(!isSending) e.currentTarget.style.background = 'rgba(194, 178, 128, 0.15)' }}
+                          >
+                            <span>Tampilkan <strong>{opt}</strong></span>
+                          </button>
+                          
+                          <button
+                            onClick={() => {
+                              setIsOpen(false);
+                              const catId = KATEGORI_NAME_TO_ID[opt.toLowerCase()] || opt;
+                              navigate(`/collection/${catId}`);
+                            }}
+                            title="Tampilkan Halaman Kategori"
+                            style={{
+                              background: 'rgba(194, 178, 128, 0.25)',
+                              border: '1px solid rgba(194, 178, 128, 0.5)',
+                              color: '#fff',
+                              padding: '0 6px',
+                              borderRadius: '8px',
+                              fontSize: '0.7rem',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              whiteSpace: 'nowrap',
+                              flexShrink: 0
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(194, 178, 128, 0.4)' }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(194, 178, 128, 0.25)' }}
+                          >
+                            Buka
+                          </button>
                         </div>
                       ))}
                     </div>

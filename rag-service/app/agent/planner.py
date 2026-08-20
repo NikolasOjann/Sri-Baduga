@@ -103,8 +103,9 @@ Terima kasih
 
 PENTING: Jika pengguna hanya mengetik satu atau dua kata (misalnya "golok", "kujang", "ciomas"), itu adalah nama koleksi. Gunakan museum_search.
 PENTING: JIKA MENGANDUNG KATA "buka koleksi" ATAU "buka klasifikasi" ATAU "buka photobooth", WAJIB GUNAKAN remote_control! JANGAN PERNAH GUNAKAN museum_info!
+SANGAT PENTING: Untuk bagian "arguments", kamu WAJIB menyalin Pertanyaan Asli SAMA PERSIS 100% huruf demi huruf ke dalam nilai "question" atau "query". DILARANG merangkum atau mengubah isi pertanyaan pengguna!
 
-Jawab HARUS berupa JSON.
+Jawab HARUS berupa format JSON yang valid.
 
 Contoh:
 
@@ -162,25 +163,25 @@ Pertanyaan:
 {question}
 """
 
-        result = self.llm.generate(prompt)
-
+        result_str = self.llm.generate(prompt)
+        
         try:
-
-            start = result.find("{")
-            end = result.rfind("}") + 1
-
-            return json.loads(result[start:end])
-
+            start = result_str.find("{")
+            end = result_str.rfind("}") + 1
+            parsed = json.loads(result_str[start:end])
         except Exception:
-
-            return {
-
-                "tool": "museum_search",
-
-                "arguments": {
-
-                    "question": question
-
-                }
-
+            parsed = {
+                "tool": "museum_search"
             }
+            
+        # PAKSAAN MUTLAK (ANTI-HALUSINASI ARGUMEN)
+        # Apapun yang dihasilkan LLM, kita timpa argumennya dengan pertanyaan asli pengguna.
+        # Ini sangat efektif untuk model kecil yang sering salah menyalin teks.
+        tool_name = parsed.get("tool", "museum_search")
+        
+        if tool_name in ["museum_search", "museum_info", "remote_control"]:
+            parsed["arguments"] = {"question": question}
+        elif tool_name == "museum_collection":
+            parsed["arguments"] = {"query": question}
+            
+        return parsed

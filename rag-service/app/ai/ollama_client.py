@@ -26,22 +26,23 @@ class OllamaClient:
             return self._cache[prompt]
 
         print("[Ollama MISS] Generating response...")
-        response = self.client.chat(
-
-            model=self.model,
-
-            messages=[
-
-                {
-                    "role": "user",
-                    "content": prompt
+        try:
+            response = self.client.chat(
+                model=self.model,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                options={
+                    "num_ctx": 2048  # Batasi konteks agar tidak OOM
                 }
-
-            ]
-
-        )
-        
-        answer = response["message"]["content"]
+            )
+            answer = response["message"]["content"]
+        except Exception as e:
+            print(f"[Ollama ERROR] {str(e)}")
+            answer = "Mohon maaf, server AI sedang kehabisan memori (Out of Memory) atau mengalami gangguan. Mohon tutup aplikasi lain yang memberatkan laptop, lalu coba lagi ya."
         
         # Batasi ukuran cache (misal 100)
         if len(self._cache) > 100:

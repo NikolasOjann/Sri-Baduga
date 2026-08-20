@@ -10,15 +10,9 @@ from app.core.dependencies import get_retriever
 
 
 ToolRegistry.register(
-
-    "museum_search",
-
     MuseumSearchTool(
-
         get_retriever()
-
     )
-
 )
 
 

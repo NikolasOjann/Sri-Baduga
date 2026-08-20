@@ -53,11 +53,11 @@ function formatArtifactResponse(item) {
   if (item.tempat_penyimpanan) specs.push(`Lokasi Penyimpanan: ${item.tempat_penyimpanan}`);
 
   if (specs.length > 0) {
-    resp += `\n\n📋 ${specs.join(' | ')}`;
+    resp += `\n\nSpesifikasi: ${specs.join(' | ')}`;
   }
 
   if (item.keterangan) {
-    resp += `\n\n🔍 Keterangan: ${item.keterangan}`;
+    resp += `\n\nKeterangan: ${item.keterangan}`;
   }
 
   return resp;
@@ -189,6 +189,7 @@ router.post('/', async (req, res) => {
       return res.json({
         reply: ragData.answer,
         artifacts: artifacts,
+        options: ragData.options || [],
         session_id: ragData.session_id || 'default_session',
         source: 'ollama_rag',
       });

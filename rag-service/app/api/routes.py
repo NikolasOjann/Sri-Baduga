@@ -25,5 +25,7 @@ def chat(request: ChatRequest):
     return ChatResponse(
         answer=result["answer"],
         sources=result["sources"],
-        session_id=session
+        session_id=session,
+        options=result.get("options"),
+        artifacts=result.get("artifacts")
     )

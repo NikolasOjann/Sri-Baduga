@@ -124,28 +124,28 @@ class RetrieverService:
             if target and target in q_clean:
                 return target
                 
-        # 2. STRATEGI FUZZY: Cari jika ada salah ketik sedikit (typo)
+        # 2. FILTER STOPWORDS SEBELUM FUZZY
         words = q_clean.split()
-        for word in words:
-            if len(word) >= 4:
-                matches = difflib.get_close_matches(word, all_targets, n=1, cutoff=0.75)
-                if matches:
-                    return matches[0]
-        
-        # 3. STRATEGI NEGATIF (Fallback): Hapus kata-kata pengantar/tanya
         stopwords = [
             "apa", "itu", "ini", "saja", "siapa", "dimana", "di", "mana", "kapan",
             "mengapa", "kenapa", "bagaimana", "berikan", "tolong", "jelaskan",
             "tentang", "info", "informasi", "kalo", "kalau", "dong", "sih",
             "yang", "dimaksud", "arti", "artinya", "berarti", "adalah", "fungsi",
             "coba", "ceritakan", "sejarah", "asal", "usul", "berasal", "terbuat", 
-            "dari", "buat", "koleksi", "jelasin", "mun", "naon", "kumaha", "kunaon"
+            "dari", "buat", "koleksi", "jelasin", "mun", "naon", "kumaha", "kunaon",
+            "membuat", "pembuat", "dibikin", "bikin", "membuatnya"
         ]
+        meaningful_words = [w for w in words if w not in stopwords]
         
-        cleaned_words = [w for w in words if w not in stopwords]
+        # 3. STRATEGI FUZZY: Cari jika ada salah ketik sedikit (typo)
+        for word in meaningful_words:
+            if len(word) >= 4:
+                matches = difflib.get_close_matches(word, all_targets, n=1, cutoff=0.75)
+                if matches:
+                    return matches[0]
         
-        # Jika setelah dihapus habis, kembalikan text asli (safety fallback)
-        if not cleaned_words:
+        # 4. STRATEGI NEGATIF (Fallback)
+        if not meaningful_words:
             return question.strip()
             
-        return " ".join(cleaned_words)
+        return " ".join(meaningful_words)
