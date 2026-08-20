@@ -14,7 +14,7 @@ function AdminLayout() {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: '"Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif' }}>
+    <div className="admin-container" style={{ display: 'flex', minHeight: '100vh' }}>
 
       {/* Sidebar - Tema AdminLTE (Dark) */}
       <aside style={{

@@ -23,6 +23,7 @@ const ParallaxLayers = () => {
     wayangKananImg
   ]);
 
+
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
 

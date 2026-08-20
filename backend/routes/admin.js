@@ -113,21 +113,29 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
     fs.mkdirSync(targetDir, { recursive: true });
   }
 
-  // Hitung nomor urut file berdasarkan isi folder
-  let maxSeq = 0;
-  const files = fs.readdirSync(targetDir);
-  files.forEach(f => {
-    const match = f.match(new RegExp(`^${folderName}-(\\d+)\\.(png|jpg|jpeg)$`, 'i'));
-    if (match) {
-      const num = parseInt(match[1], 10);
-      if (num > maxSeq) maxSeq = num;
-    }
-  });
-  const nextSeq = String(maxSeq + 1).padStart(3, '0');
+  let finalFilename;
+  if (req.body.old_gambar) {
+    // Gunakan nama file yang sama jika ini adalah mode edit (overwrite)
+    const url = new URL(req.body.old_gambar, 'http://localhost');
+    const filenameFromUrl = path.basename(url.pathname);
+    finalFilename = filenameFromUrl;
+  } else {
+    // Hitung nomor urut file berdasarkan isi folder
+    let maxSeq = 0;
+    const files = fs.readdirSync(targetDir);
+    files.forEach(f => {
+      const match = f.match(new RegExp(`^${folderName}-(\\d+)\\.(png|jpg|jpeg)$`, 'i'));
+      if (match) {
+        const num = parseInt(match[1], 10);
+        if (num > maxSeq) maxSeq = num;
+      }
+    });
+    const nextSeq = String(maxSeq + 1).padStart(3, '0');
+    finalFilename = `${folderName}-${nextSeq}.png`;
+  }
   
-  const finalFilename = `${folderName}-${nextSeq}.png`;
   const finalPath = path.join(targetDir, finalFilename);
-  const fallbackFilename = `${folderName}-${nextSeq}${path.extname(req.file.originalname).toLowerCase()}`;
+  const fallbackFilename = finalFilename.replace('.png', path.extname(req.file.originalname).toLowerCase());
   const fallbackPath = path.join(targetDir, fallbackFilename);
   
   const PYTHON_CMD = 'C:\\laragon\\bin\\python\\python-3.10\\python.exe';
@@ -142,14 +150,14 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
     // Opsional: Hapus file asli yang belum dihapus backgroundnya untuk menghemat storage
     if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
 
-    const fileUrl = `http://localhost:3001/images/${folderName}/${finalFilename}`;
+    const fileUrl = `http://localhost:3001/images/${folderName}/${finalFilename}?t=${Date.now()}`;
     res.json({ url: fileUrl });
   } catch (err) {
     console.error(`[ERROR] Gagal hapus background: ${err.message}`);
     // Fallback: Jika script AI gagal, pindahkan gambar asli ke folder tujuan
     if (fs.existsSync(originalPath)) fs.renameSync(originalPath, fallbackPath);
     
-    const fileUrl = `http://localhost:3001/images/${folderName}/${fallbackFilename}`;
+    const fileUrl = `http://localhost:3001/images/${folderName}/${fallbackFilename}?t=${Date.now()}`;
     res.json({ url: fileUrl });
   }
 });
@@ -295,11 +303,32 @@ router.put('/datasets/:id', authenticateToken, (req, res) => {
     return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
   }
 
+  const oldGambar = data[index].gambar;
+
   data[index].nama_koleksi = nama_koleksi;
   data[index].no_registrasi = no_registrasi;
   data[index].klasifikasi = klasifikasi;
   if (deskripsi !== undefined) data[index].deskripsi = deskripsi;
-  if (gambar !== undefined) data[index].gambar = gambar || null;
+  if (gambar !== undefined) {
+    data[index].gambar = gambar || null;
+    
+    // Hapus gambar lama jika ada gambar baru yang berbeda
+    if (oldGambar && oldGambar !== gambar) {
+      try {
+        // Asumsi URL seperti http://localhost:3001/images/folder/file.png
+        const urlParts = oldGambar.split('/images/');
+        if (urlParts.length === 2) {
+          const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
+          if (fs.existsSync(oldFilePath)) {
+            fs.unlinkSync(oldFilePath);
+            console.log(`[Admin] Berhasil menghapus file gambar lama: ${urlParts[1]}`);
+          }
+        }
+      } catch (err) {
+        console.error(`[Admin] Gagal menghapus gambar lama: ${err.message}`);
+      }
+    }
+  }
 
   saveCollections(data);
   console.log(`[Admin] Artefak diupdate: ID ${id}`);
@@ -320,6 +349,23 @@ router.delete('/datasets/:id', authenticateToken, (req, res) => {
 
   const deletedItem = data.splice(index, 1);
   saveCollections(data);
+
+  // Hapus file gambar yang terkait dengan dataset yang dihapus
+  const gambar = deletedItem[0].gambar;
+  if (gambar) {
+    try {
+      const urlParts = gambar.split('/images/');
+      if (urlParts.length === 2) {
+        const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+          console.log(`[Admin] Berhasil menghapus file gambar dataset yang didelete: ${urlParts[1]}`);
+        }
+      }
+    } catch (err) {
+      console.error(`[Admin] Gagal menghapus file gambar: ${err.message}`);
+    }
+  }
 
   console.log(`[Admin] Artefak dihapus: ID ${id}`);
   res.json({ message: 'Dataset berhasil dihapus.', item: deletedItem[0] });

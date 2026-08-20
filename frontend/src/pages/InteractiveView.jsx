@@ -71,9 +71,9 @@ const SphereModel = ({ color }) => (
 const dummyArtifacts = [
   {
     id: '1',
-    titleKey: 'Kujang Pajajaran',
-    desc1Key: 'Senjata tradisional Jawa Barat yang bernilai sakral.',
-    desc2Key: 'Mencerminkan ketajaman budi dan perlindungan.',
+    titleKey: 'kujangTitle',
+    desc1Key: 'kujangDesc1',
+    desc2Key: 'kujangDesc2',
     materialKey: 'Besi Pamor & Kayu',
     eraKey: 'Abad ke-14 Masehi',
     locationKey: 'Jawa Barat',
@@ -134,9 +134,11 @@ const InteractiveView = () => {
   // Auto-speak penjelasan barang saat halaman berhasil di-load
   useEffect(() => {
     if (!loading && activeArtifact) {
-      // Dapatkan teks judul dan deskripsi, atau gunakan dummy teks
+      // Dapatkan teks judul dan deskripsi sesuai dengan bahasa yang aktif
       const title = activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '');
-      const desc = activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : '');
+      const desc = language === 'en' 
+        ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''))
+        : (activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''));
 
       if (title || desc) {
         // Gabungkan judul dan deskripsi dengan jeda (titik)
@@ -312,7 +314,7 @@ const InteractiveView = () => {
                 }}
               >
                 <div style={{ width: '45px', height: '32px', borderRadius: '6px', overflow: 'hidden', boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.25)' : 'none', border: isSelected ? '2px solid #1a1a1a' : '1px solid transparent', backgroundColor: '#ddd' }}>
-                  <img src={art.gambar || dummyArtifacts[0].thumbnail} alt={art.nama_koleksi} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={art.gambar || dummyArtifacts[0].thumbnail} alt={art.nama_koleksi} style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: '#ddd' }} />
                 </div>
               </Link>
             );
@@ -337,6 +339,11 @@ const InteractiveView = () => {
               <div style={{ position: 'relative', width: '100%', height: '80%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
                 {activeArtifact.gambar ? (
                   <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '2rem',
                     overflow: 'hidden',
                     borderRadius: '20px',
                     boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
@@ -344,7 +351,9 @@ const InteractiveView = () => {
                     maxWidth: '85%',
                     position: 'relative',
                     border: '4px solid rgba(255,255,255,0.3)',
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'rgba(234, 214, 178, 0.6)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)'
                   }}>
                     <img
                       src={activeArtifact.gambar}
@@ -353,7 +362,6 @@ const InteractiveView = () => {
                         maxHeight: '60vh',
                         maxWidth: '100%',
                         display: 'block',
-                        mixBlendMode: 'lighten',
                         filter: 'contrast(1.06) brightness(1.03)',
                         transform: `scale(${imageScale})`,
                         transition: 'transform 0.3s ease',
@@ -419,7 +427,9 @@ const InteractiveView = () => {
           {/* Right Side: Description & Metadata */}
           <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '6rem 3rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
             <div style={{
-              backgroundColor: '#eee0ca',
+              backgroundColor: 'rgba(234, 214, 178, 0.7)',
+              backdropFilter: 'blur(15px)',
+              WebkitBackdropFilter: 'blur(15px)',
               borderRadius: '24px',
               padding: '2.5rem',
               boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
@@ -429,7 +439,24 @@ const InteractiveView = () => {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
                 <span style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.75rem', color: '#4a4a44', fontWeight: 600 }}>
-                  {activeArtifact.klasifikasi || 'Koleksi Museum'}
+                  {(() => {
+                    const k = activeArtifact.klasifikasi;
+                    if (!k) return 'Koleksi Museum';
+                    const keyMap = {
+                      'Geologika': 'geologika',
+                      'Biologika': 'biologika',
+                      'Etnografika': 'etnografika',
+                      'Arkeologika': 'arkeologika',
+                      'Historika': 'historika',
+                      'Numismatika': 'numismatika',
+                      'Filologika': 'filologika',
+                      'Keramologika': 'keramologika',
+                      'Seni Rupa': 'seniRupa',
+                      'Teknologika': 'teknologika'
+                    };
+                    const match = Object.keys(keyMap).find(key => k.toLowerCase().includes(key.toLowerCase()));
+                    return match ? t(keyMap[match]) : k;
+                  })()}
                 </span>
                 {activeArtifact.kondisi && (
                   <span style={{
@@ -441,13 +468,20 @@ const InteractiveView = () => {
                     fontWeight: 700,
                     textTransform: 'uppercase'
                   }}>
-                    {activeArtifact.kondisi}
+                    {language === 'en' ? (
+                      activeArtifact.kondisi.toLowerCase() === 'baik' ? 'Good' :
+                      activeArtifact.kondisi.toLowerCase() === 'utuh' ? 'Intact' :
+                      activeArtifact.kondisi.toLowerCase() === 'sedikit berkarat' ? 'Slightly Rusty' :
+                      activeArtifact.kondisi.toLowerCase() === 'korosi berat' ? 'Heavy Corrosion' :
+                      activeArtifact.kondisi.toLowerCase() === 'berkarat sebagian' ? 'Partially Rusty' :
+                      activeArtifact.kondisi
+                    ) : activeArtifact.kondisi}
                   </span>
                 )}
               </div>
 
               <h1 style={{ fontSize: '2.4rem', marginBottom: '1.2rem', lineHeight: '1.2', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
-                {activeArtifact.nama_koleksi || activeArtifact.titleKey}
+                {activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '')}
               </h1>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
@@ -457,50 +491,7 @@ const InteractiveView = () => {
                     : (activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))}
                 </p>
 
-                {/* Grid Metadata Lengkap */}
-                <div style={{ marginTop: '1.5rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', backgroundColor: 'rgba(255,255,255,0.25)', padding: '1.2rem', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                  {activeArtifact.no_inventarisasi && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Inventory No.' : 'No. Inventarisasi'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600, fontFamily: 'monospace' }}>{activeArtifact.no_inventarisasi}</p>
-                    </div>
-                  )}
 
-                  {activeArtifact.dimensi && activeArtifact.dimensi.panjang && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Dimension' : 'Dimensi'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.dimensi.panjang}</p>
-                    </div>
-                  )}
-
-                  {activeArtifact.tempat_penyimpanan && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Storage Location' : 'Tempat Penyimpanan'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tempat_penyimpanan}</p>
-                    </div>
-                  )}
-
-                  {activeArtifact.tanggal_pengamatan && (
-                    <div>
-                      <h4 style={{ color: '#555', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 0.3rem' }}>
-                        {language === 'en' ? 'Observation Date' : 'Tanggal Pendataan'}
-                      </h4>
-                      <p style={{ margin: 0, color: '#1a1a1a', fontWeight: 600 }}>{activeArtifact.tanggal_pengamatan}</p>
-                    </div>
-                  )}
-                </div>
-
-                {activeArtifact.keterangan && (
-                  <div style={{ marginTop: '0.5rem', fontSize: '0.82rem', color: '#555', fontStyle: 'italic' }}>
-                    {language === 'en' ? 'Note: ' : 'Catatan: '} {activeArtifact.keterangan}
-                  </div>
-                )}
               </div>
             </div>
           </div>
