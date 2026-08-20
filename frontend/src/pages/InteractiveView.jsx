@@ -71,9 +71,9 @@ const SphereModel = ({ color }) => (
 const dummyArtifacts = [
   {
     id: '1',
-    titleKey: 'Kujang Pajajaran',
-    desc1Key: 'Senjata tradisional Jawa Barat yang bernilai sakral.',
-    desc2Key: 'Mencerminkan ketajaman budi dan perlindungan.',
+    titleKey: 'kujangTitle',
+    desc1Key: 'kujangDesc1',
+    desc2Key: 'kujangDesc2',
     materialKey: 'Besi Pamor & Kayu',
     eraKey: 'Abad ke-14 Masehi',
     locationKey: 'Jawa Barat',
@@ -134,9 +134,11 @@ const InteractiveView = () => {
   // Auto-speak penjelasan barang saat halaman berhasil di-load
   useEffect(() => {
     if (!loading && activeArtifact) {
-      // Dapatkan teks judul dan deskripsi, atau gunakan dummy teks
+      // Dapatkan teks judul dan deskripsi sesuai dengan bahasa yang aktif
       const title = activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '');
-      const desc = activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : '');
+      const desc = language === 'en' 
+        ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''))
+        : (activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''));
 
       if (title || desc) {
         // Gabungkan judul dan deskripsi dengan jeda (titik)
@@ -312,7 +314,7 @@ const InteractiveView = () => {
                 }}
               >
                 <div style={{ width: '45px', height: '32px', borderRadius: '6px', overflow: 'hidden', boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.25)' : 'none', border: isSelected ? '2px solid #1a1a1a' : '1px solid transparent', backgroundColor: '#ddd' }}>
-                  <img src={art.gambar || dummyArtifacts[0].thumbnail} alt={art.nama_koleksi} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <img src={art.gambar || dummyArtifacts[0].thumbnail} alt={art.nama_koleksi} style={{ width: '100%', height: '100%', objectFit: 'contain', backgroundColor: '#ddd' }} />
                 </div>
               </Link>
             );
@@ -437,7 +439,24 @@ const InteractiveView = () => {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1rem' }}>
                 <span style={{ textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.75rem', color: '#4a4a44', fontWeight: 600 }}>
-                  {activeArtifact.klasifikasi || 'Koleksi Museum'}
+                  {(() => {
+                    const k = activeArtifact.klasifikasi;
+                    if (!k) return 'Koleksi Museum';
+                    const keyMap = {
+                      'Geologika': 'geologika',
+                      'Biologika': 'biologika',
+                      'Etnografika': 'etnografika',
+                      'Arkeologika': 'arkeologika',
+                      'Historika': 'historika',
+                      'Numismatika': 'numismatika',
+                      'Filologika': 'filologika',
+                      'Keramologika': 'keramologika',
+                      'Seni Rupa': 'seniRupa',
+                      'Teknologika': 'teknologika'
+                    };
+                    const match = Object.keys(keyMap).find(key => k.toLowerCase().includes(key.toLowerCase()));
+                    return match ? t(keyMap[match]) : k;
+                  })()}
                 </span>
                 {activeArtifact.kondisi && (
                   <span style={{
@@ -449,13 +468,20 @@ const InteractiveView = () => {
                     fontWeight: 700,
                     textTransform: 'uppercase'
                   }}>
-                    {activeArtifact.kondisi}
+                    {language === 'en' ? (
+                      activeArtifact.kondisi.toLowerCase() === 'baik' ? 'Good' :
+                      activeArtifact.kondisi.toLowerCase() === 'utuh' ? 'Intact' :
+                      activeArtifact.kondisi.toLowerCase() === 'sedikit berkarat' ? 'Slightly Rusty' :
+                      activeArtifact.kondisi.toLowerCase() === 'korosi berat' ? 'Heavy Corrosion' :
+                      activeArtifact.kondisi.toLowerCase() === 'berkarat sebagian' ? 'Partially Rusty' :
+                      activeArtifact.kondisi
+                    ) : activeArtifact.kondisi}
                   </span>
                 )}
               </div>
 
               <h1 style={{ fontSize: '2.4rem', marginBottom: '1.2rem', lineHeight: '1.2', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
-                {activeArtifact.nama_koleksi || activeArtifact.titleKey}
+                {activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '')}
               </h1>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
