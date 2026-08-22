@@ -8,7 +8,6 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
-<<<<<<< HEAD
         changeOrigin: true,
       },
       '/images': {
@@ -18,9 +17,6 @@ export default defineConfig({
       '/models': {
         target: 'http://localhost:3001',
         changeOrigin: true,
-=======
-        changeOrigin: true
->>>>>>> c29aa2cfa9e6dbdb57c3de004300c5bc2465f359
       }
     }
   }

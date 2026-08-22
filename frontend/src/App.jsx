@@ -17,6 +17,7 @@ import AdminLogin from './pages/Admin/AdminLogin';
 import AdminLayout from './pages/Admin/AdminLayout';
 import Dashboard from './pages/Admin/Dashboard';
 import Datasets from './pages/Admin/Datasets';
+import EditDataset from './pages/Admin/EditDataset';
 
 function App() {
   const location = useLocation();
@@ -39,6 +40,8 @@ function App() {
             <Route path="/1974-SriBaduga/dashboard" element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="datasets" element={<Datasets />} />
+              <Route path="datasets/create" element={<EditDataset />} />
+              <Route path="datasets/edit/:id" element={<EditDataset />} />
             </Route>
           </Route>
           
