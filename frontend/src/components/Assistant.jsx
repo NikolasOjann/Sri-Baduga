@@ -49,11 +49,9 @@ const Assistant = () => {
   useEffect(() => {
     const greeting = t('assistantGreeting');
     setMessages(prev => {
-      // Jika chat masih kosong atau isinya cuma sapaan awal, maka perbarui bahasanya
       if (prev.length === 0 || (prev.length === 1 && prev[0].sender === "nyai")) {
-        return [{ text: greeting, sender: "nyai" }];
+        return [{ text: greeting, sender: "nyai", isFinal: true }];
       }
-      // Jika sudah ada riwayat obrolan panjang, biarkan riwayatnya utuh (tidak reset)
       return prev;
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,7 +64,6 @@ const Assistant = () => {
         speak(t('assistantGreeting'), language);
       }
     } else {
-      // Hentikan suara jika chatbot ditutup
       stop();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,7 +98,6 @@ const Assistant = () => {
 
   // Context-aware messages based on route (Audio-only, tidak masuk riwayat chat)
   useEffect(() => {
-    // Hentikan suara sebelumnya setiap kali pindah halaman
     stop();
 
     let contextMsg = "";
@@ -116,7 +112,6 @@ const Assistant = () => {
           : "Welcome to Sri Baduga. Explore freely and enjoy a comfortable and memorable journey.";
       }
     } else if (location.pathname.startsWith('/collection/')) {
-      // Dapatkan ID kategori dari URL (misal: /collection/1 atau /collection/Etnografika)
       const parts = location.pathname.split('/');
       let categoryId = parts[2];
 
@@ -129,15 +124,12 @@ const Assistant = () => {
 
         const key = `assistantCollectionContext_${categoryId}`;
         const translated = t(key);
-        // Cegah pembacaan key mentah (yang ada underscore-nya) jika translation tidak ditemukan
         if (translated !== key) {
           contextMsg = translated;
         }
       }
     }
-    // rute '/interactive' sengaja dihapus dari sini agar tidak tabrakan dengan penjelasan barang di InteractiveView.jsx
 
-    // Langsung bacakan tanpa menambahkan ke balon teks chat
     if (contextMsg && !isMuted) {
       speak(contextMsg, language);
     }
@@ -160,9 +152,8 @@ const Assistant = () => {
     if (messages.length > 0 && !isMuted) {
       const lastIndex = messages.length - 1;
       const lastMsg = messages[lastIndex];
-
-      // Hanya speak pesan dari nyai (dan pastikan pesan pada index ini belum pernah dibacakan)
-      if (lastMsg.sender === "nyai" && lastSpokenIndexRef.current !== lastIndex) {
+      // Hanya speak pesan dari nyai JIKA sudah selesai stream (isFinal) dan belum pernah dibacakan
+      if (lastMsg.sender === "nyai" && lastMsg.isFinal && lastSpokenIndexRef.current !== lastIndex) {
         lastSpokenIndexRef.current = lastIndex;
 
         // Bersihkan teks dari Markdown sebelum dibacakan
@@ -189,33 +180,70 @@ const Assistant = () => {
   const sendMessageToAPI = async (text) => {
     if (!text.trim()) return;
 
-    // Hentikan audio yang sedang berjalan saat user kirim pesan baru
     stop();
 
-    setMessages(prev => [...prev, { text, sender: 'user' }]);
+    const currentMessages = [...messages, { text, sender: 'user' }];
+    setMessages([...currentMessages, { text: '', sender: 'nyai', artifacts: [], source: '' }]);
     setIsSending(true);
 
     try {
-      const res = await fetch(`${API_BASE}/api/chat`, {
+      const res = await fetch(`${API_BASE}/api/chat/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: text,
-          session_id: sessionId
-        }),
+        body: JSON.stringify({ message: text, session_id: sessionId }),
       });
-      const data = await res.json();
-      setMessages(prev => [...prev, {
-        text: data.reply,
-        sender: 'nyai',
-        source: data.source,
-        artifacts: data.artifacts || []
-      }]);
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      let aiAnswer = "";
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const blocks = buffer.split('\n\n');
+        buffer = blocks.pop();
+
+        for (const block of blocks) {
+          const lines = block.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.replace('data: ', ''));
+                
+                if (data.type === 'chunk') {
+                  aiAnswer += data.text;
+                  setMessages(prev => {
+                    const newMsgs = [...prev];
+                    newMsgs[newMsgs.length - 1] = { ...newMsgs[newMsgs.length - 1], text: aiAnswer };
+                    return newMsgs;
+                  });
+                } else if (data.type === 'final') {
+                  setMessages(prev => {
+                    const newMsgs = [...prev];
+                    newMsgs[newMsgs.length - 1] = { 
+                      ...newMsgs[newMsgs.length - 1], 
+                      source: 'ollama_rag',
+                      artifacts: data.artifacts || [],
+                      options: data.options || [],
+                      isFinal: true
+                    };
+                    return newMsgs;
+                  });
+                }
+              } catch (e) { }
+            }
+          }
+        }
+      }
     } catch {
-      setMessages(prev => [...prev, {
-        text: 'Maaf, saya sedang tidak dapat merespons. Pastikan server berjalan.',
-        sender: 'nyai'
-      }]);
+      setMessages(prev => {
+        const newMsgs = [...prev];
+        newMsgs[newMsgs.length - 1] = { text: 'Maaf, saya sedang tidak dapat merespons. Pastikan server berjalan.', sender: 'nyai' };
+        return newMsgs;
+      });
     } finally {
       setIsSending(false);
     }

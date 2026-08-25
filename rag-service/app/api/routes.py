@@ -29,3 +29,13 @@ def chat(request: ChatRequest):
         options=result.get("options"),
         artifacts=result.get("artifacts")
     )
+
+from fastapi.responses import StreamingResponse
+
+@router.post("/chat/stream")
+async def chat_stream(request: ChatRequest):
+    session = session_service.get_session(request.session_id)
+    return StreamingResponse(
+        chat_service.ask_stream(request.question, session),
+        media_type="text/event-stream"
+    )
