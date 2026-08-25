@@ -20,6 +20,8 @@ const Assistant = () => {
   const [isSending, setIsSending] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isVoiceChatMode, setIsVoiceChatMode] = useState(false);
+  const isVoiceChatModeRef = useRef(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { t, language } = useLanguage();
@@ -274,8 +276,11 @@ const Assistant = () => {
   };
 
   const startListening = () => {
-    // Hentikan suara AI yang sedang berjalan agar mikrofon tidak merekam suara AI
-    stop();
+    // Di mode normal, kita hentikan suara AI saat mic ditekan.
+    // Di mode Voice Chat, kita biarkan suara AI menyala agar bisa di-interupsi (barge-in).
+    if (!isVoiceChatModeRef.current) {
+      stop();
+    }
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
@@ -286,7 +291,7 @@ const Assistant = () => {
     const recognition = new SpeechRecognition();
     recognitionRef.current = recognition;
     recognition.lang = language === 'en' ? 'en-US' : 'id-ID';
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
@@ -294,8 +299,21 @@ const Assistant = () => {
     };
 
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      sendMessageToAPI(transcript);
+      let finalTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          // Jika ada suara (interim), langsung hentikan AI agar terasa instan (seperti ChatGPT)
+          if (isVoiceChatModeRef.current) {
+            stop();
+          }
+        }
+      }
+
+      if (finalTranscript) {
+        sendMessageToAPI(finalTranscript);
+      }
     };
 
     recognition.onerror = (event) => {
@@ -305,9 +323,32 @@ const Assistant = () => {
 
     recognition.onend = () => {
       setIsListening(false);
+      // Jika Mode Voice Chat aktif, mic akan selalu dihidupkan ulang (Always-On)
+      if (isVoiceChatModeRef.current) {
+        setTimeout(() => {
+          if (isVoiceChatModeRef.current) {
+            startListening();
+          }
+        }, 300);
+      }
     };
 
     recognition.start();
+  };
+
+  const toggleVoiceChatMode = () => {
+    const newState = !isVoiceChatMode;
+    setIsVoiceChatMode(newState);
+    isVoiceChatModeRef.current = newState;
+    
+    if (newState) {
+      // Jika diaktifkan, langsung mulai mendengarkan
+      startListening();
+    } else {
+      // Jika dimatikan, hentikan pendengaran dan suara
+      stopListening();
+      stop();
+    }
   };
 
   return (
@@ -367,6 +408,38 @@ const Assistant = () => {
                   >
                     <Trash2 size={16} />
                   </button>
+                  {/* Tombol Voice Chat Mode */}
+                  <button
+                    onClick={toggleVoiceChatMode}
+                    title={isVoiceChatMode ? 'Matikan Mode Ngobrol' : 'Mode Ngobrol Otomatis (Beta)'}
+                    style={{ 
+                      background: 'none', 
+                      color: isVoiceChatMode ? '#ef4444' : '#4ade80', 
+                      border: 'none', 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      padding: '2px 4px',
+                      borderRadius: '4px',
+                      transition: 'background 0.2s',
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                  >
+                    <Sparkles size={18} />
+                    <span style={{ 
+                      marginLeft: '6px', 
+                      fontSize: '0.55rem', 
+                      fontWeight: 'bold', 
+                      letterSpacing: '0.5px',
+                      background: isVoiceChatMode ? 'rgba(239,68,68,0.2)' : 'rgba(74,222,128,0.2)', 
+                      color: isVoiceChatMode ? '#ef4444' : '#4ade80', 
+                      padding: '2px 4px', 
+                      borderRadius: '4px' 
+                    }}>
+                      BETA
+                    </span>
+                  </button>
                   {/* Tombol Mute/Unmute */}
                   <button
                     onClick={() => {
@@ -384,8 +457,88 @@ const Assistant = () => {
                 </div>
               </div>
 
-              <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {messages.map((msg, idx) => (
+              <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', justifyContent: isVoiceChatMode ? 'center' : 'flex-start' }}>
+                {isVoiceChatMode ? (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                      gap: '40px'
+                    }}
+                  >
+                    {/* Bola Animasi (Orb) ChatGPT Style */}
+                    <div style={{
+                      position: 'relative',
+                      width: '120px',
+                      height: '120px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <div style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '50%',
+                        background: isSending
+                          ? 'radial-gradient(circle at 30% 30%, #fff, #38bdf8 40%, #0284c7 80%, #0369a1)' 
+                          : isListening
+                            ? 'radial-gradient(circle at 30% 30%, #fff, #4ade80 40%, #16a34a 80%, #14532d)'
+                            : 'radial-gradient(circle at 30% 30%, #fff, #a8a29e 40%, #57534e 80%, #292524)',
+                        filter: 'blur(4px)',
+                        animation: isSending 
+                          ? 'orbPulseFast 1s ease-in-out infinite alternate' 
+                          : 'orbPulseSlow 2s ease-in-out infinite alternate',
+                        boxShadow: isSending
+                          ? '0 0 40px #38bdf8, inset 0 0 20px #fff'
+                          : isListening
+                            ? '0 0 40px #4ade80, inset 0 0 20px #fff'
+                            : '0 0 20px #a8a29e, inset 0 0 10px #fff',
+                        transition: 'all 0.5s ease'
+                      }} />
+                      
+                      {/* Inti Bola yang lebih padat */}
+                      <div style={{
+                        position: 'absolute',
+                        width: '70%',
+                        height: '70%',
+                        borderRadius: '50%',
+                        background: '#fff',
+                        boxShadow: '0 0 20px #fff',
+                        opacity: 0.8,
+                        animation: 'orbCore 3s ease-in-out infinite alternate'
+                      }} />
+                    </div>
+
+                    <div style={{ color: '#fff', fontSize: '1.2rem', fontWeight: 500, textAlign: 'center', letterSpacing: '1px' }}>
+                      {isSending ? "Berpikir..." : isListening ? "Mendengarkan..." : "Bicaralah..."}
+                    </div>
+
+                    <style>{`
+                      @keyframes orbPulseSlow {
+                        0% { transform: scale(0.9) rotate(0deg); border-radius: 50% 55% 45% 50%; }
+                        50% { transform: scale(1.05) rotate(180deg); border-radius: 55% 45% 50% 45%; }
+                        100% { transform: scale(0.9) rotate(360deg); border-radius: 45% 50% 55% 50%; }
+                      }
+                      @keyframes orbPulseFast {
+                        0% { transform: scale(0.95) rotate(0deg); border-radius: 50%; opacity: 0.8; }
+                        50% { transform: scale(1.1) rotate(180deg); border-radius: 52% 48% 50% 52%; opacity: 1; }
+                        100% { transform: scale(0.95) rotate(360deg); border-radius: 48% 52% 52% 48%; opacity: 0.8; }
+                      }
+                      @keyframes orbCore {
+                        0% { transform: scale(0.95); opacity: 0.7; }
+                        100% { transform: scale(1.05); opacity: 1; }
+                      }
+                    `}</style>
+                  </motion.div>
+                ) : (
+                  messages.map((msg, idx) => (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -576,35 +729,45 @@ const Assistant = () => {
                       </div>
                     )}
                   </motion.div>
-                ))}
+                ))
+              )}
 
-                {/* Loading indicator saat menunggu balasan */}
-                {isSending && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    style={{
-                      alignSelf: 'flex-start',
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                      padding: '12px 16px',
-                      borderRadius: '16px',
-                      borderBottomLeftRadius: '4px',
-                      display: 'flex',
-                      gap: '6px',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0s' }} />
-                    <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0.2s' }} />
-                    <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0.4s' }} />
-                  </motion.div>
-                )}
+              {/* Loading indicator saat menunggu balasan */}
+              {isSending && !isVoiceChatMode && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    alignSelf: 'flex-start',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    padding: '12px 16px',
+                    borderRadius: '16px',
+                    borderBottomLeftRadius: '4px',
+                    display: 'flex',
+                    gap: '6px',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0s' }} />
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0.2s' }} />
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: '#a3a3a3', animation: 'bounce 1.2s infinite 0.4s' }} />
+                </motion.div>
+              )}
 
-                <div ref={messagesEndRef} />
+              {isVoiceChatMode && (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '20px', color: '#C2B280' }}>
+                  <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'rgba(194,178,128,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Mic size={48} />
+                  </div>
+                  <p>Mendengarkan...</p>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
               </div>
 
               {/* Suggested Chips */}
-              {messages.length <= 1 && (
+              {!isVoiceChatMode && messages.length <= 1 && (
                 <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', padding: '0 15px 15px 15px', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                   {suggestedChips.map((chip, idx) => (
                     <button

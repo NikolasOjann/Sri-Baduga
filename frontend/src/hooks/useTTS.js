@@ -11,27 +11,42 @@ let globalAudio = null;
  */
 export function useTTS() {
   const speak = useCallback((text, lang = 'id') => {
-    if (!text || !text.trim()) return;
+    return new Promise((resolve) => {
+      if (!text || !text.trim()) {
+        resolve();
+        return;
+      }
 
-    // Hentikan audio yang sedang diputar di mana pun
-    if (globalAudio) {
-      globalAudio.pause();
-      globalAudio.src = '';
-    }
+      // Hentikan audio yang sedang diputar di mana pun
+      if (globalAudio) {
+        globalAudio.pause();
+        globalAudio.src = '';
+      }
 
-    try {
-      // Gunakan streaming GET secara langsung dengan menempelkan teks dan bahasa sebagai parameter
-      const streamUrl = `${TTS_API}?text=${encodeURIComponent(text)}&lang=${lang}`;
-      globalAudio = new Audio(streamUrl);
+      try {
+        // Gunakan streaming GET secara langsung dengan menempelkan teks dan bahasa sebagai parameter
+        const streamUrl = `${TTS_API}?text=${encodeURIComponent(text)}&lang=${lang}`;
+        globalAudio = new Audio(streamUrl);
 
-      // Play audio secara langsung selagi data distream
-      globalAudio.play().catch(() => {
-        console.warn('[TTS] Autoplay diblokir browser, menunggu interaksi user.');
-      });
+        globalAudio.onended = () => {
+          resolve();
+        };
 
-    } catch (err) {
-      console.error('[TTS] Error:', err);
-    }
+        globalAudio.onerror = () => {
+          resolve();
+        };
+
+        // Play audio secara langsung selagi data distream
+        globalAudio.play().catch(() => {
+          console.warn('[TTS] Autoplay diblokir browser, menunggu interaksi user.');
+          resolve();
+        });
+
+      } catch (err) {
+        console.error('[TTS] Error:', err);
+        resolve();
+      }
+    });
   }, []);
 
   const stop = useCallback(() => {
