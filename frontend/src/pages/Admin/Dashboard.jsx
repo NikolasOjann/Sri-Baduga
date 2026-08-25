@@ -11,6 +11,9 @@ import {
 } from 'chart.js';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Library, Image as ImageIcon, Wrench, Hammer, Box, Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
 
 // Registrasi komponen ChartJS
 ChartJS.register(
@@ -37,7 +40,7 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
-    fetch(('http://' + window.location.hostname + ':3001/api/admin/stats'), {
+    fetch(`${API_BASE}/api/admin/stats`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }

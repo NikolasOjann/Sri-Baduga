@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Collection {
+  id                     Int      @id @default(autoincrement())
+  no_registrasi          String
+  no_inventarisasi       String?
+  nama_koleksi           String
+  klasifikasi            String
+  sub_klasifikasi        String?
+  tanggal_registrasi     String?
+  no_registrasi_nasional String?
+  tanggal_inventarisasi  String?
+  status_cb              String?
+  tanggal_perolehan      String?
+  deskripsi              String?  @db.Text
+  tempat_pembuatan       String?
+  cara_pembuatan         String?
+  tempat_perolehan       String?
+  cara_perolehan         String?
+  tahun_masuk            String?
+  dimensi                Json?
+  tempat_penyimpanan     String?
+  kondisi                String?
+  tanggal_pengamatan     String?
+  nama_petugas           String?
+  acuan                  String?  @db.Text
+  keterangan             String?  @db.Text
+  gambar                 String?
+  model_3d               String?
+  dokumentasi            Json?
+  pemilik_koleksi        String?
+  jenis_pengadaan        String?
+  lokasi_provinsi        String?
+  lokasi_kabupaten       String?
+  latitude               String?
+  longitude              String?
+  estimasi_harga         String?
+  tim_pengkaji           Json?
+  sejarah                String?  @db.Text
+  is_public              Boolean  @default(true)
+  source_pdf             String?
+  tanggal_input          String?
+  
+  // Timestamps
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
