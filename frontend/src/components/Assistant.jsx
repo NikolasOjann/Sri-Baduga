@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTTS } from '../hooks/useTTS';
 
-const API_BASE = 'http://' + window.location.hostname + ':3001';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
 
 const KATEGORI_NAME_TO_ID = {
   'geologika/geografika': '1', 'geologika': '1', 'biologika': '2', 'etnografika': '3',

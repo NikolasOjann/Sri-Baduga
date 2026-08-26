@@ -8,6 +8,8 @@ import { Canvas } from '@react-three/fiber';
 import { useGLTF, Stage, PresentationControls } from '@react-three/drei';
 import modelUrl from '../glb/contoh.glb?url';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
+
 // Error Boundary to prevent crashes if the 3D model path is wrong
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -37,16 +39,16 @@ function NyaiModel(props) {
 }
 
 const categories = [
-  { id: 1, nameKey: 'geologika', name: 'Geologika', descKey: 'geologikaDesc', img: '/images/geologika.png' },
-  { id: 2, nameKey: 'biologika', name: 'Biologika', descKey: 'biologikaDesc', img: '/images/biologika.png' },
-  { id: 3, nameKey: 'etnografika', name: 'Etnografika', descKey: 'etnografikaDesc', img: '/images/etnografika.png' },
-  { id: 4, nameKey: 'arkeologika', name: 'Arkeologika', descKey: 'arkeologikaDesc', img: '/images/arkeologika.png' },
-  { id: 5, nameKey: 'historika', name: 'Historika', descKey: 'historikaDesc', img: '/images/historika.png' },
-  { id: 6, nameKey: 'numismatika', name: 'Numismatika', descKey: 'numismatikaDesc', img: '/images/numismatika.png' },
-  { id: 7, nameKey: 'filologika', name: 'Filologika', descKey: 'filologikaDesc', img: '/images/filologika.png' },
-  { id: 8, nameKey: 'keramologika', name: 'Keramologika', descKey: 'keramologikaDesc', img: '/images/keramologika.png' },
-  { id: 9, nameKey: 'seniRupa', name: 'Seni Rupa', descKey: 'seniRupaDesc', img: '/images/senirupa.png' },
-  { id: 10, nameKey: 'teknologika', name: 'Teknologika', descKey: 'teknologikaDesc', img: '/images/teknologika.png' }
+  { id: 1, nameKey: 'geologika', name: 'Geologika', descKey: 'geologikaDesc', img: '/category-images/geologika.png' },
+  { id: 2, nameKey: 'biologika', name: 'Biologika', descKey: 'biologikaDesc', img: '/category-images/biologika.png' },
+  { id: 3, nameKey: 'etnografika', name: 'Etnografika', descKey: 'etnografikaDesc', img: '/category-images/etnografika.png' },
+  { id: 4, nameKey: 'arkeologika', name: 'Arkeologika', descKey: 'arkeologikaDesc', img: '/category-images/arkeologika.png' },
+  { id: 5, nameKey: 'historika', name: 'Historika', descKey: 'historikaDesc', img: '/category-images/historika.png' },
+  { id: 6, nameKey: 'numismatika', name: 'Numismatika', descKey: 'numismatikaDesc', img: '/category-images/numismatika.png' },
+  { id: 7, nameKey: 'filologika', name: 'Filologika', descKey: 'filologikaDesc', img: '/category-images/filologika.png' },
+  { id: 8, nameKey: 'keramologika', name: 'Keramologika', descKey: 'keramologikaDesc', img: '/category-images/keramologika.png' },
+  { id: 9, nameKey: 'seniRupa', name: 'Seni Rupa', descKey: 'seniRupaDesc', img: '/category-images/senirupa.png' },
+  { id: 10, nameKey: 'teknologika', name: 'Teknologika', descKey: 'teknologikaDesc', img: '/category-images/teknologika.png' }
 ];
 
 const Catalog = () => {
@@ -71,7 +73,7 @@ const Catalog = () => {
   };
 
   useEffect(() => {
-    fetch(('http://' + window.location.hostname + ':3001/api/collections/stats/counts'))
+    fetch(`${API_BASE}/api/collections/stats/counts`)
       .then(res => res.json())
       .then(data => setCounts(data || {}))
       .catch(() => setCounts({}));

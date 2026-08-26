@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { UploadCloud, FileText, CheckCircle, PlusCircle, Search, Filter, MoreVertical, Edit, Trash2, Eye, Image as ImageIcon } from 'lucide-react';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
+
 function Datasets() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -71,7 +73,7 @@ function Datasets() {
     
     try {
       await Promise.all(selectedIds.map(id => 
-        fetch(`http://localhost:3001/api/admin/datasets/${id}`, {
+        fetch(`${API_BASE}/api/admin/datasets/${id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         })
@@ -93,7 +95,7 @@ function Datasets() {
     setLoadingData(true);
     const token = localStorage.getItem('adminToken');
     try {
-      let url = ('http://' + window.location.hostname + ':3001/api/admin/datasets?limit=100');
+      let url = `${API_BASE}/api/admin/datasets?limit=100`;
       if (searchTerm) url += `&search=${encodeURIComponent(searchTerm)}`;
       if (filterKlasifikasi) url += `&klasifikasi=${encodeURIComponent(filterKlasifikasi)}`;
       if (filterPengadaan) url += `&pengadaan=${encodeURIComponent(filterPengadaan)}`;
@@ -126,7 +128,7 @@ function Datasets() {
     setLoadingData(true);
     const token = localStorage.getItem('adminToken');
     
-    let url = ('http://' + window.location.hostname + ':3001/api/admin/datasets?limit=100');
+    let url = `${API_BASE}/api/admin/datasets?limit=100`;
     if (searchVal) url += `&search=${encodeURIComponent(searchVal)}`;
     if (filterKlasifikasi) url += `&klasifikasi=${encodeURIComponent(filterKlasifikasi)}`;
     if (filterPengadaan) url += `&pengadaan=${encodeURIComponent(filterPengadaan)}`;
@@ -166,7 +168,7 @@ function Datasets() {
     fd.append('tanggal_upload', new Date().toISOString());
 
     try {
-      const res = await fetch(('http://' + window.location.hostname + ':3001/api/admin/datasets/upload'), {
+      const res = await fetch(`${API_BASE}/api/admin/datasets/upload`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: fd
@@ -203,7 +205,7 @@ function Datasets() {
     }
     const token = localStorage.getItem('adminToken');
     try {
-      const res = await fetch(`http://${window.location.hostname}:3001/api/admin/datasets/${id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/datasets/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });

@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
-const TTS_API = 'http://' + window.location.hostname + ':3001/api/tts/speak';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
+const TTS_API = `${API_BASE}/api/tts/speak`;
 
 // Global audio instance agar audio antar komponen tidak bertabrakan
 let globalAudio = null;
