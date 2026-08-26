@@ -77,6 +77,17 @@ const Catalog = () => {
       .catch(() => setCounts({}));
   }, []);
 
+  useEffect(() => {
+    if (showOverlay) {
+      window.dispatchEvent(new Event('hide-assistant'));
+    } else {
+      window.dispatchEvent(new Event('show-assistant'));
+    }
+    return () => {
+      window.dispatchEvent(new Event('show-assistant'));
+    };
+  }, [showOverlay]);
+
   return (
     <PageTransition style={{
       minHeight: '100vh',
@@ -232,10 +243,11 @@ const Catalog = () => {
             textAlign: 'center',
             fontSize: '1.1rem',
             lineHeight: '1.6',
-            marginBottom: '2rem',
-            color: '#eee'
+            marginBottom: '2rem'
           }}>
-            Sampurasun Selamat datang di Sri Baduga, jelajahi dengan leluasa dan nikmati perjalanan yang nyaman dan berkesan.
+            <span style={{ color: '#FAF6EF' }}>Wilujeng Sumping di Museum </span>
+            <strong style={{ color: '#E5C17A', textShadow: '0 0 20px rgba(229, 193, 122, 0.3)' }}>Sri Baduga</strong>
+            <span style={{ color: '#D9D1C5', fontWeight: 400, opacity: 0.9 }}>, Abdi NyAI, asisten virtual yang akan memandu perjalananmu menelusuri 10 klasifikasi peninggalan budaya Jawa Barat</span>
           </p>
 
           {/* Chat Button */}
