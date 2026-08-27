@@ -425,7 +425,7 @@ const InteractiveView = () => {
           </div>
 
           {/* Right Side: Description & Metadata */}
-          <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '6rem 3rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
+          <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '4rem 4rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
             <div style={{
               backgroundColor: 'rgba(234, 214, 178, 0.7)',
               backdropFilter: 'blur(15px)',
