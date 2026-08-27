@@ -21,14 +21,21 @@ const Assistant = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isVoiceChatMode, setIsVoiceChatMode] = useState(false);
+  const [interimTranscript, setInterimTranscript] = useState('');
   const isVoiceChatModeRef = useRef(false);
+  const isSendingRef = useRef(false);
+  const isSpeakingRef = useRef(false);
   const location = useLocation();
+
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const messagesEndRef = useRef(null);
   const lastSpokenIndexRef = useRef(-1); // Mencegah TTS terpicu dua kali untuk pesan yang sama
   const recognitionRef = useRef(null);
-  const { speak, stop } = useTTS();
+  const abortControllerRef = useRef(null);
+  const audioStreamRef = useRef(null);
+  const aiCurrentAnswerRef = useRef("");
+  const { speak, stop, isSpeaking } = useTTS();
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -39,6 +46,22 @@ const Assistant = () => {
     setSessionId(Math.random().toString(36).substring(7));
     lastSpokenIndexRef.current = -1; // Reset TTS index
   };
+
+  useEffect(() => {
+    isSpeakingRef.current = isSpeaking;
+    // Dengan Smart Barge-in, mic tetap dibiarkan menyala saat AI berbicara.
+    // Kita hanya perlu memastikan mic dinyalakan ulang jika terputus.
+    if (isVoiceChatModeRef.current) {
+      if (!isSpeaking && !isSendingRef.current && !isListening) {
+        try {
+          startListening();
+        } catch (e) {
+          console.warn("Failed to restart mic", e);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSpeaking]);
 
   const suggestedChips = [
     "Apa itu Etnografika?",
@@ -149,6 +172,8 @@ const Assistant = () => {
     return () => window.removeEventListener('catalog-overlay-closed', handleOverlayClosed);
   }, [location.pathname, t, isMuted, speak, language]);
 
+
+
   // Auto-speak setiap pesan baru dari nyai (AI)
   useEffect(() => {
     if (messages.length > 0 && !isMuted) {
@@ -164,6 +189,7 @@ const Assistant = () => {
           .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
           .replace(/\n+/g, ". ");
 
+        isSpeakingRef.current = true;
         speak(cleanText, language);
       }
     }
@@ -183,16 +209,27 @@ const Assistant = () => {
     if (!text.trim()) return;
 
     stop();
+    if (isVoiceChatModeRef.current) {
+      if (recognitionRef.current) recognitionRef.current.abort();
+      setIsListening(false);
+    }
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    abortControllerRef.current = new AbortController();
 
     const currentMessages = [...messages, { text, sender: 'user' }];
     setMessages([...currentMessages, { text: '', sender: 'nyai', artifacts: [], source: '' }]);
     setIsSending(true);
+    isSendingRef.current = true;
 
     try {
       const res = await fetch(`${API_BASE}/api/chat/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, session_id: sessionId }),
+        signal: abortControllerRef.current.signal
       });
 
       const reader = res.body.getReader();
@@ -217,19 +254,38 @@ const Assistant = () => {
                 
                 if (data.type === 'chunk') {
                   aiAnswer += data.text;
+                  aiCurrentAnswerRef.current = aiAnswer;
+                  
                   setMessages(prev => {
                     const newMsgs = [...prev];
                     newMsgs[newMsgs.length - 1] = { ...newMsgs[newMsgs.length - 1], text: aiAnswer };
                     return newMsgs;
                   });
                 } else if (data.type === 'final') {
+                  aiCurrentAnswerRef.current = aiAnswer;
+                  
+                  // Auto-detect kategori dari jawaban AI untuk menampilkan tombol
+                  let finalOptions = data.options || [];
+                  if (finalOptions.length === 0) {
+                    const KATEGORI_LIST = [
+                      "Geologika", "Biologika", "Etnografika", "Arkeologika", 
+                      "Historika", "Numismatika", "Filologika", "Keramologika", 
+                      "Seni Rupa", "Teknologika"
+                    ];
+                    const lowerAnswer = aiAnswer.toLowerCase();
+                    const foundCategories = KATEGORI_LIST.filter(cat => lowerAnswer.includes(cat.toLowerCase()));
+                    if (foundCategories.length > 0) {
+                      finalOptions = foundCategories;
+                    }
+                  }
+
                   setMessages(prev => {
                     const newMsgs = [...prev];
                     newMsgs[newMsgs.length - 1] = { 
                       ...newMsgs[newMsgs.length - 1], 
                       source: 'ollama_rag',
                       artifacts: data.artifacts || [],
-                      options: data.options || [],
+                      options: finalOptions,
                       isFinal: true
                     };
                     return newMsgs;
@@ -240,14 +296,20 @@ const Assistant = () => {
           }
         }
       }
-    } catch {
+    } catch (err) {
+      if (err.name === 'AbortError') return; // Abaikan jika sengaja dibatalkan
       setMessages(prev => {
         const newMsgs = [...prev];
-        newMsgs[newMsgs.length - 1] = { text: 'Maaf, saya sedang tidak dapat merespons. Pastikan server berjalan.', sender: 'nyai' };
+        newMsgs[newMsgs.length - 1] = { 
+          text: 'Maaf, saya sedang tidak dapat merespons. Pastikan server berjalan.', 
+          sender: 'nyai',
+          isFinal: true
+        };
         return newMsgs;
       });
     } finally {
       setIsSending(false);
+      isSendingRef.current = false;
     }
   };
 
@@ -299,20 +361,86 @@ const Assistant = () => {
     };
 
     recognition.onresult = (event) => {
+
       let finalTranscript = '';
+      let interimTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           finalTranscript += event.results[i][0].transcript;
         } else {
-          // Jika ada suara (interim), langsung hentikan AI agar terasa instan (seperti ChatGPT)
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+
+      // Pastikan UI update dengan teks yang sedang diucapkan
+      if (typeof setInterimTranscript === 'function') {
+         setInterimTranscript(interimTranscript);
+      }
+
+      // Smart Barge-in (Interupsi Cerdas) bisa dilakukan saat AI bicara ATAU berpikir
+      if (isSpeakingRef.current || isSendingRef.current) {
+        const text = interimTranscript.trim().toLowerCase();
+        const words = text.split(/\s+/).length;
+
+        if (words >= 2) {
+           // --- Lexical Anti-Echo Filter (Fuzzy) ---
+           const aiClean = aiCurrentAnswerRef.current.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+           const userClean = text.replace(/[^a-z0-9 ]/g, '');
+           
+           const userWords = userClean.split(/\s+/);
+           let matchCount = 0;
+           let significantWords = 0;
+           
+           for (const word of userWords) {
+             if (word.length >= 3) {
+               significantWords++;
+               if (aiClean.includes(word)) {
+                 matchCount++;
+               }
+             }
+           }
+           
+           // Jika >= 70% kata signifikan cocok dengan teks AI, anggap sebagai gema dari speaker
+           if (significantWords > 0 && (matchCount / significantWords) >= 0.7) {
+             return; // Abaikan, ini suara AI sendiri (echo)
+           }
+
           if (isVoiceChatModeRef.current) {
             stop();
+            if (abortControllerRef.current) abortControllerRef.current.abort();
           }
+        }
+      } else {
+        if (interimTranscript && isVoiceChatModeRef.current) {
+          stop();
+          if (abortControllerRef.current) abortControllerRef.current.abort();
         }
       }
 
       if (finalTranscript) {
-        sendMessageToAPI(finalTranscript);
+        let cleanTranscript = finalTranscript.trim();
+        
+        // Anti-Echo Filter untuk finalTranscript agar gema AI tidak dikirim ke LLM
+        if (isVoiceChatModeRef.current && (isSpeakingRef.current || isSendingRef.current)) {
+           const aiClean = aiCurrentAnswerRef.current.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+           const userClean = cleanTranscript.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+           const userWords = userClean.split(/\s+/);
+           let matchCount = 0;
+           let significantWords = 0;
+           for (const word of userWords) {
+             if (word.length >= 3) {
+               significantWords++;
+               if (aiClean.includes(word)) matchCount++;
+             }
+           }
+           if (significantWords > 0 && (matchCount / significantWords) >= 0.7) {
+             cleanTranscript = ""; // Hapus seluruhnya jika ini murni gema
+           }
+        }
+        
+        if (cleanTranscript) {
+          sendMessageToAPI(cleanTranscript);
+        }
       }
     };
 
@@ -323,7 +451,7 @@ const Assistant = () => {
 
     recognition.onend = () => {
       setIsListening(false);
-      // Jika Mode Voice Chat aktif, mic akan selalu dihidupkan ulang (Always-On)
+      // Mic dihidupkan ulang (Always-On) tanpa syarat jika Voice Chat aktif
       if (isVoiceChatModeRef.current) {
         setTimeout(() => {
           if (isVoiceChatModeRef.current) {
@@ -333,7 +461,11 @@ const Assistant = () => {
       }
     };
 
-    recognition.start();
+    try {
+      recognition.start();
+    } catch (e) {
+      console.warn("Speech recognition is already running");
+    }
   };
 
   const toggleVoiceChatMode = () => {
@@ -342,10 +474,28 @@ const Assistant = () => {
     isVoiceChatModeRef.current = newState;
     
     if (newState) {
+      // Paksa aktifkan fitur peredam bising & gema dari hardware sebelum SpeechRecognition berjalan
+      navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        }
+      }).then(stream => {
+        audioStreamRef.current = stream;
+      }).catch(err => console.warn("Hardware mic constraints failed:", err));
+
       // Jika diaktifkan, langsung mulai mendengarkan
-      startListening();
+      if (!isListening) {
+        startListening();
+      }
     } else {
-      // Jika dimatikan, hentikan pendengaran dan suara
+      // Jika dimatikan, bebaskan memori mic hardware
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach(track => track.stop());
+        audioStreamRef.current = null;
+      }
+      
       stopListening();
       stop();
     }
@@ -488,36 +638,30 @@ const Assistant = () => {
                         borderRadius: '50%',
                         background: isSending
                           ? 'radial-gradient(circle at 30% 30%, #fff, #38bdf8 40%, #0284c7 80%, #0369a1)' 
-                          : isListening
-                            ? 'radial-gradient(circle at 30% 30%, #fff, #4ade80 40%, #16a34a 80%, #14532d)'
-                            : 'radial-gradient(circle at 30% 30%, #fff, #a8a29e 40%, #57534e 80%, #292524)',
+                          : isSpeaking
+                            ? 'radial-gradient(circle at 30% 30%, #fff, #c084fc 40%, #9333ea 80%, #581c87)'
+                            : isListening
+                              ? 'radial-gradient(circle at 30% 30%, #fff, #4ade80 40%, #16a34a 80%, #14532d)'
+                              : 'radial-gradient(circle at 30% 30%, #fff, #a8a29e 40%, #57534e 80%, #292524)',
                         filter: 'blur(4px)',
                         animation: isSending 
                           ? 'orbPulseFast 1s ease-in-out infinite alternate' 
-                          : 'orbPulseSlow 2s ease-in-out infinite alternate',
+                          : isSpeaking
+                            ? 'orbPulseFast 0.8s ease-in-out infinite alternate'
+                            : 'orbPulseSlow 2s ease-in-out infinite alternate',
                         boxShadow: isSending
                           ? '0 0 40px #38bdf8, inset 0 0 20px #fff'
-                          : isListening
-                            ? '0 0 40px #4ade80, inset 0 0 20px #fff'
-                            : '0 0 20px #a8a29e, inset 0 0 10px #fff',
+                          : isSpeaking
+                            ? '0 0 40px #c084fc, inset 0 0 20px #fff'
+                            : isListening
+                              ? '0 0 40px #4ade80, inset 0 0 20px #fff'
+                              : '0 0 20px #a8a29e, inset 0 0 10px #fff',
                         transition: 'all 0.5s ease'
-                      }} />
-                      
-                      {/* Inti Bola yang lebih padat */}
-                      <div style={{
-                        position: 'absolute',
-                        width: '70%',
-                        height: '70%',
-                        borderRadius: '50%',
-                        background: '#fff',
-                        boxShadow: '0 0 20px #fff',
-                        opacity: 0.8,
-                        animation: 'orbCore 3s ease-in-out infinite alternate'
                       }} />
                     </div>
 
                     <div style={{ color: '#fff', fontSize: '1.2rem', fontWeight: 500, textAlign: 'center', letterSpacing: '1px' }}>
-                      {isSending ? "Berpikir..." : isListening ? "Mendengarkan..." : "Bicaralah..."}
+                      {isSending ? "Berpikir..." : isSpeaking ? "Berbicara..." : isListening ? "Mendengarkan..." : "Bicaralah..."}
                     </div>
 
                     <style>{`
@@ -754,12 +898,21 @@ const Assistant = () => {
                 </motion.div>
               )}
 
-              {isVoiceChatMode && (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '20px', color: '#C2B280' }}>
-                  <div style={{ width: '120px', height: '120px', borderRadius: '50%', background: 'rgba(194,178,128,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Mic size={48} />
-                  </div>
-                  <p>Mendengarkan...</p>
+              {/* Teks Realtime (Interim) */}
+              {interimTranscript && (
+                <div style={{
+                  alignSelf: 'flex-end',
+                  backgroundColor: 'rgba(194, 178, 128, 0.4)',
+                  padding: '12px 16px',
+                  borderRadius: '16px',
+                  borderBottomRightRadius: '4px',
+                  maxWidth: '85%',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  fontStyle: 'italic',
+                  color: '#fff',
+                  opacity: 0.7
+                }}>
+                  {interimTranscript}...
                 </div>
               )}
 

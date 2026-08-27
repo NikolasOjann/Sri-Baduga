@@ -14,7 +14,6 @@
     "link:images": "node scripts/link-images.js"
   },
   "dependencies": {
-    "@prisma/client": "^5.10.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "fuse.js": "^7.0.0",
@@ -24,6 +23,7 @@
     "pdf-parse": "^1.1.1"
   },
   "devDependencies": {
-    "prisma": "^5.10.2"
+    "@prisma/client": "^5.22.0",
+    "prisma": "^5.22.0"
   }
 }
