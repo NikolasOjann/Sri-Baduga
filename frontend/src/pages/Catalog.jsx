@@ -37,16 +37,16 @@ function NyaiModel(props) {
 }
 
 const categories = [
-  { id: 1, nameKey: 'geologika', name: 'Geologika', descKey: 'geologikaDesc', img: '/images/geologika.png' },
-  { id: 2, nameKey: 'biologika', name: 'Biologika', descKey: 'biologikaDesc', img: '/images/biologika.png' },
-  { id: 3, nameKey: 'etnografika', name: 'Etnografika', descKey: 'etnografikaDesc', img: '/images/etnografika.png' },
-  { id: 4, nameKey: 'arkeologika', name: 'Arkeologika', descKey: 'arkeologikaDesc', img: '/images/arkeologika.png' },
-  { id: 5, nameKey: 'historika', name: 'Historika', descKey: 'historikaDesc', img: '/images/historika.png' },
-  { id: 6, nameKey: 'numismatika', name: 'Numismatika', descKey: 'numismatikaDesc', img: '/images/numismatika.png' },
-  { id: 7, nameKey: 'filologika', name: 'Filologika', descKey: 'filologikaDesc', img: '/images/filologika.png' },
-  { id: 8, nameKey: 'keramologika', name: 'Keramologika', descKey: 'keramologikaDesc', img: '/images/keramologika.png' },
-  { id: 9, nameKey: 'seniRupa', name: 'Seni Rupa', descKey: 'seniRupaDesc', img: '/images/senirupa.png' },
-  { id: 10, nameKey: 'teknologika', name: 'Teknologika', descKey: 'teknologikaDesc', img: '/images/teknologika.png' }
+  { id: 1, nameKey: 'geologika', name: 'Geologika', descKey: 'geologikaDesc', img: '/kategori_img/geologika.png' },
+  { id: 2, nameKey: 'biologika', name: 'Biologika', descKey: 'biologikaDesc', img: '/kategori_img/biologika.png' },
+  { id: 3, nameKey: 'etnografika', name: 'Etnografika', descKey: 'etnografikaDesc', img: '/kategori_img/etnografika.png' },
+  { id: 4, nameKey: 'arkeologika', name: 'Arkeologika', descKey: 'arkeologikaDesc', img: '/kategori_img/arkeologika.png' },
+  { id: 5, nameKey: 'historika', name: 'Historika', descKey: 'historikaDesc', img: '/kategori_img/historika.png' },
+  { id: 6, nameKey: 'numismatika', name: 'Numismatika', descKey: 'numismatikaDesc', img: '/kategori_img/numismatika.png' },
+  { id: 7, nameKey: 'filologika', name: 'Filologika', descKey: 'filologikaDesc', img: '/kategori_img/filologika.png' },
+  { id: 8, nameKey: 'keramologika', name: 'Keramologika', descKey: 'keramologikaDesc', img: '/kategori_img/keramologika.png' },
+  { id: 9, nameKey: 'seniRupa', name: 'Seni Rupa', descKey: 'seniRupaDesc', img: '/kategori_img/senirupa.png' },
+  { id: 10, nameKey: 'teknologika', name: 'Teknologika', descKey: 'teknologikaDesc', img: '/kategori_img/teknologika.png' }
 ];
 
 const Catalog = () => {
