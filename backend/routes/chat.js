@@ -212,4 +212,123 @@ router.post('/', async (req, res) => {
   }
 });
 
+// ============================================================
+// POST /api/chat/stream
+// Endpoint khusus untuk StreamingResponse
+// ============================================================
+router.post('/stream', async (req, res) => {
+  const { message, session_id } = req.body;
+
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: 'Pesan tidak boleh kosong.' });
+  }
+
+  // Setup SSE Headers
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders();
+
+  const museumInfoReply = checkMuseumInfo(message);
+  if (museumInfoReply) {
+    const words = museumInfoReply.split(" ");
+    for (const w of words) {
+      res.write(`data: ${JSON.stringify({ type: 'chunk', text: w + " " })}\n\n`);
+    }
+    res.write(`data: ${JSON.stringify({ type: 'final', sources: [] })}\n\n`);
+    return res.end();
+  }
+
+  try {
+    const ragResponse = await fetch('http://127.0.0.1:8000/chat/stream', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: message,
+        session_id: session_id || 'default_session',
+      }),
+      signal: AbortSignal.timeout(600000),
+    });
+
+    if (!ragResponse.ok) {
+      res.write(`data: ${JSON.stringify({ type: 'chunk', text: "Mohon maaf, server AI sedang mengalami gangguan." })}\n\n`);
+      res.write(`data: ${JSON.stringify({ type: 'final', sources: [] })}\n\n`);
+      return res.end();
+    }
+
+    const reader = ragResponse.body.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const blocks = buffer.split('\n\n');
+      buffer = blocks.pop(); // Sisa potongan yang belum lengkap
+
+      for (const block of blocks) {
+        const lines = block.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.replace('data: ', ''));
+              if (data.type === 'final') {
+                // Map sources to artifacts just like the normal /chat endpoint
+                let artifacts = [];
+                const collections = loadCollections();
+                if (data.sources && Array.isArray(data.sources)) {
+                  const rawArtifacts = data.sources.map(s => {
+                    let match = s.inventory ? collections.find(c => c.no_inventarisasi === s.inventory) : null;
+                    if (!match && s.name) {
+                      match = collections.find(c => c.nama_koleksi && c.nama_koleksi.toLowerCase() === s.name.toLowerCase());
+                    }
+                    return match ? {
+                      id: match.id,
+                      nama_koleksi: match.nama_koleksi,
+                      klasifikasi: match.klasifikasi,
+                      no_inventarisasi: match.no_inventarisasi,
+                      gambar: match.gambar,
+                    } : null;
+                  }).filter(Boolean);
+
+                  const validArtifacts = rawArtifacts.filter(a => a.gambar && typeof a.gambar === 'string' && a.gambar.trim() !== '' && a.gambar !== 'null');
+                  const uniqueSourceNames = new Set(data.sources.map(s => s.name));
+                  
+                  if (uniqueSourceNames.size > 1) {
+                    const seenNames = new Set();
+                    artifacts = validArtifacts.filter(a => {
+                      const key = a.nama_koleksi?.toLowerCase();
+                      if (!key || seenNames.has(key)) return false;
+                      seenNames.add(key);
+                      return true;
+                    });
+                  } else {
+                    artifacts = validArtifacts;
+                  }
+                }
+                // Send final with artifacts
+                res.write(`data: ${JSON.stringify({ type: 'final', sources: data.sources, artifacts: artifacts, options: data.options || [] })}\n\n`);
+              } else {
+                // Pass chunks as is
+                res.write(line + '\n\n');
+              }
+            } catch (e) {
+              // Ignore invalid JSON
+            }
+          }
+        }
+      }
+    }
+    res.end();
+
+  } catch (err) {
+    console.log(`⚠️ [RAG Service Stream] Gagal terhubung: ${err.message}`);
+    res.write(`data: ${JSON.stringify({ type: 'chunk', text: "Mohon maaf, server AI saat ini sedang offline." })}\n\n`);
+    res.write(`data: ${JSON.stringify({ type: 'final', sources: [] })}\n\n`);
+    res.end();
+  }
+});
+
 module.exports = router;

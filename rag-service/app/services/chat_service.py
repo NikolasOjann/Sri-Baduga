@@ -23,3 +23,14 @@ class ChatService:
                 "options": [],
                 "artifacts": []
             }
+
+    async def ask_stream(self, question, session_id="default"):
+        try:
+            async for chunk in self.pipeline.ask_stream(question, session_id):
+                yield chunk
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            import json
+            yield f"data: {json.dumps({'type': 'chunk', 'text': f'Terjadi kesalahan: {str(e)}'})}\n\n"
+            yield f"data: {json.dumps({'type': 'final', 'sources': []})}\n\n"

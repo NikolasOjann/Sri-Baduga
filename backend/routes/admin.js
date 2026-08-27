@@ -4,14 +4,22 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { exec } = require('child_process');
+const { PrismaClient } = require('@prisma/client');
+const myCache = require('../utils/cache');
 const authenticateToken = require('../middleware/auth');
 
+const prisma = new PrismaClient();
 const router = express.Router();
 const SECRET_KEY = process.env.JWT_SECRET || 'sribaduga_rahasia_super_aman_123';
 
-// Konfigurasi Kredensial Hardcode (Sesuai Permintaan)
-const ADMIN_USERNAME = 'tegallega1974';
-const ADMIN_PASSWORD = 'istimewa1974';
+// Konfigurasi Kredensial dari .env (Fallback ke default)
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'tegallega1974';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'istimewa1974';
+
+// Helper: dapatkan Base URL (Prioritaskan .env, lalu req.get('host'))
+const getBaseUrl = (req) => {
+  return process.env.API_BASE_URL || `${req.protocol}://${req.get('host')}`;
+};
 
 // Konfigurasi Multer untuk Upload PDF
 const uploadDir = path.join(__dirname, '..', 'data', 'Uploads');
@@ -150,16 +158,74 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
     // Opsional: Hapus file asli yang belum dihapus backgroundnya untuk menghemat storage
     if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
 
-    const fileUrl = `http://localhost:3001/images/${folderName}/${finalFilename}?t=${Date.now()}`;
+    const base = getBaseUrl(req);
+    const fileUrl = `${base}/images/${folderName}/${finalFilename}?t=${Date.now()}`;
     res.json({ url: fileUrl });
   } catch (err) {
     console.error(`[ERROR] Gagal hapus background: ${err.message}`);
     // Fallback: Jika script AI gagal, pindahkan gambar asli ke folder tujuan
     if (fs.existsSync(originalPath)) fs.renameSync(originalPath, fallbackPath);
     
-    const fileUrl = `http://localhost:3001/images/${folderName}/${fallbackFilename}?t=${Date.now()}`;
+    const base = getBaseUrl(req);
+    const fileUrl = `${base}/images/${folderName}/${fallbackFilename}?t=${Date.now()}`;
     res.json({ url: fileUrl });
   }
+});
+
+// ==========================================================
+// Konfigurasi & Endpoint Upload Model 3D (Manual)
+// ==========================================================
+const modelUploadDir = path.join(__dirname, '..', 'public', 'models');
+if (!fs.existsSync(modelUploadDir)) {
+  fs.mkdirSync(modelUploadDir, { recursive: true });
+}
+
+const modelStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, modelUploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'model-' + Date.now() + path.extname(file.originalname).toLowerCase());
+  }
+});
+
+const uploadModel = multer({
+  storage: modelStorage,
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext === '.glb' || ext === '.gltf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Hanya file .glb atau .gltf yang diperbolehkan.'));
+    }
+  }
+});
+
+router.post('/upload-model', authenticateToken, uploadModel.single('model_file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'File model 3D tidak ditemukan.' });
+  }
+  
+  const finalFilename = req.file.filename;
+  const fileUrl = `/models/${finalFilename}`; // Simpan relative path saja, frontend/backend akan nambahin domain
+  
+  // Hapus model lama jika ada
+  if (req.body.old_model) {
+    try {
+      const urlParts = req.body.old_model.split('/models/');
+      if (urlParts.length === 2) {
+        const oldFilePath = path.join(__dirname, '..', 'public', 'models', urlParts[1]);
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+          console.log(`[Admin] Berhasil menghapus file model lama: ${urlParts[1]}`);
+        }
+      }
+    } catch (err) {
+      console.error(`[Admin] Gagal menghapus model lama: ${err.message}`);
+    }
+  }
+  
+  res.json({ url: fileUrl });
 });
 
 // ==========================================================
@@ -209,24 +275,9 @@ router.post('/datasets/upload', authenticateToken, upload.single('pdf_file'), (r
 });
 
 // ==========================================================
-// FUNGSI HELPER: Baca & Simpan JSON
+// FUNGSI HELPER: Sync RAG
 // ==========================================================
-const DATA_FILE = path.join(__dirname, '..', 'data', 'collections.json');
-
-function loadCollections() {
-  if (!fs.existsSync(DATA_FILE)) return [];
-  try {
-    const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-}
-
-function saveCollections(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
-  
-  // Sinkronisasi otomatis ke Python RAG (Vector Database)
+function syncRagDatabase() {
   try {
     fetch('http://127.0.0.1:8000/admin/reindex', { method: 'POST' })
       .then(res => res.json())
@@ -240,304 +291,348 @@ function saveCollections(data) {
 // ==========================================================
 // Endpoint: CREATE Manual Dataset
 // ==========================================================
-router.post('/datasets', authenticateToken, (req, res) => {
-  const { nama_koleksi, no_registrasi, klasifikasi, deskripsi, gambar } = req.body;
-  if (!nama_koleksi || !no_registrasi || !klasifikasi) {
-    return res.status(400).json({ error: 'Nama Koleksi, No Registrasi, dan Klasifikasi wajib diisi.' });
+router.post('/datasets', authenticateToken, async (req, res) => {
+  try {
+    const { nama_koleksi, no_registrasi, klasifikasi, deskripsi, gambar } = req.body;
+    if (!nama_koleksi || !no_registrasi || !klasifikasi) {
+      return res.status(400).json({ error: 'Nama Koleksi, No Registrasi, dan Klasifikasi wajib diisi.' });
+    }
+
+    const newItem = await prisma.collection.create({
+      data: {
+        no_registrasi: no_registrasi,
+        no_inventarisasi: req.body.no_inventarisasi || '',
+        nama_koleksi: nama_koleksi,
+        klasifikasi: klasifikasi,
+        sub_klasifikasi: '',
+        tanggal_registrasi: req.body.tanggal_registrasi || '',
+        no_registrasi_nasional: req.body.no_registrasi_nasional || '',
+        tanggal_inventarisasi: req.body.tanggal_inventarisasi || '',
+        status_cb: req.body.status_cb || '',
+        tanggal_perolehan: req.body.tanggal_perolehan || '',
+        deskripsi: deskripsi || '',
+        tempat_pembuatan: '',
+        cara_pembuatan: req.body.cara_pembuatan || '',
+        tempat_perolehan: '',
+        cara_perolehan: req.body.cara_perolehan || '',
+        tahun_masuk: req.body.tahun_masuk || '',
+        dimensi: req.body.dimensi || { panjang: '', lebar: '', tinggi: '', tebal: '', diameter: '', berat: '', karat: '' },
+        tempat_penyimpanan: req.body.tempat_penyimpanan || '',
+        kondisi: req.body.kondisi || '',
+        tanggal_pengamatan: req.body.tanggal_pengamatan || '',
+        nama_petugas: req.body.nama_petugas || 'Admin Manual',
+        acuan: req.body.acuan || '',
+        keterangan: req.body.keterangan || '',
+        gambar: gambar || null,
+        model_3d: req.body.model_3d || null,
+        dokumentasi: req.body.dokumentasi || [],
+        pemilik_koleksi: req.body.pemilik_koleksi || '',
+        jenis_pengadaan: req.body.jenis_pengadaan || '',
+        lokasi_provinsi: req.body.lokasi_provinsi || '',
+        lokasi_kabupaten: req.body.lokasi_kabupaten || '',
+        latitude: req.body.latitude || '',
+        longitude: req.body.longitude || '',
+        estimasi_harga: req.body.estimasi_harga || '',
+        tim_pengkaji: req.body.tim_pengkaji || [],
+        sejarah: req.body.sejarah || '',
+        is_public: req.body.is_public !== undefined ? (req.body.is_public === 'true' || req.body.is_public === true) : true,
+        source_pdf: 'Input Manual',
+        tanggal_input: new Date().toISOString()
+      }
+    });
+
+    syncRagDatabase();
+    myCache.clear(); // Hapus cache agar API publik terupdate
+    console.log(`[Admin] Artefak dibuat manual: ${nama_koleksi} (ID: ${newItem.id})`);
+    res.status(201).json({ message: 'Dataset berhasil ditambahkan secara manual.', item: newItem });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Terjadi kesalahan saat membuat dataset.' });
   }
-
-  const data = loadCollections();
-
-  // Cari ID terbesar untuk increment
-  let maxId = 0;
-  data.forEach(item => {
-    if (item.id && item.id > maxId) maxId = item.id;
-  });
-
-  const newItem = {
-    id: maxId + 1,
-    no_registrasi: no_registrasi,
-    no_inventarisasi: req.body.no_inventarisasi || '',
-    nama_koleksi: nama_koleksi,
-    klasifikasi: klasifikasi,
-    sub_klasifikasi: '',
-    tanggal_registrasi: req.body.tanggal_registrasi || '',
-    no_registrasi_nasional: req.body.no_registrasi_nasional || '',
-    tanggal_inventarisasi: req.body.tanggal_inventarisasi || '',
-    status_cb: req.body.status_cb || '',
-    tanggal_perolehan: req.body.tanggal_perolehan || '',
-    deskripsi: deskripsi || '',
-    tempat_pembuatan: '',
-    cara_pembuatan: req.body.cara_pembuatan || '',
-    tempat_perolehan: '',
-    cara_perolehan: req.body.cara_perolehan || '',
-    tahun_masuk: req.body.tahun_masuk || '',
-    dimensi: req.body.dimensi || { panjang: '', lebar: '', tinggi: '', tebal: '', diameter: '', berat: '', karat: '' },
-    tempat_penyimpanan: req.body.tempat_penyimpanan || '',
-    kondisi: req.body.kondisi || '',
-    tanggal_pengamatan: req.body.tanggal_pengamatan || '',
-    nama_petugas: req.body.nama_petugas || 'Admin Manual',
-    acuan: req.body.acuan || '',
-    keterangan: req.body.keterangan || '',
-    gambar: gambar || null,
-    dokumentasi: req.body.dokumentasi || [],
-    pemilik_koleksi: req.body.pemilik_koleksi || '',
-    jenis_pengadaan: req.body.jenis_pengadaan || '',
-    lokasi_provinsi: req.body.lokasi_provinsi || '',
-    lokasi_kabupaten: req.body.lokasi_kabupaten || '',
-    latitude: req.body.latitude || '',
-    longitude: req.body.longitude || '',
-    estimasi_harga: req.body.estimasi_harga || '',
-    tim_pengkaji: req.body.tim_pengkaji || [],
-    sejarah: req.body.sejarah || '',
-    is_public: req.body.is_public !== undefined ? (req.body.is_public === 'true' || req.body.is_public === true) : true,
-    source_pdf: 'Input Manual',
-    tanggal_input: new Date().toISOString()
-  };
-
-  data.push(newItem); // Tambahkan ke paling bawah
-  saveCollections(data);
-
-  console.log(`[Admin] Artefak dibuat manual: ${nama_koleksi} (ID: ${newItem.id})`);
-  res.status(201).json({ message: 'Dataset berhasil ditambahkan secara manual.', item: newItem });
 });
 
 // ==========================================================
 // Endpoint: GET Admin Stats
 // ==========================================================
-router.get('/stats', authenticateToken, (req, res) => {
-  const data = loadCollections();
-  
-  let publicCount = 0;
-  let privateCount = 0;
-  let dokumentasiCount = 0;
-  
-  const standardCategories = [
-    'Geologika', 'Biologika', 'Etnografika', 'Arkeologika', 'Historika',
-    'Numismatika', 'Filologika', 'Keramologika', 'Seni Rupa', 'Teknologika'
-  ];
-  
-  const counts = {};
-  standardCategories.forEach(cat => counts[cat] = 0);
-  counts['Lainnya'] = 0;
-
-  data.forEach(item => {
-    // Check Public/Private
-    if (item.is_public === false || String(item.is_public) === 'false') {
-      privateCount++;
-    } else {
-      publicCount++;
-    }
-
-    // Hitung dokumentasi (gambar utama + dokumentasi tambahan)
-    if (item.gambar) dokumentasiCount++;
-    if (item.dokumentasi && Array.isArray(item.dokumentasi)) {
-      dokumentasiCount += item.dokumentasi.length;
-    }
-
-    // Check Klasifikasi
-    let k = (item.klasifikasi || 'Lainnya').trim();
-    if (k.toLowerCase() === 'etnografi') k = 'Etnografika';
+router.get('/stats', authenticateToken, async (req, res) => {
+  try {
+    const data = await prisma.collection.findMany();
     
-    const matchedCategory = standardCategories.find(c => c.toLowerCase() === k.toLowerCase());
-    if (matchedCategory) {
-      counts[matchedCategory]++;
-    } else {
-      counts['Lainnya']++;
-    }
-  });
+    let publicCount = 0;
+    let privateCount = 0;
+    let dokumentasiCount = 0;
+    
+    const standardCategories = [
+      'Geologika', 'Biologika', 'Etnografika', 'Arkeologika', 'Historika',
+      'Numismatika', 'Filologika', 'Keramologika', 'Seni Rupa', 'Teknologika'
+    ];
+    
+    const counts = {};
+    standardCategories.forEach(cat => counts[cat] = 0);
+    counts['Lainnya'] = 0;
 
-  res.json({
-    total: data.length,
-    publicCount,
-    privateCount,
-    dokumentasiCount,
-    konservasiCount: 49, // Mockup sesuai UI
-    restorasiCount: 1, // Mockup sesuai UI
-    penyimpananCount: 1, // Mockup sesuai UI
-    klasifikasi: counts
-  });
+    data.forEach(item => {
+      // Check Public/Private
+      if (item.is_public === false || String(item.is_public) === 'false') {
+        privateCount++;
+      } else {
+        publicCount++;
+      }
+
+      // Hitung dokumentasi (gambar utama + dokumentasi tambahan)
+      if (item.gambar) dokumentasiCount++;
+      if (item.dokumentasi && Array.isArray(item.dokumentasi)) {
+        dokumentasiCount += item.dokumentasi.length;
+      }
+
+      // Check Klasifikasi
+      let k = (item.klasifikasi || 'Lainnya').trim();
+      if (k.toLowerCase() === 'etnografi') k = 'Etnografika';
+      
+      const matchedCategory = standardCategories.find(c => c.toLowerCase() === k.toLowerCase());
+      if (matchedCategory) {
+        counts[matchedCategory]++;
+      } else {
+        counts['Lainnya']++;
+      }
+    });
+
+    res.json({
+      total: data.length,
+      publicCount,
+      privateCount,
+      dokumentasiCount,
+      konservasiCount: 49, // Mockup sesuai UI
+      restorasiCount: 1, // Mockup sesuai UI
+      penyimpananCount: 1, // Mockup sesuai UI
+      klasifikasi: counts
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Terjadi kesalahan server.' });
+  }
 });
 
 // ==========================================================
 // Endpoint: GET Admin Datasets (All records + support search & filters)
 // ==========================================================
-router.get('/datasets', authenticateToken, (req, res) => {
-  let data = loadCollections();
-  
-  const { klasifikasi, search, pengadaan, publikasi } = req.query;
+router.get('/datasets', authenticateToken, async (req, res) => {
+  try {
+    const { klasifikasi, search, pengadaan, publikasi } = req.query;
+    
+    const where = {};
 
-  if (klasifikasi) {
-    data = data.filter(item => item.klasifikasi?.toLowerCase() === klasifikasi.toLowerCase());
-  }
-
-  if (pengadaan && pengadaan.toLowerCase() !== 'semua') {
-    data = data.filter(item => item.jenis_pengadaan?.toLowerCase() === pengadaan.toLowerCase());
-  }
-  
-  if (publikasi && publikasi !== 'semua') {
-    if (publikasi === 'publik') {
-      data = data.filter(item => item.is_public !== false && item.is_public !== 'false');
-    } else if (publikasi === 'private') {
-      data = data.filter(item => item.is_public === false || item.is_public === 'false');
+    if (klasifikasi) {
+      where.klasifikasi = { equals: klasifikasi, mode: 'insensitive' };
     }
+
+    if (pengadaan && pengadaan.toLowerCase() !== 'semua') {
+      where.jenis_pengadaan = { equals: pengadaan, mode: 'insensitive' };
+    }
+    
+    if (publikasi && publikasi !== 'semua') {
+      if (publikasi === 'publik') {
+        where.is_public = true;
+      } else if (publikasi === 'private') {
+        where.is_public = false;
+      }
+    }
+
+    if (search) {
+      where.OR = [
+        { nama_koleksi: { contains: search, mode: 'insensitive' } },
+        { sub_klasifikasi: { contains: search, mode: 'insensitive' } },
+        { deskripsi: { contains: search, mode: 'insensitive' } },
+        { keterangan: { contains: search, mode: 'insensitive' } },
+        { no_inventarisasi: { contains: search, mode: 'insensitive' } },
+        { no_registrasi: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+
+    let data = await prisma.collection.findMany({ where, orderBy: { id: 'desc' } });
+
+    const base = getBaseUrl(req);
+    data = data.map(item => ({
+      ...item,
+      gambar: (item.gambar && item.gambar.startsWith('/')) ? base + item.gambar : item.gambar,
+      model_3d: (item.model_3d && item.model_3d.startsWith('/')) ? base + item.model_3d : item.model_3d
+    }));
+
+    res.json({ total: data.length, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Terjadi kesalahan server.' });
   }
-
-  if (search) {
-    const Fuse = require('fuse.js');
-    const fuse = new Fuse(data, {
-      keys: ['nama_koleksi', 'sub_klasifikasi', 'deskripsi', 'keterangan', 'no_inventarisasi', 'no_registrasi'],
-      threshold: 0.4,
-    });
-    data = fuse.search(search).map(r => r.item);
-  }
-
-  const base = `${req.protocol}://${req.hostname}:3001`;
-  data = data.map(item => ({
-    ...item,
-    gambar: (item.gambar && item.gambar.startsWith('/')) ? base + item.gambar : item.gambar,
-    model_3d: (item.model_3d && item.model_3d.startsWith('/')) ? base + item.model_3d : item.model_3d
-  }));
-
-  res.json({ total: data.length, data });
 });
 
 // ==========================================================
 // Endpoint: GET Admin Dataset by ID
 // ==========================================================
-router.get('/datasets/:id', authenticateToken, (req, res) => {
-  const data = loadCollections();
-  const idStr = String(req.params.id);
-  const item = data.find(d => String(d.id) === idStr);
+router.get('/datasets/:id', authenticateToken, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const item = await prisma.collection.findUnique({ where: { id } });
 
-  if (!item) {
-    return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
+    if (!item) {
+      return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
+    }
+
+    const base = getBaseUrl(req);
+    const formattedItem = {
+      ...item,
+      gambar: (item.gambar && item.gambar.startsWith('/')) ? base + item.gambar : item.gambar,
+      model_3d: (item.model_3d && item.model_3d.startsWith('/')) ? base + item.model_3d : item.model_3d
+    };
+
+    res.json(formattedItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Terjadi kesalahan server.' });
   }
-
-  const base = `${req.protocol}://${req.hostname}:3001`;
-  const formattedItem = {
-    ...item,
-    gambar: (item.gambar && item.gambar.startsWith('/')) ? base + item.gambar : item.gambar,
-    model_3d: (item.model_3d && item.model_3d.startsWith('/')) ? base + item.model_3d : item.model_3d
-  };
-
-  res.json(formattedItem);
 });
 
 // ==========================================================
 // Endpoint: UPDATE Dataset
 // ==========================================================
-router.put('/datasets/:id', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const { nama_koleksi, no_registrasi, klasifikasi, deskripsi, gambar } = req.body;
+router.put('/datasets/:id', authenticateToken, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { nama_koleksi, no_registrasi, klasifikasi, deskripsi, gambar } = req.body;
 
-  if (!nama_koleksi || !no_registrasi || !klasifikasi) {
-    return res.status(400).json({ error: 'Nama Koleksi, No Registrasi, dan Klasifikasi wajib diisi.' });
-  }
+    if (!nama_koleksi || !no_registrasi || !klasifikasi) {
+      return res.status(400).json({ error: 'Nama Koleksi, No Registrasi, dan Klasifikasi wajib diisi.' });
+    }
 
-  const data = loadCollections();
-  const index = data.findIndex(item => String(item.id) === String(id));
+    const existingItem = await prisma.collection.findUnique({ where: { id } });
+    if (!existingItem) {
+      return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
+    }
 
-  if (index === -1) {
-    return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
-  }
-
-  const oldGambar = data[index].gambar;
-
-  // Update field lama dan baru
-  data[index].nama_koleksi = nama_koleksi;
-  data[index].no_registrasi = no_registrasi;
-  data[index].klasifikasi = klasifikasi;
-  if (deskripsi !== undefined) data[index].deskripsi = deskripsi;
-  
-  // Field Baru
-  if (req.body.no_inventarisasi !== undefined) data[index].no_inventarisasi = req.body.no_inventarisasi;
-  if (req.body.tanggal_registrasi !== undefined) data[index].tanggal_registrasi = req.body.tanggal_registrasi;
-  if (req.body.no_registrasi_nasional !== undefined) data[index].no_registrasi_nasional = req.body.no_registrasi_nasional;
-  if (req.body.tanggal_inventarisasi !== undefined) data[index].tanggal_inventarisasi = req.body.tanggal_inventarisasi;
-  if (req.body.status_cb !== undefined) data[index].status_cb = req.body.status_cb;
-  if (req.body.tanggal_perolehan !== undefined) data[index].tanggal_perolehan = req.body.tanggal_perolehan;
-  if (req.body.cara_pembuatan !== undefined) data[index].cara_pembuatan = req.body.cara_pembuatan;
-  if (req.body.cara_perolehan !== undefined) data[index].cara_perolehan = req.body.cara_perolehan;
-  if (req.body.tahun_masuk !== undefined) data[index].tahun_masuk = req.body.tahun_masuk;
-  if (req.body.dimensi !== undefined) data[index].dimensi = req.body.dimensi;
-  if (req.body.tempat_penyimpanan !== undefined) data[index].tempat_penyimpanan = req.body.tempat_penyimpanan;
-  if (req.body.kondisi !== undefined) data[index].kondisi = req.body.kondisi;
-  if (req.body.tanggal_pengamatan !== undefined) data[index].tanggal_pengamatan = req.body.tanggal_pengamatan;
-  if (req.body.acuan !== undefined) data[index].acuan = req.body.acuan;
-  if (req.body.keterangan !== undefined) data[index].keterangan = req.body.keterangan;
-  if (req.body.dokumentasi !== undefined) data[index].dokumentasi = req.body.dokumentasi;
-  if (req.body.pemilik_koleksi !== undefined) data[index].pemilik_koleksi = req.body.pemilik_koleksi;
-  if (req.body.jenis_pengadaan !== undefined) data[index].jenis_pengadaan = req.body.jenis_pengadaan;
-  if (req.body.lokasi_provinsi !== undefined) data[index].lokasi_provinsi = req.body.lokasi_provinsi;
-  if (req.body.lokasi_kabupaten !== undefined) data[index].lokasi_kabupaten = req.body.lokasi_kabupaten;
-  if (req.body.latitude !== undefined) data[index].latitude = req.body.latitude;
-  if (req.body.longitude !== undefined) data[index].longitude = req.body.longitude;
-  if (req.body.estimasi_harga !== undefined) data[index].estimasi_harga = req.body.estimasi_harga;
-  if (req.body.tim_pengkaji !== undefined) data[index].tim_pengkaji = req.body.tim_pengkaji;
-  if (req.body.sejarah !== undefined) data[index].sejarah = req.body.sejarah;
-  if (req.body.is_public !== undefined) data[index].is_public = (req.body.is_public === 'true' || req.body.is_public === true);
-
-  if (gambar !== undefined) {
-    data[index].gambar = gambar || null;
+    const updateData = {
+      nama_koleksi,
+      no_registrasi,
+      klasifikasi,
+    };
     
-    // Hapus gambar lama jika ada gambar baru yang berbeda
-    if (oldGambar && oldGambar !== gambar) {
-      try {
-        // Asumsi URL seperti http://localhost:3001/images/folder/file.png
-        const urlParts = oldGambar.split('/images/');
-        if (urlParts.length === 2) {
-          const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-            console.log(`[Admin] Berhasil menghapus file gambar lama: ${urlParts[1]}`);
+    if (deskripsi !== undefined) updateData.deskripsi = deskripsi;
+    if (req.body.no_inventarisasi !== undefined) updateData.no_inventarisasi = req.body.no_inventarisasi;
+    if (req.body.tanggal_registrasi !== undefined) updateData.tanggal_registrasi = req.body.tanggal_registrasi;
+    if (req.body.no_registrasi_nasional !== undefined) updateData.no_registrasi_nasional = req.body.no_registrasi_nasional;
+    if (req.body.tanggal_inventarisasi !== undefined) updateData.tanggal_inventarisasi = req.body.tanggal_inventarisasi;
+    if (req.body.status_cb !== undefined) updateData.status_cb = req.body.status_cb;
+    if (req.body.tanggal_perolehan !== undefined) updateData.tanggal_perolehan = req.body.tanggal_perolehan;
+    if (req.body.cara_pembuatan !== undefined) updateData.cara_pembuatan = req.body.cara_pembuatan;
+    if (req.body.cara_perolehan !== undefined) updateData.cara_perolehan = req.body.cara_perolehan;
+    if (req.body.tahun_masuk !== undefined) updateData.tahun_masuk = req.body.tahun_masuk;
+    if (req.body.dimensi !== undefined) updateData.dimensi = req.body.dimensi;
+    if (req.body.tempat_penyimpanan !== undefined) updateData.tempat_penyimpanan = req.body.tempat_penyimpanan;
+    if (req.body.kondisi !== undefined) updateData.kondisi = req.body.kondisi;
+    if (req.body.tanggal_pengamatan !== undefined) updateData.tanggal_pengamatan = req.body.tanggal_pengamatan;
+    if (req.body.acuan !== undefined) updateData.acuan = req.body.acuan;
+    if (req.body.keterangan !== undefined) updateData.keterangan = req.body.keterangan;
+    if (req.body.dokumentasi !== undefined) updateData.dokumentasi = req.body.dokumentasi;
+    if (req.body.pemilik_koleksi !== undefined) updateData.pemilik_koleksi = req.body.pemilik_koleksi;
+    if (req.body.jenis_pengadaan !== undefined) updateData.jenis_pengadaan = req.body.jenis_pengadaan;
+    if (req.body.lokasi_provinsi !== undefined) updateData.lokasi_provinsi = req.body.lokasi_provinsi;
+    if (req.body.lokasi_kabupaten !== undefined) updateData.lokasi_kabupaten = req.body.lokasi_kabupaten;
+    if (req.body.latitude !== undefined) updateData.latitude = req.body.latitude;
+    if (req.body.longitude !== undefined) updateData.longitude = req.body.longitude;
+    if (req.body.estimasi_harga !== undefined) updateData.estimasi_harga = req.body.estimasi_harga;
+    if (req.body.tim_pengkaji !== undefined) updateData.tim_pengkaji = req.body.tim_pengkaji;
+    if (req.body.sejarah !== undefined) updateData.sejarah = req.body.sejarah;
+    if (req.body.is_public !== undefined) updateData.is_public = (req.body.is_public === 'true' || req.body.is_public === true);
+    if (req.body.model_3d !== undefined) updateData.model_3d = req.body.model_3d;
+
+    if (gambar !== undefined) {
+      updateData.gambar = gambar || null;
+      
+      const oldGambar = existingItem.gambar;
+      if (oldGambar && oldGambar !== gambar) {
+        try {
+          const urlParts = oldGambar.split('/images/');
+          if (urlParts.length === 2) {
+            const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
+            if (fs.existsSync(oldFilePath)) {
+              fs.unlinkSync(oldFilePath);
+              console.log(`[Admin] Berhasil menghapus file gambar lama: ${urlParts[1]}`);
+            }
           }
+        } catch (err) {
+          console.error(`[Admin] Gagal menghapus gambar lama: ${err.message}`);
         }
-      } catch (err) {
-        console.error(`[Admin] Gagal menghapus gambar lama: ${err.message}`);
       }
     }
-  }
 
-  saveCollections(data);
-  console.log(`[Admin] Artefak diupdate: ID ${id}`);
-  res.json({ message: 'Dataset berhasil diperbarui.', item: data[index] });
+    const updatedItem = await prisma.collection.update({
+      where: { id },
+      data: updateData
+    });
+
+    syncRagDatabase();
+    myCache.clear(); // Hapus cache agar API publik terupdate
+    console.log(`[Admin] Artefak diupdate: ID ${id}`);
+    res.json({ message: 'Dataset berhasil diperbarui.', item: updatedItem });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Terjadi kesalahan saat update dataset.' });
+  }
 });
 
 // ==========================================================
 // Endpoint: DELETE Dataset
 // ==========================================================
-router.delete('/datasets/:id', authenticateToken, (req, res) => {
-  const { id } = req.params;
-  const data = loadCollections();
-
-  const index = data.findIndex(item => String(item.id) === String(id));
-  if (index === -1) {
-    return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
-  }
-
-  const deletedItem = data.splice(index, 1);
-  saveCollections(data);
-
-  // Hapus file gambar yang terkait dengan dataset yang dihapus
-  const gambar = deletedItem[0].gambar;
-  if (gambar) {
-    try {
-      const urlParts = gambar.split('/images/');
-      if (urlParts.length === 2) {
-        const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
-        if (fs.existsSync(oldFilePath)) {
-          fs.unlinkSync(oldFilePath);
-          console.log(`[Admin] Berhasil menghapus file gambar dataset yang didelete: ${urlParts[1]}`);
-        }
-      }
-    } catch (err) {
-      console.error(`[Admin] Gagal menghapus file gambar: ${err.message}`);
+router.delete('/datasets/:id', authenticateToken, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    
+    const existingItem = await prisma.collection.findUnique({ where: { id } });
+    if (!existingItem) {
+      return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
     }
-  }
 
-  console.log(`[Admin] Artefak dihapus: ID ${id}`);
-  res.json({ message: 'Dataset berhasil dihapus.', item: deletedItem[0] });
+    await prisma.collection.delete({ where: { id } });
+
+    // Hapus file gambar yang terkait dengan dataset yang dihapus
+    const gambar = existingItem.gambar;
+    if (gambar) {
+      try {
+        const urlParts = gambar.split('/images/');
+        if (urlParts.length === 2) {
+          const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
+          if (fs.existsSync(oldFilePath)) {
+            fs.unlinkSync(oldFilePath);
+            console.log(`[Admin] Berhasil menghapus file gambar dataset yang didelete: ${urlParts[1]}`);
+          }
+        }
+      } catch (err) {
+        console.error(`[Admin] Gagal menghapus file gambar: ${err.message}`);
+      }
+    }
+
+    const model_3d = existingItem.model_3d;
+    if (model_3d) {
+      try {
+        const urlParts = model_3d.split('/models/');
+        if (urlParts.length === 2) {
+          const oldFilePath = path.join(__dirname, '..', 'public', 'models', urlParts[1]);
+          if (fs.existsSync(oldFilePath)) {
+            fs.unlinkSync(oldFilePath);
+            console.log(`[Admin] Berhasil menghapus file model dataset yang didelete: ${urlParts[1]}`);
+          }
+        }
+      } catch (err) {
+        console.error(`[Admin] Gagal menghapus file model: ${err.message}`);
+      }
+    }
+
+    syncRagDatabase();
+    myCache.clear(); // Hapus cache agar API publik terupdate
+    console.log(`[Admin] Artefak dihapus: ID ${id}`);
+    res.json({ message: 'Dataset berhasil dihapus.', item: existingItem });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Terjadi kesalahan saat menghapus dataset.' });
+  }
 });
 
 module.exports = router;

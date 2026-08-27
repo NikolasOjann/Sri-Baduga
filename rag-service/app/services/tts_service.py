@@ -27,3 +27,4 @@ def stream_speech(text: str, lang: str = "id"):
         
     voice = get_voice_for_lang(lang)
     return _stream_audio_generator(text, voice)
+

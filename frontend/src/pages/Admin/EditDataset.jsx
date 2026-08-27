@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
+
 const standardCategories = [
   'Geologika', 'Biologika', 'Etnografika', 'Arkeologika', 'Historika',
   'Numismatika', 'Filologika', 'Keramologika', 'Seni Rupa', 'Teknologika'
@@ -29,6 +31,7 @@ function EditDataset() {
     deskripsi: '',
     dimensi: { panjang: '', lebar: '', tinggi: '', berat: '', tebal: '', diameter: '', karat: '' },
     gambar: '',
+    model_3d: '',
     dokumentasi: [],
     pemilik_koleksi: 'Museum Sri Baduga',
     jenis_pengadaan: '',
@@ -59,7 +62,7 @@ function EditDataset() {
   const fetchDataset = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const res = await fetch(`http://${window.location.hostname}:3001/api/admin/datasets/${id}`, {
+      const res = await fetch(`${API_BASE}/api/admin/datasets/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -120,7 +123,7 @@ function EditDataset() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      const res = await fetch(`http://${window.location.hostname}:3001/api/admin/upload-image`, {
+      const res = await fetch(`${API_BASE}/api/admin/upload-image`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: fd
@@ -142,6 +145,36 @@ function EditDataset() {
       }
     } catch (err) {
       alert(`Error upload: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleModelUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setLoading(true);
+    const fd = new FormData();
+    fd.append('model_file', file);
+    if (formData.model_3d) {
+      fd.append('old_model', formData.model_3d);
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(`${API_BASE}/api/admin/upload-model`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: fd
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Gagal upload model.');
+
+      setFormData(prev => ({ ...prev, model_3d: data.url }));
+      alert('Model 3D berhasil diunggah!');
+    } catch (err) {
+      alert(`Error upload model: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -181,8 +214,8 @@ function EditDataset() {
     setLoading(true);
     const token = localStorage.getItem('adminToken');
     const url = isEditMode
-      ? `http://${window.location.hostname}:3001/api/admin/datasets/${id}`
-      : `http://${window.location.hostname}:3001/api/admin/datasets`;
+      ? `${API_BASE}/api/admin/datasets/${id}`
+      : `${API_BASE}/api/admin/datasets`;
     const method = isEditMode ? 'PUT' : 'POST';
 
     try {
@@ -344,6 +377,18 @@ function EditDataset() {
           <div style={{ fontSize: '12px', color: '#6c757d', textAlign: 'right', marginTop: '-25px', marginBottom: '10px' }}>Max photo 2MB</div>
           {formData.gambar && (
             <img src={formData.gambar} alt="Koleksi" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ddd' }} />
+          )}
+        </div>
+
+        {/* Row: Model 3D Koleksi */}
+        <div style={{ border: '1px solid #dee2e6', borderRadius: '4px', padding: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '5px', color: '#495057' }}>Model 3D (.glb / .gltf)</label>
+          <input type="file" accept=".glb,.gltf" onChange={handleModelUpload} style={{ marginBottom: '10px' }} />
+          <div style={{ fontSize: '12px', color: '#6c757d', textAlign: 'right', marginTop: '-25px', marginBottom: '10px' }}>Max model 50MB</div>
+          {formData.model_3d && (
+            <div style={{ padding: '10px', backgroundColor: '#e9ecef', borderRadius: '4px', fontSize: '14px', color: '#198754', fontWeight: 'bold' }}>
+              ✓ Model 3D terpasang: {formData.model_3d.split('/').pop()}
+            </div>
           )}
         </div>
 

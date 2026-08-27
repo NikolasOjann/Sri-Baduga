@@ -4,7 +4,7 @@ from functools import lru_cache
 # AI
 # =====================================================
 
-from app.ai.ollama_client import OllamaClient
+from app.ai.openai_client import OpenAIClient
 
 # =====================================================
 # DATABASE
@@ -37,7 +37,7 @@ from app.tools.remote_control_tool import RemoteControlTool
 @lru_cache(maxsize=1)
 def get_llm():
 
-    return OllamaClient()
+    return OpenAIClient()
 
 
 # =====================================================
