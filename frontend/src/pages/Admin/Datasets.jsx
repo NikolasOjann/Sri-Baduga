@@ -217,6 +217,28 @@ function Datasets() {
     }
   };
 
+  const handleToggleVisibility = async (id, currentStatus) => {
+    const token = localStorage.getItem('adminToken');
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/datasets/${id}/visibility`, {
+        method: 'PATCH',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ is_public: !currentStatus })
+      });
+      if (res.ok) {
+        fetchDatasets();
+      } else {
+        const data = await res.json();
+        alert('Gagal merubah status: ' + data.error);
+      }
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
   return (
     <div>
       <h1 style={{ margin: '0 0 20px 0', fontSize: '24px', fontWeight: 'normal' }}>Kelola Dataset PDF</h1>
@@ -550,11 +572,42 @@ function Datasets() {
                         </span>
                       </td>
                       <td style={{ padding: '15px 12px', textAlign: 'center' }}>
-                        {item.is_public !== false ? (
-                          <span style={{ backgroundColor: '#ecfdf5', color: '#059669', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600' }}>Publik</span>
-                        ) : (
-                          <span style={{ backgroundColor: '#fef2f2', color: '#dc2626', padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '600' }}>Private</span>
-                        )}
+                        <div 
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', cursor: 'pointer' }}
+                          onClick={() => handleToggleVisibility(item.id, item.is_public !== false)}
+                          title={item.is_public !== false ? "Ubah ke Private" : "Ubah ke Publik"}
+                        >
+                          <div style={{
+                            width: '46px',
+                            height: '24px',
+                            backgroundColor: item.is_public !== false ? '#34d399' : '#cbd5e1',
+                            borderRadius: '24px',
+                            position: 'relative',
+                            transition: 'background-color 0.3s ease',
+                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.15)'
+                          }}>
+                            <div style={{
+                              width: '20px',
+                              height: '20px',
+                              backgroundColor: '#fff',
+                              borderRadius: '50%',
+                              position: 'absolute',
+                              top: '2px',
+                              left: item.is_public !== false ? '24px' : '2px',
+                              transition: 'left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                              boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+                            }} />
+                          </div>
+                          <span style={{ 
+                            fontSize: '12px', 
+                            fontWeight: '600', 
+                            color: item.is_public !== false ? '#059669' : '#64748b',
+                            minWidth: '45px', 
+                            textAlign: 'left' 
+                          }}>
+                            {item.is_public !== false ? 'Publik' : 'Private'}
+                          </span>
+                        </div>
                       </td>
                       <td style={{ padding: '15px 12px', textAlign: 'center', position: 'relative' }}>
                         <button 

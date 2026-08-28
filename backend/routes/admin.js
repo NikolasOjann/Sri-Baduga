@@ -685,4 +685,27 @@ router.delete('/datasets/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// ==========================================================
+// Endpoint: TOGGLE Visibility
+// ==========================================================
+router.patch('/datasets/:id/visibility', authenticateToken, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { is_public } = req.body;
+    
+    const updatedItem = await prisma.collection.update({
+      where: { id },
+      data: { is_public }
+    });
+
+    syncRagDatabase();
+    myCache.clear();
+    console.log(`[Admin] Visibilitas diubah ID ${id} menjadi ${is_public}`);
+    res.json({ message: 'Status publikasi diperbarui.', item: updatedItem });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Terjadi kesalahan saat mengubah visibilitas.' });
+  }
+});
+
 module.exports = router;
