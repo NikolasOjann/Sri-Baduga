@@ -118,7 +118,8 @@ router.post('/', async (req, res) => {
   // Coba hubungi Python RAG & Ollama Service (Submodule llm-museum di port 8000)
 
   try {
-    const ragResponse = await fetch('http://127.0.0.1:8000/chat', {
+    const ragUrl = process.env.RAG_URL || 'http://127.0.0.1:8000';
+    const ragResponse = await fetch(`${ragUrl}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -240,7 +241,8 @@ router.post('/stream', async (req, res) => {
   }
 
   try {
-    const ragResponse = await fetch('http://127.0.0.1:8000/chat/stream', {
+    const ragUrl = process.env.RAG_URL || 'http://127.0.0.1:8000';
+    const ragResponse = await fetch(`${ragUrl}/chat/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

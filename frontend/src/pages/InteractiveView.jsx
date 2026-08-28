@@ -2,7 +2,7 @@ import React, { Suspense, useState, useRef, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Info, Maximize2, ZoomIn, ZoomOut, RotateCcw, Box, Image as ImageIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, ContactShadows, useGLTF, Center } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows, useGLTF, Center, Bounds } from '@react-three/drei';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTTS } from '../hooks/useTTS';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,9 +18,11 @@ import bg9 from '../asset/Galery/Background-9.png';
 function DynamicGLTFModel({ url }) {
   const { scene } = useGLTF(url);
   return (
-    <Center>
-      <primitive object={scene} scale={2.5} />
-    </Center>
+    <Bounds fit clip observe margin={1.2}>
+      <Center>
+        <primitive object={scene} />
+      </Center>
+    </Bounds>
   );
 }
 
@@ -409,6 +411,7 @@ const InteractiveView = () => {
                   </Suspense>
 
                   <OrbitControls
+                    makeDefault
                     enablePan={false}
                     enableZoom={true}
                     minPolarAngle={Math.PI / 4}
