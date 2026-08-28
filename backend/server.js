@@ -3,7 +3,7 @@ const cors    = require('cors');
 const path    = require('path');
 
 const app  = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -30,7 +30,8 @@ const httpCore = require('http');
 app.get('/api/tts/speak', (req, res) => {
   const { text, lang } = req.query;
   // Teruskan request dari frontend (lewat port 3001) ke RAG service (port 8000)
-  const ttsUrl = `http://127.0.0.1:8000/tts/speak?text=${encodeURIComponent(text || '')}&lang=${lang || 'id'}`;
+  const ragUrl = process.env.RAG_URL || 'http://127.0.0.1:8000';
+  const ttsUrl = `${ragUrl}/tts/speak?text=${encodeURIComponent(text || '')}&lang=${lang || 'id'}`;
   
   httpCore.get(ttsUrl, (response) => {
     res.set({
@@ -66,7 +67,7 @@ const server = app.listen(PORT, () => {
   console.log(`  GET  /api/collections/kategori/:nama`);
   console.log(`  POST /api/chat`);
   console.log(`\nIntegrasi RAG & Ollama:`);
-  console.log(`  • RAG Service  : http://127.0.0.1:8000/chat (Submodule llm-museum)`);
+  console.log(`  • RAG Service  : ${process.env.RAG_URL || 'http://127.0.0.1:8000'}/chat (Submodule llm-museum)`);
   console.log(`  • Fallback     : Fuse.js (Lokal JSON) jika RAG/Ollama offline`);
   console.log(`\nTips:`);
   console.log(`  • Jalankan RAG Python : cd ../rag-service && uvicorn app.main:app --port 8000 --reload`);

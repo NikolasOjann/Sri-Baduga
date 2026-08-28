@@ -6,3 +6,21 @@ build/
 .DS_Store
 
 scratch/
+
+# Uploaded Files (Do not push large user uploads)
+backend/public/models/*
+!backend/public/models/.gitkeep
+backend/public/images/*
+!backend/public/images/.gitkeep
+
+# Python / RAG
+rag-service/data/chromadb/
+rag-service/__pycache__/
+rag-service/temp/
+*.pyc
+
+# Temp Files
+temp.json
+output.txt
+test.mp3
+*.zip

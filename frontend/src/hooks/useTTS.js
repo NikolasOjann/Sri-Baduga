@@ -1,62 +1,75 @@
-import { useCallback } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
-const TTS_API = `${API_BASE}/api/tts/speak`;
-
-// Global audio instance agar audio antar komponen tidak bertabrakan
-let globalAudio = null;
 
 /**
- * Custom hook untuk Text-to-Speech menggunakan Microsoft Neural Voice (edge-tts).
- * Memanggil backend /tts/speak dan memainkan audio MP3 yang dihasilkan.
+ * Custom hook untuk Text-to-Speech menggunakan endpoint backend (edge-tts).
+ * Menghasilkan suara yang lebih natural dan jernih dibanding browser TTS.
  */
 export function useTTS() {
-  const speak = useCallback((text, lang = 'id') => {
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const audioRef = useRef(null);
+
+  // Mencegah memory leak / audio terus memutar jika komponen unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
+    };
+  }, []);
+
+  const speak = useCallback(async (text, lang = 'id') => {
     return new Promise((resolve) => {
       if (!text || !text.trim()) {
         resolve();
         return;
       }
 
-      // Hentikan audio yang sedang diputar di mana pun
-      if (globalAudio) {
-        globalAudio.pause();
-        globalAudio.src = '';
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
       }
 
       try {
-        // Gunakan streaming GET secara langsung dengan menempelkan teks dan bahasa sebagai parameter
-        const streamUrl = `${TTS_API}?text=${encodeURIComponent(text)}&lang=${lang}`;
-        globalAudio = new Audio(streamUrl);
+        const url = `${API_BASE}/api/tts/speak?text=${encodeURIComponent(text)}&lang=${lang}`;
+        const audio = new Audio(url);
+        audioRef.current = audio;
 
-        globalAudio.onended = () => {
+        audio.onplay = () => setIsSpeaking(true);
+        
+        audio.onended = () => {
+          setIsSpeaking(false);
           resolve();
         };
 
-        globalAudio.onerror = () => {
-          resolve();
+        audio.onerror = (e) => {
+          console.error("Audio TTS error:", e);
+          setIsSpeaking(false);
+          resolve(); // Resolve agar tidak stuck
         };
 
-        // Play audio secara langsung selagi data distream
-        globalAudio.play().catch(() => {
-          console.warn('[TTS] Autoplay diblokir browser, menunggu interaksi user.');
+        audio.play().catch(err => {
+          console.error("Audio TTS play error:", err);
+          setIsSpeaking(false);
           resolve();
         });
-
-      } catch (err) {
-        console.error('[TTS] Error:', err);
+      } catch (e) {
+        console.error("TTS fetch error:", e);
+        setIsSpeaking(false);
         resolve();
       }
     });
   }, []);
 
   const stop = useCallback(() => {
-    if (globalAudio) {
-      globalAudio.pause();
-      globalAudio.src = '';
-      globalAudio = null;
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = "";
     }
+    setIsSpeaking(false);
   }, []);
 
-  return { speak, stop };
+  return { speak, stop, isSpeaking };
 }
