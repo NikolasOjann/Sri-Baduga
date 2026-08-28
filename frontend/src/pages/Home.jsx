@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
 import WayangParallax from '../components/WayangParallax';
 import logo from '../asset/Galery/Logo.png';
+import logo2 from '../asset/Galery/ITENAS.png';
+
 const Home = () => {
 
   return (
@@ -33,7 +35,8 @@ const Home = () => {
       {/* Navigation */}
       <nav className="nav-padding" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src={logo} alt="Logo Sri Baduga" style={{ height: '50px', objectFit: 'contain' }} />
+          <img src={logo2} alt="Itenas" style={{ height: '50px', objectFit: 'contain' }} />
+          <img src={logo} alt="Logo Sri Baduga" style={{ height: '60px', objectFit: 'contain' }} />
         </div>
         <div style={{ display: 'flex', gap: '2rem', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', fontFamily: 'Elms Sans, sans-serif' }}>
           <Link to="/catalog" state={{ fromHome: true }} style={{ color: 'var(--color-text-muted)' }}>Koleksi</Link>
