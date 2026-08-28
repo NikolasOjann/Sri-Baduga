@@ -25,6 +25,7 @@ const Assistant = () => {
   const isVoiceChatModeRef = useRef(false);
   const isSendingRef = useRef(false);
   const isSpeakingRef = useRef(false);
+  const lastSpokeTimeRef = useRef(0);
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ const Assistant = () => {
   const recognitionRef = useRef(null);
   const abortControllerRef = useRef(null);
   const audioStreamRef = useRef(null);
+  const silenceTimeoutRef = useRef(null);
   const aiCurrentAnswerRef = useRef("");
   const { speak, stop, isSpeaking } = useTTS();
 
@@ -49,8 +51,12 @@ const Assistant = () => {
 
   useEffect(() => {
     isSpeakingRef.current = isSpeaking;
-    // Dengan Smart Barge-in, mic tetap dibiarkan menyala saat AI berbicara.
-    // Kita hanya perlu memastikan mic dinyalakan ulang jika terputus.
+    if (!isSpeaking) {
+      lastSpokeTimeRef.current = Date.now();
+    }
+    
+    // Mode Full-Duplex (Smart Barge-in) ala ChatGPT
+    // Mic selalu menyala agar user bisa memotong (interupsi) pembicaraan kapan saja.
     if (isVoiceChatModeRef.current) {
       if (!isSpeaking && !isSendingRef.current && !isListening) {
         try {
@@ -86,6 +92,7 @@ const Assistant = () => {
   useEffect(() => {
     if (isOpen) {
       if (!isMuted) {
+        aiCurrentAnswerRef.current = t('assistantGreeting');
         speak(t('assistantGreeting'), language);
       }
     } else {
@@ -156,6 +163,7 @@ const Assistant = () => {
     }
 
     if (contextMsg && !isMuted) {
+      aiCurrentAnswerRef.current = contextMsg;
       speak(contextMsg, language);
     }
   }, [location.pathname, t, isMuted, speak, language]);
@@ -165,6 +173,7 @@ const Assistant = () => {
     const handleOverlayClosed = () => {
       if (location.pathname === '/catalog' && !isMuted) {
         stop();
+        aiCurrentAnswerRef.current = t('assistantCatalogContext');
         speak(t('assistantCatalogContext'), language);
       }
     };
@@ -190,6 +199,7 @@ const Assistant = () => {
           .replace(/\n+/g, ". ");
 
         isSpeakingRef.current = true;
+        aiCurrentAnswerRef.current = cleanText;
         speak(cleanText, language);
       }
     }
@@ -210,6 +220,7 @@ const Assistant = () => {
 
     stop();
     if (isVoiceChatModeRef.current) {
+      if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
       if (recognitionRef.current) recognitionRef.current.abort();
       setIsListening(false);
     }
@@ -323,6 +334,7 @@ const Assistant = () => {
   };
 
   const stopListening = () => {
+    if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
@@ -330,6 +342,7 @@ const Assistant = () => {
   };
 
   const cancelListening = () => {
+    if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
     if (recognitionRef.current) {
       // abort() langsung membatalkan tanpa memicu onresult
       recognitionRef.current.abort();
@@ -358,6 +371,11 @@ const Assistant = () => {
 
     recognition.onstart = () => {
       setIsListening(true);
+      // Set timeout agar mic tidak stuck karena background noise
+      if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
+      silenceTimeoutRef.current = setTimeout(() => {
+        if (recognitionRef.current) recognitionRef.current.stop();
+      }, 8000);
     };
 
     recognition.onresult = (event) => {
@@ -377,36 +395,79 @@ const Assistant = () => {
          setInterimTranscript(interimTranscript);
       }
 
-      // Smart Barge-in (Interupsi Cerdas) bisa dilakukan saat AI bicara ATAU berpikir
-      if (isSpeakingRef.current || isSendingRef.current) {
-        const text = interimTranscript.trim().toLowerCase();
-        const words = text.split(/\s+/).length;
+      const hasWords = interimTranscript.trim().length > 0;
+      if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
+      
+      // Timeout pintar: Paksa stop mic. Jika ada kata, kirim langsung agar tidak hilang walau isFinal gagal
+      silenceTimeoutRef.current = setTimeout(() => {
+         if (recognitionRef.current) {
+             try { recognitionRef.current.stop(); } catch(e){}
+         }
+         
+         if (hasWords) {
+            let cleanTranscript = interimTranscript.trim();
+            const isEchoPossible = isSpeakingRef.current || isSendingRef.current || (Date.now() - lastSpokeTimeRef.current < 2500);
+            
+            // Text-Based Acoustic Echo Cancellation (AEC) menggunakan Bigram Sequence
+            if (isEchoPossible) {
+                const aiClean = aiCurrentAnswerRef.current.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+                const micClean = cleanTranscript.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+                
+                let isEcho = aiClean.includes(micClean);
+                if (!isEcho) {
+                    const micWords = micClean.split(/\s+/).filter(w => w.length > 2);
+                    let seqMatch = 0;
+                    for (let i = 0; i < micWords.length - 1; i++) {
+                        if (aiClean.includes(micWords[i] + " " + micWords[i+1])) seqMatch++;
+                    }
+                    if (seqMatch > 0) isEcho = true; // Ada 2 kata berurutan yg sama persis
+                    else if (micWords.length > 0 && micWords.length <= 2) {
+                        let match = 0;
+                        for (const w of micWords) { if (aiClean.includes(w)) match++; }
+                        if (match === micWords.length) isEcho = true; // 1-2 kata aja dan semuanya ada di teks AI
+                    }
+                }
+                
+                if (isEcho) cleanTranscript = "";
+            }
 
-        if (words >= 2) {
-           // --- Lexical Anti-Echo Filter (Fuzzy) ---
+            if (cleanTranscript && !isSendingRef.current) {
+                sendMessageToAPI(cleanTranscript);
+            }
+         }
+      }, hasWords ? 2500 : 8000);
+
+      // --- Cek Interupsi / Echo secara real-time ---
+      const isEchoPossible = isSpeakingRef.current || isSendingRef.current || (Date.now() - lastSpokeTimeRef.current < 2500);
+      if (isEchoPossible) {
+        const text = interimTranscript.trim().toLowerCase();
+        const micClean = text.replace(/[^a-z0-9 ]/g, '');
+        
+        if (micClean.length > 0) {
            const aiClean = aiCurrentAnswerRef.current.toLowerCase().replace(/[^a-z0-9 ]/g, '');
-           const userClean = text.replace(/[^a-z0-9 ]/g, '');
            
-           const userWords = userClean.split(/\s+/);
-           let matchCount = 0;
-           let significantWords = 0;
-           
-           for (const word of userWords) {
-             if (word.length >= 3) {
-               significantWords++;
-               if (aiClean.includes(word)) {
-                 matchCount++;
+           let isEcho = aiClean.includes(micClean);
+           if (!isEcho) {
+               const micWords = micClean.split(/\s+/).filter(w => w.length > 2);
+               let seqMatch = 0;
+               for (let i = 0; i < micWords.length - 1; i++) {
+                   if (aiClean.includes(micWords[i] + " " + micWords[i+1])) seqMatch++;
                }
-             }
+               if (seqMatch > 0) isEcho = true;
+               else if (micWords.length > 0 && micWords.length <= 2) {
+                   let match = 0;
+                   for (const w of micWords) { if (aiClean.includes(w)) match++; }
+                   if (match === micWords.length) isEcho = true;
+               }
            }
            
-           // Jika >= 70% kata signifikan cocok dengan teks AI, anggap sebagai gema dari speaker
-           if (significantWords > 0 && (matchCount / significantWords) >= 0.7) {
+           if (isEcho) {
              return; // Abaikan, ini suara AI sendiri (echo)
            }
 
+          // BUKAN ECHO! INI ADALAH BARGE-IN DARI USER!
           if (isVoiceChatModeRef.current) {
-            stop();
+            stop(); // Hentikan bicara NyAi secara instan
             if (abortControllerRef.current) abortControllerRef.current.abort();
           }
         }
@@ -420,25 +481,30 @@ const Assistant = () => {
       if (finalTranscript) {
         let cleanTranscript = finalTranscript.trim();
         
-        // Anti-Echo Filter untuk finalTranscript agar gema AI tidak dikirim ke LLM
-        if (isVoiceChatModeRef.current && (isSpeakingRef.current || isSendingRef.current)) {
+        // Anti-Echo Final Check
+        const isEchoPossibleFinal = isVoiceChatModeRef.current && (isSpeakingRef.current || isSendingRef.current || (Date.now() - lastSpokeTimeRef.current < 2500));
+        if (isEchoPossibleFinal) {
            const aiClean = aiCurrentAnswerRef.current.toLowerCase().replace(/[^a-z0-9 ]/g, '');
-           const userClean = cleanTranscript.toLowerCase().replace(/[^a-z0-9 ]/g, '');
-           const userWords = userClean.split(/\s+/);
-           let matchCount = 0;
-           let significantWords = 0;
-           for (const word of userWords) {
-             if (word.length >= 3) {
-               significantWords++;
-               if (aiClean.includes(word)) matchCount++;
-             }
+           const micClean = cleanTranscript.toLowerCase().replace(/[^a-z0-9 ]/g, '');
+           
+           let isEcho = aiClean.includes(micClean);
+           if (!isEcho) {
+               const micWords = micClean.split(/\s+/).filter(w => w.length > 2);
+               let seqMatch = 0;
+               for (let i = 0; i < micWords.length - 1; i++) {
+                   if (aiClean.includes(micWords[i] + " " + micWords[i+1])) seqMatch++;
+               }
+               if (seqMatch > 0) isEcho = true;
+               else if (micWords.length > 0 && micWords.length <= 2) {
+                   let match = 0;
+                   for (const w of micWords) { if (aiClean.includes(w)) match++; }
+                   if (match === micWords.length) isEcho = true;
+               }
            }
-           if (significantWords > 0 && (matchCount / significantWords) >= 0.7) {
-             cleanTranscript = ""; // Hapus seluruhnya jika ini murni gema
-           }
+           if (isEcho) cleanTranscript = "";
         }
         
-        if (cleanTranscript) {
+        if (cleanTranscript && !isSendingRef.current) {
           sendMessageToAPI(cleanTranscript);
         }
       }
@@ -446,10 +512,12 @@ const Assistant = () => {
 
     recognition.onerror = (event) => {
       console.error("Speech recognition error:", event.error);
+      if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
       setIsListening(false);
     };
 
     recognition.onend = () => {
+      if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
       setIsListening(false);
       // Mic dihidupkan ulang (Always-On) tanpa syarat jika Voice Chat aktif
       if (isVoiceChatModeRef.current) {
@@ -710,6 +778,7 @@ const Assistant = () => {
                             .replace(/[*#_`~]/g, "")
                             .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
                             .replace(/\n+/g, ". ");
+                          aiCurrentAnswerRef.current = cleanText;
                           speak(cleanText);
                         }}
                         title="Ulangi Audio"

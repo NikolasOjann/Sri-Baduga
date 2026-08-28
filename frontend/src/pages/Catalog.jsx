@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
 import { ArrowLeft, Globe, MessageCircle, X } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useTTS } from '../hooks/useTTS';
 import bgImage from '../asset/Galery/Background-12.png';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, Stage, PresentationControls } from '@react-three/drei';
@@ -58,6 +59,7 @@ const Catalog = () => {
   const [showOverlay, setShowOverlay] = useState(() => {
     return location.state?.fromHome === true;
   });
+  const { speak, stop } = useTTS();
   const [cookieConsent, setCookieConsent] = useState(() => {
     return localStorage.getItem('cookieConsentAccepted') === 'true';
   });
@@ -82,13 +84,16 @@ const Catalog = () => {
   useEffect(() => {
     if (showOverlay) {
       window.dispatchEvent(new Event('hide-assistant'));
+      speak("Wilujeng Sumping di Museum Sri Baduga, Abdi NyAI, asisten virtual yang akan memandu perjalananmu menelusuri 10 klasifikasi peninggalan budaya Jawa Barat", "id");
     } else {
       window.dispatchEvent(new Event('show-assistant'));
+      stop();
     }
     return () => {
       window.dispatchEvent(new Event('show-assistant'));
+      stop();
     };
-  }, [showOverlay]);
+  }, [showOverlay, speak, stop]);
 
   return (
     <PageTransition style={{

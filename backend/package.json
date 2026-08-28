@@ -4,7 +4,7 @@
   "description": "Backend for Museum Sri Baduga Virtual Assistant (RAG/LLM)",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node --env-file=.env server.js",
     "start:rag": "cd ../rag-service && uvicorn app.main:app --port 8000 --reload",
     "split:dataset": "node scripts/split-pdf-dataset.js",
     "extract": "node scripts/extract-pdf.js",

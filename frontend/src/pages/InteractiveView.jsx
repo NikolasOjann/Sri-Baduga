@@ -96,6 +96,8 @@ const InteractiveView = () => {
   const [item, setItem] = useState(null);
   const [categoryItems, setCategoryItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [translatedData, setTranslatedData] = useState({ title: '', desc: '' });
+  const [isTranslating, setIsTranslating] = useState(false);
   const [viewMode, setViewMode] = useState('image'); // 'image' | '3d'
   const [imageScale, setImageScale] = useState(1);
   const [scrollDir, setScrollDir] = useState(1);
@@ -133,13 +135,55 @@ const InteractiveView = () => {
   const currentIndex = categoryItems.findIndex(x => String(x.id) === String(id));
   const activeArtifact = item || dummyArtifacts[0];
 
+  // Auto-Translate ketika bahasa Inggris dipilih
+  useEffect(() => {
+    let isMounted = true;
+    const doTranslate = async () => {
+      if (language === 'en' && activeArtifact) {
+         if (activeArtifact.deskripsi_en && activeArtifact.nama_koleksi_en) {
+            setTranslatedData({ title: activeArtifact.nama_koleksi_en, desc: activeArtifact.deskripsi_en });
+            return;
+         }
+         setIsTranslating(true);
+         try {
+           const translateSingle = async (text) => {
+             if (!text) return '';
+             const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=id&tl=en&dt=t&q=${encodeURIComponent(text)}`);
+             const json = await res.json();
+             return json[0].map(item => item[0]).join('');
+           };
+           
+           const [titleEn, descEn] = await Promise.all([
+             translateSingle(activeArtifact.nama_koleksi),
+             translateSingle(activeArtifact.deskripsi)
+           ]);
+           
+           if (isMounted) {
+             setTranslatedData({ title: titleEn, desc: descEn });
+           }
+         } catch(e) {
+           console.error("Translate error:", e);
+         } finally {
+           if (isMounted) setIsTranslating(false);
+         }
+      } else {
+         setTranslatedData({ title: '', desc: '' });
+      }
+    };
+    doTranslate();
+    return () => { isMounted = false; };
+  }, [language, activeArtifact]);
+
   // Auto-speak penjelasan barang saat halaman berhasil di-load
   useEffect(() => {
-    if (!loading && activeArtifact) {
+    if (!loading && activeArtifact && !isTranslating) {
       // Dapatkan teks judul dan deskripsi sesuai dengan bahasa yang aktif
-      const title = activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '');
+      const title = language === 'en'
+        ? (translatedData.title || activeArtifact.nama_koleksi_en || activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''))
+        : (activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''));
+        
       const desc = language === 'en' 
-        ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''))
+        ? (translatedData.desc || activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''))
         : (activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''));
 
       if (title || desc) {
@@ -153,7 +197,7 @@ const InteractiveView = () => {
         return () => clearTimeout(timer);
       }
     }
-  }, [loading, activeArtifact, speak, t, language]);
+  }, [loading, activeArtifact, speak, t, language, translatedData, isTranslating]);
 
   const handleNextItem = () => {
     if (categoryItems.length > 0 && currentIndex >= 0 && currentIndex < categoryItems.length - 1) {
@@ -484,13 +528,15 @@ const InteractiveView = () => {
               </div>
 
               <h1 style={{ fontSize: '2.4rem', marginBottom: '1.2rem', lineHeight: '1.2', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
-                {activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '')}
+                {language === 'en' 
+                   ? (translatedData.title || activeArtifact.nama_koleksi_en || activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''))
+                   : (activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''))}
               </h1>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
                 <p style={{ margin: 0, textAlign: 'justify' }}>
                   {language === 'en'
-                    ? (activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))
+                    ? (translatedData.desc || activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))
                     : (activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))}
                 </p>
 

@@ -9,6 +9,8 @@ const router  = express.Router();
 const fs      = require('fs');
 const path    = require('path');
 const Fuse    = require('fuse.js');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 const DATA_FILE = path.join(__dirname, '..', 'data', 'collections.json');
 
@@ -21,15 +23,23 @@ const MUSEUM_INFO = {
   sejarah:  'Museum Sri Baduga diresmikan pada 5 Juni 1980. Nama Sri Baduga diambil dari gelar Raja Pajajaran, Sri Baduga Maharaja, yang membawa masa kejayaan di bumi Pasundan.',
 };
 
-// Helper: baca data JSON
-function loadCollections() {
-  if (!fs.existsSync(DATA_FILE)) return [];
+// Helper: baca data dari DB (Prisma) agar ID selalu sinkron
+async function loadCollectionsFromDB() {
   try {
-    const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-    const data = JSON.parse(raw);
+    const data = await prisma.collection.findMany({
+      where: { is_public: true }
+    });
     return data.filter(item => item && item.gambar && typeof item.gambar === 'string' && item.gambar.trim() !== '' && item.gambar !== 'null');
-  } catch {
-    return [];
+  } catch (error) {
+    console.error("Gagal load dari DB, fallback ke JSON:", error.message);
+    if (!fs.existsSync(DATA_FILE)) return [];
+    try {
+      const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+      const data = JSON.parse(raw);
+      return data.filter(item => item && item.gambar && typeof item.gambar === 'string' && item.gambar.trim() !== '' && item.gambar !== 'null');
+    } catch {
+      return [];
+    }
   }
 }
 
@@ -137,7 +147,7 @@ router.post('/', async (req, res) => {
 
       // Pemetaan sources dari Python RAG agar cocok dengan format artifacts di Frontend
       let artifacts = [];
-      const collections = loadCollections();
+      const collections = await loadCollectionsFromDB();
       if (ragData.sources && Array.isArray(ragData.sources)) {
         const rawArtifacts = ragData.sources.map(s => {
           // Prioritas 1: cocokkan berdasarkan nomor inventarisasi (paling unik & konsisten)
@@ -279,7 +289,7 @@ router.post('/stream', async (req, res) => {
               if (data.type === 'final') {
                 // Map sources to artifacts just like the normal /chat endpoint
                 let artifacts = [];
-                const collections = loadCollections();
+                const collections = await loadCollectionsFromDB();
                 if (data.sources && Array.isArray(data.sources)) {
                   const rawArtifacts = data.sources.map(s => {
                     let match = s.inventory ? collections.find(c => c.no_inventarisasi === s.inventory) : null;
