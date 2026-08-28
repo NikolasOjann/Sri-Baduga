@@ -5,6 +5,11 @@ const path = require('path');
 const fs = require('fs');
 const { exec } = require('child_process');
 const { PrismaClient } = require('@prisma/client');
+const { createClient } = require('@supabase/supabase-js');
+
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
 const myCache = require('../utils/cache');
 const authenticateToken = require('../middleware/auth');
 
@@ -106,7 +111,7 @@ const mapKlasifikasiToFolder = (klasifikasi) => {
   return 'Uploads';
 };
 
-router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'), (req, res) => {
+router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'File gambar tidak ditemukan.' });
   }
@@ -151,24 +156,54 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
 
   try {
     console.log(`[Admin Upload] Memanggil Python AI Remove BG untuk upload manual (Folder: ${folderName}, File: ${finalFilename})...`);
-    // Tunggu proses hapus background selesai secara sinkronus agar bisa return URL
     const { execSync } = require('child_process');
     execSync(`"${PYTHON_CMD}" "${REMBG_SCRIPT}" "${originalPath}" "${finalPath}"`, { stdio: 'pipe' });
     
-    // Opsional: Hapus file asli yang belum dihapus backgroundnya untuk menghemat storage
-    if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
-
-    const base = getBaseUrl(req);
-    const fileUrl = `${base}/images/${folderName}/${finalFilename}?t=${Date.now()}`;
-    res.json({ url: fileUrl });
-  } catch (err) {
-    console.error(`[ERROR] Gagal hapus background: ${err.message}`);
-    // Fallback: Jika script AI gagal, pindahkan gambar asli ke folder tujuan
-    if (fs.existsSync(originalPath)) fs.renameSync(originalPath, fallbackPath);
+    // Upload ke Supabase
+    const fileBuffer = fs.readFileSync(finalPath);
+    const { error } = await supabase.storage
+      .from('museum-assets')
+      .upload(`images/${folderName}/${finalFilename}`, fileBuffer, {
+        contentType: 'image/png',
+        upsert: true
+      });
+    if (error) throw error;
     
-    const base = getBaseUrl(req);
-    const fileUrl = `${base}/images/${folderName}/${fallbackFilename}?t=${Date.now()}`;
-    res.json({ url: fileUrl });
+    const { data: publicUrlData } = supabase.storage
+      .from('museum-assets')
+      .getPublicUrl(`images/${folderName}/${finalFilename}`);
+      
+    // Bersihkan file sementara
+    if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
+    if (fs.existsSync(finalPath)) fs.unlinkSync(finalPath);
+
+    res.json({ url: publicUrlData.publicUrl });
+  } catch (err) {
+    console.error(`[ERROR] Gagal hapus background atau upload ke Supabase: ${err.message}`);
+    try {
+      // Fallback: Upload original
+      const fileBuffer = fs.readFileSync(originalPath);
+      const { error } = await supabase.storage
+        .from('museum-assets')
+        .upload(`images/${folderName}/${fallbackFilename}`, fileBuffer, {
+          contentType: req.file.mimetype,
+          upsert: true
+        });
+      if (error) throw error;
+      
+      const { data: publicUrlData } = supabase.storage
+        .from('museum-assets')
+        .getPublicUrl(`images/${folderName}/${fallbackFilename}`);
+        
+      if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
+      if (fs.existsSync(finalPath)) fs.unlinkSync(finalPath);
+      
+      res.json({ url: publicUrlData.publicUrl });
+    } catch(e) {
+      if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
+      if (fs.existsSync(finalPath)) fs.unlinkSync(finalPath);
+      return res.status(500).json({ error: 'Gagal upload gambar ke server cloud.' });
+    }
   }
 });
 
@@ -201,31 +236,52 @@ const uploadModel = multer({
   }
 });
 
-router.post('/upload-model', authenticateToken, uploadModel.single('model_file'), (req, res) => {
+router.post('/upload-model', authenticateToken, uploadModel.single('model_file'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'File model 3D tidak ditemukan.' });
   }
   
   const finalFilename = req.file.filename;
-  const fileUrl = `/models/${finalFilename}`; // Simpan relative path saja, frontend/backend akan nambahin domain
+  const localFilePath = req.file.path;
   
-  // Hapus model lama jika ada
-  if (req.body.old_model) {
-    try {
-      const urlParts = req.body.old_model.split('/models/');
-      if (urlParts.length === 2) {
-        const oldFilePath = path.join(__dirname, '..', 'public', 'models', urlParts[1]);
-        if (fs.existsSync(oldFilePath)) {
-          fs.unlinkSync(oldFilePath);
-          console.log(`[Admin] Berhasil menghapus file model lama: ${urlParts[1]}`);
+  try {
+    const fileBuffer = fs.readFileSync(localFilePath);
+    
+    // Upload ke Supabase
+    const { error } = await supabase.storage
+      .from('museum-assets')
+      .upload(`models/${finalFilename}`, fileBuffer, {
+        contentType: req.file.mimetype,
+        upsert: true
+      });
+      
+    if (error) throw error;
+    
+    const { data: publicUrlData } = supabase.storage
+      .from('museum-assets')
+      .getPublicUrl(`models/${finalFilename}`);
+      
+    if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
+    
+    // Hapus model lama di Supabase jika ada
+    if (req.body.old_model) {
+      try {
+        const oldUrl = req.body.old_model;
+        if (oldUrl.includes('/models/')) {
+          const oldFilename = oldUrl.split('/models/').pop();
+          await supabase.storage.from('museum-assets').remove([`models/${oldFilename}`]);
         }
+      } catch (err) {
+        console.error(`[Admin] Gagal menghapus model lama di Supabase: ${err.message}`);
       }
-    } catch (err) {
-      console.error(`[Admin] Gagal menghapus model lama: ${err.message}`);
     }
+    
+    res.json({ url: publicUrlData.publicUrl });
+  } catch (err) {
+    console.error(`[Admin Upload Model] Gagal: ${err.message}`);
+    if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
+    return res.status(500).json({ error: 'Gagal upload model 3D ke server cloud.' });
   }
-  
-  res.json({ url: fileUrl });
 });
 
 // ==========================================================
@@ -552,14 +608,12 @@ router.put('/datasets/:id', authenticateToken, async (req, res) => {
         try {
           const urlParts = oldGambar.split('/images/');
           if (urlParts.length === 2) {
-            const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
-            if (fs.existsSync(oldFilePath)) {
-              fs.unlinkSync(oldFilePath);
-              console.log(`[Admin] Berhasil menghapus file gambar lama: ${urlParts[1]}`);
-            }
+            const oldFilename = urlParts[1];
+            await supabase.storage.from('museum-assets').remove([`images/${oldFilename}`]);
+            console.log(`[Admin] Berhasil menghapus gambar lama di Supabase: ${oldFilename}`);
           }
         } catch (err) {
-          console.error(`[Admin] Gagal menghapus gambar lama: ${err.message}`);
+          console.error(`[Admin] Gagal menghapus gambar lama di Supabase: ${err.message}`);
         }
       }
     }
@@ -593,20 +647,17 @@ router.delete('/datasets/:id', authenticateToken, async (req, res) => {
 
     await prisma.collection.delete({ where: { id } });
 
-    // Hapus file gambar yang terkait dengan dataset yang dihapus
     const gambar = existingItem.gambar;
     if (gambar) {
       try {
         const urlParts = gambar.split('/images/');
         if (urlParts.length === 2) {
-          const oldFilePath = path.join(__dirname, '..', 'public', 'images', urlParts[1]);
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-            console.log(`[Admin] Berhasil menghapus file gambar dataset yang didelete: ${urlParts[1]}`);
-          }
+          const oldFilename = urlParts[1];
+          await supabase.storage.from('museum-assets').remove([`images/${oldFilename}`]);
+          console.log(`[Admin] Berhasil menghapus gambar dataset di Supabase: ${oldFilename}`);
         }
       } catch (err) {
-        console.error(`[Admin] Gagal menghapus file gambar: ${err.message}`);
+        console.error(`[Admin] Gagal menghapus file gambar di Supabase: ${err.message}`);
       }
     }
 
@@ -615,14 +666,12 @@ router.delete('/datasets/:id', authenticateToken, async (req, res) => {
       try {
         const urlParts = model_3d.split('/models/');
         if (urlParts.length === 2) {
-          const oldFilePath = path.join(__dirname, '..', 'public', 'models', urlParts[1]);
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-            console.log(`[Admin] Berhasil menghapus file model dataset yang didelete: ${urlParts[1]}`);
-          }
+          const oldFilename = urlParts[1];
+          await supabase.storage.from('museum-assets').remove([`models/${oldFilename}`]);
+          console.log(`[Admin] Berhasil menghapus model dataset di Supabase: ${oldFilename}`);
         }
       } catch (err) {
-        console.error(`[Admin] Gagal menghapus file model: ${err.message}`);
+        console.error(`[Admin] Gagal menghapus file model di Supabase: ${err.message}`);
       }
     }
 
