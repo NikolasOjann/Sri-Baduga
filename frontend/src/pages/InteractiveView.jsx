@@ -7,12 +7,12 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useTTS } from '../hooks/useTTS';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import bg1 from '../asset/Galery/Background-1.png';
-import bg4 from '../asset/Galery/Background-4.png';
-import bg6 from '../asset/Galery/Background-6.png';
-import bg7 from '../asset/Galery/Background-7.png';
-import bg8 from '../asset/Galery/Background-8.png';
-import bg9 from '../asset/Galery/Background-9.png';
+import bg1 from '../asset/gallery/Background-1.png';
+import bg4 from '../asset/gallery/Background-4.png';
+import bg6 from '../asset/gallery/Background-6.png';
+import bg7 from '../asset/gallery/Background-7.png';
+import bg8 from '../asset/gallery/Background-8.png';
+import bg9 from '../asset/gallery/Background-9.png';
 
 // Dynamic GLTF Loader Component for Real 3D Assets (.glb / .gltf)
 function DynamicGLTFModel({ url }) {
@@ -106,6 +106,7 @@ const InteractiveView = () => {
   useEffect(() => {
     setLoading(true);
     setImageScale(1);
+    setViewMode('image'); // Reset to image mode on route change to prevent WebGL context lost
 
     fetch(`${API_BASE}/api/collections/${id}`)
       .then(res => {
@@ -135,39 +136,44 @@ const InteractiveView = () => {
   const currentIndex = categoryItems.findIndex(x => String(x.id) === String(id));
   const activeArtifact = item || dummyArtifacts[0];
 
+  const stripHtml = (html) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>?/gm, '');
+  };
+
   // Auto-Translate ketika bahasa Inggris dipilih
   useEffect(() => {
     let isMounted = true;
     const doTranslate = async () => {
       if (language === 'en' && activeArtifact) {
-         if (activeArtifact.deskripsi_en && activeArtifact.nama_koleksi_en) {
-            setTranslatedData({ title: activeArtifact.nama_koleksi_en, desc: activeArtifact.deskripsi_en });
-            return;
-         }
-         setIsTranslating(true);
-         try {
-           const translateSingle = async (text) => {
-             if (!text) return '';
-             const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=id&tl=en&dt=t&q=${encodeURIComponent(text)}`);
-             const json = await res.json();
-             return json[0].map(item => item[0]).join('');
-           };
-           
-           const [titleEn, descEn] = await Promise.all([
-             translateSingle(activeArtifact.nama_koleksi),
-             translateSingle(activeArtifact.deskripsi)
-           ]);
-           
-           if (isMounted) {
-             setTranslatedData({ title: titleEn, desc: descEn });
-           }
-         } catch(e) {
-           console.error("Translate error:", e);
-         } finally {
-           if (isMounted) setIsTranslating(false);
-         }
+        if (activeArtifact.deskripsi_en && activeArtifact.nama_koleksi_en) {
+          setTranslatedData({ title: activeArtifact.nama_koleksi_en, desc: activeArtifact.deskripsi_en });
+          return;
+        }
+        setIsTranslating(true);
+        try {
+          const translateSingle = async (text) => {
+            if (!text) return '';
+            const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=id&tl=en&dt=t&q=${encodeURIComponent(text)}`);
+            const json = await res.json();
+            return json[0].map(item => item[0]).join('');
+          };
+
+          const [titleEn, descEn] = await Promise.all([
+            translateSingle(activeArtifact.nama_koleksi),
+            translateSingle(activeArtifact.deskripsi)
+          ]);
+
+          if (isMounted) {
+            setTranslatedData({ title: titleEn, desc: descEn });
+          }
+        } catch (e) {
+          console.error("Translate error:", e);
+        } finally {
+          if (isMounted) setIsTranslating(false);
+        }
       } else {
-         setTranslatedData({ title: '', desc: '' });
+        setTranslatedData({ title: '', desc: '' });
       }
     };
     doTranslate();
@@ -181,14 +187,16 @@ const InteractiveView = () => {
       const title = language === 'en'
         ? (translatedData.title || activeArtifact.nama_koleksi_en || activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''))
         : (activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''));
-        
-      const desc = language === 'en' 
+
+      let desc = language === 'en'
         ? (translatedData.desc || activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''))
         : (activeArtifact.deskripsi || (activeArtifact.desc1Key ? t(activeArtifact.desc1Key) : ''));
 
+      desc = stripHtml(desc);
+
       if (title || desc) {
         // Gabungkan judul dan deskripsi dengan jeda (titik)
-        const textToSpeak = `${title}. ${desc}`.trim();
+        const textToSpeak = `${stripHtml(title)}. ${desc}`.trim();
 
         // Beri jeda sedikit agar jika chatbot sedang menyapa rute interaktif, audionya bisa langsung ditimpa (override)
         const timer = setTimeout(() => {
@@ -296,7 +304,7 @@ const InteractiveView = () => {
               cursor: 'pointer', fontSize: '0.82rem', fontWeight: 500, transition: 'all 0.3s'
             }}
           >
-            <ImageIcon size={14} /> Foto Artefak
+            <ImageIcon size={14} /> Artefak
           </button>
           <button
             onClick={() => setViewMode('3d')}
@@ -308,7 +316,7 @@ const InteractiveView = () => {
               cursor: 'pointer', fontSize: '0.82rem', fontWeight: 500, transition: 'all 0.3s'
             }}
           >
-            <Box size={14} /> Simulasi 3D
+            <Box size={14} /> 3D View
             {activeArtifact.model_3d && (
               <span style={{
                 backgroundColor: viewMode === '3d' ? '#4caf50' : '#2e7d32',
@@ -332,12 +340,12 @@ const InteractiveView = () => {
 
       {/* Slide Arrows */}
       {categoryItems.length > 0 && currentIndex > 0 && (
-        <button onClick={handlePrevItem} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
+        <button onClick={handlePrevItem} className="interactive-arrow-prev" style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
           <ChevronLeft size={24} color="#1a1a1a" />
         </button>
       )}
       {categoryItems.length > 0 && currentIndex < categoryItems.length - 1 && (
-        <button onClick={handleNextItem} style={{ position: 'absolute', left: 'calc(55% - 65px)', top: '50%', transform: 'translateY(-50%)', zIndex: 60, width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
+        <button onClick={handleNextItem} className="interactive-arrow-next" style={{ width: '45px', height: '45px', borderRadius: '50%', backgroundColor: '	#eee0ca', border: '1px solid rgba(0,0,0,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', backdropFilter: 'blur(10px)', boxShadow: '0 4px 12px rgba(0,0,0,0.1)', transition: 'all 0.3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#E3C59D'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '	#eee0ca'}>
           <ChevronRight size={24} color="#1a1a1a" />
         </button>
       )}
@@ -368,7 +376,11 @@ const InteractiveView = () => {
         </div>
       )}
 
-      <AnimatePresence initial={false} custom={scrollDir}>
+      <AnimatePresence
+        initial={false}
+        custom={scrollDir}
+        mode="wait"
+      >
         <motion.div
           key={id}
           custom={scrollDir}
@@ -472,13 +484,12 @@ const InteractiveView = () => {
           </div>
 
           {/* Right Side: Description & Metadata */}
-          <div className="interactive-right" style={{ backgroundColor: 'transparent', padding: '4rem 4rem 4rem 1rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
-            <div style={{
+          <div className="interactive-right" style={{ backgroundColor: 'transparent', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
+            <div className="interactive-card" style={{
               backgroundColor: 'rgba(234, 214, 178, 0.7)',
               backdropFilter: 'blur(15px)',
               WebkitBackdropFilter: 'blur(15px)',
               borderRadius: '24px',
-              padding: '2.5rem',
               boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
               border: '1px solid rgba(255,255,255,0.6)',
               position: 'relative'
@@ -517,27 +528,27 @@ const InteractiveView = () => {
                   }}>
                     {language === 'en' ? (
                       activeArtifact.kondisi.toLowerCase() === 'baik' ? 'Good' :
-                      activeArtifact.kondisi.toLowerCase() === 'utuh' ? 'Intact' :
-                      activeArtifact.kondisi.toLowerCase() === 'sedikit berkarat' ? 'Slightly Rusty' :
-                      activeArtifact.kondisi.toLowerCase() === 'korosi berat' ? 'Heavy Corrosion' :
-                      activeArtifact.kondisi.toLowerCase() === 'berkarat sebagian' ? 'Partially Rusty' :
-                      activeArtifact.kondisi
+                        activeArtifact.kondisi.toLowerCase() === 'utuh' ? 'Intact' :
+                          activeArtifact.kondisi.toLowerCase() === 'sedikit berkarat' ? 'Slightly Rusty' :
+                            activeArtifact.kondisi.toLowerCase() === 'korosi berat' ? 'Heavy Corrosion' :
+                              activeArtifact.kondisi.toLowerCase() === 'berkarat sebagian' ? 'Partially Rusty' :
+                                activeArtifact.kondisi
                     ) : activeArtifact.kondisi}
                   </span>
                 )}
               </div>
 
-              <h1 style={{ fontSize: '2.4rem', marginBottom: '1.2rem', lineHeight: '1.2', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
-                {language === 'en' 
-                   ? (translatedData.title || activeArtifact.nama_koleksi_en || activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''))
-                   : (activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''))}
+              <h1 className="interactive-title" style={{ marginBottom: '1.2rem', lineHeight: '1.2', color: '#1a1a1a', fontFamily: 'Kalnia', fontWeight: 500 }}>
+                {stripHtml(language === 'en'
+                  ? (translatedData.title || activeArtifact.nama_koleksi_en || activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : ''))
+                  : (activeArtifact.nama_koleksi || (activeArtifact.titleKey ? t(activeArtifact.titleKey) : '')))}
               </h1>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: '#2b2b27', lineHeight: '1.75', fontSize: '1rem' }}>
                 <p style={{ margin: 0, textAlign: 'justify' }}>
-                  {language === 'en'
+                  {stripHtml(language === 'en'
                     ? (translatedData.desc || activeArtifact.deskripsi_en || activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))
-                    : (activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key)))}
+                    : (activeArtifact.deskripsi || (activeArtifact.desc1Key && t(activeArtifact.desc1Key))))}
                 </p>
 
 

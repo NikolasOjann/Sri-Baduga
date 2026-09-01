@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PageTransition from '../animations/PageTransition';
 import WayangParallax from '../components/WayangParallax';
-import logo from '../asset/Galery/Logo.png';
-import logo2 from '../asset/Galery/ITENAS.png';
+import logo from '../asset/gallery/Logo.png';
+import logo2 from '../asset/gallery/ITENAS.png';
 
 const Home = () => {
 

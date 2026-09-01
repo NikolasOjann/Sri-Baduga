@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import bgImage from '../asset/Galery/Background-gray black.png';
+import bgImage from '../asset/gallery/Background-gray black.png';
 // Default data fallback if no prop is provided
 const defaultTokoh = {
   nama: "Prabu Siliwangi",

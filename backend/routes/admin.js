@@ -7,8 +7,8 @@ const { exec } = require('child_process');
 const { PrismaClient } = require('@prisma/client');
 const { createClient } = require('@supabase/supabase-js');
 
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_KEY || '';
+const supabaseUrl = process.env.SUPABASE_URL || 'https://mrtexiavbzgajlltttwj.supabase.co';
+const supabaseKey = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ydGV4aWF2YnpnYWpsbHR0dHdqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4NzY5MDUwNiwiZXhwIjoyMTAzMjY2NTA2fQ.6aoA9hNyh-LQdXUqokRmqXTrsFTNKnkMt1TeRcLy7nY';
 const supabase = createClient(supabaseUrl, supabaseKey);
 const myCache = require('../utils/cache');
 const authenticateToken = require('../middleware/auth');
@@ -115,13 +115,13 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
   if (!req.file) {
     return res.status(400).json({ error: 'File gambar tidak ditemukan.' });
   }
-  
+
   const originalPath = req.file.path;
-  
+
   // Tentukan folder tujuan berdasarkan klasifikasi
   const folderName = mapKlasifikasiToFolder(req.body.klasifikasi);
   const targetDir = path.join(__dirname, '..', 'public', 'images', folderName);
-  
+
   if (!fs.existsSync(targetDir)) {
     fs.mkdirSync(targetDir, { recursive: true });
   }
@@ -146,11 +146,11 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
     const nextSeq = String(maxSeq + 1).padStart(3, '0');
     finalFilename = `${folderName}-${nextSeq}.png`;
   }
-  
+
   const finalPath = path.join(targetDir, finalFilename);
   const fallbackFilename = finalFilename.replace('.png', path.extname(req.file.originalname).toLowerCase());
   const fallbackPath = path.join(targetDir, fallbackFilename);
-  
+
   const PYTHON_CMD = 'C:\\laragon\\bin\\python\\python-3.10\\python.exe';
   const REMBG_SCRIPT = path.join(__dirname, '..', 'scripts', 'remove-single-bg.py');
 
@@ -158,7 +158,7 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
     console.log(`[Admin Upload] Memanggil Python AI Remove BG untuk upload manual (Folder: ${folderName}, File: ${finalFilename})...`);
     const { execSync } = require('child_process');
     execSync(`"${PYTHON_CMD}" "${REMBG_SCRIPT}" "${originalPath}" "${finalPath}"`, { stdio: 'pipe' });
-    
+
     // Upload ke Supabase
     const fileBuffer = fs.readFileSync(finalPath);
     const { error } = await supabase.storage
@@ -168,11 +168,11 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
         upsert: true
       });
     if (error) throw error;
-    
+
     const { data: publicUrlData } = supabase.storage
       .from('museum-assets')
       .getPublicUrl(`images/${folderName}/${finalFilename}`);
-      
+
     // Bersihkan file sementara
     if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
     if (fs.existsSync(finalPath)) fs.unlinkSync(finalPath);
@@ -190,16 +190,16 @@ router.post('/upload-image', authenticateToken, uploadImage.single('gambar_file'
           upsert: true
         });
       if (error) throw error;
-      
+
       const { data: publicUrlData } = supabase.storage
         .from('museum-assets')
         .getPublicUrl(`images/${folderName}/${fallbackFilename}`);
-        
+
       if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
       if (fs.existsSync(finalPath)) fs.unlinkSync(finalPath);
-      
+
       res.json({ url: publicUrlData.publicUrl });
-    } catch(e) {
+    } catch (e) {
       if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
       if (fs.existsSync(finalPath)) fs.unlinkSync(finalPath);
       return res.status(500).json({ error: 'Gagal upload gambar ke server cloud.' });
@@ -240,13 +240,13 @@ router.post('/upload-model', authenticateToken, uploadModel.single('model_file')
   if (!req.file) {
     return res.status(400).json({ error: 'File model 3D tidak ditemukan.' });
   }
-  
+
   const finalFilename = req.file.filename;
   const localFilePath = req.file.path;
-  
+
   try {
     const fileBuffer = fs.readFileSync(localFilePath);
-    
+
     // Upload ke Supabase
     const { error } = await supabase.storage
       .from('museum-assets')
@@ -254,15 +254,15 @@ router.post('/upload-model', authenticateToken, uploadModel.single('model_file')
         contentType: req.file.mimetype,
         upsert: true
       });
-      
+
     if (error) throw error;
-    
+
     const { data: publicUrlData } = supabase.storage
       .from('museum-assets')
       .getPublicUrl(`models/${finalFilename}`);
-      
+
     if (fs.existsSync(localFilePath)) fs.unlinkSync(localFilePath);
-    
+
     // Hapus model lama di Supabase jika ada
     if (req.body.old_model) {
       try {
@@ -275,7 +275,7 @@ router.post('/upload-model', authenticateToken, uploadModel.single('model_file')
         console.error(`[Admin] Gagal menghapus model lama di Supabase: ${err.message}`);
       }
     }
-    
+
     res.json({ url: publicUrlData.publicUrl });
   } catch (err) {
     console.error(`[Admin Upload Model] Gagal: ${err.message}`);
@@ -414,16 +414,16 @@ router.post('/datasets', authenticateToken, async (req, res) => {
 router.get('/stats', authenticateToken, async (req, res) => {
   try {
     const data = await prisma.collection.findMany();
-    
+
     let publicCount = 0;
     let privateCount = 0;
     let dokumentasiCount = 0;
-    
+
     const standardCategories = [
       'Geologika', 'Biologika', 'Etnografika', 'Arkeologika', 'Historika',
       'Numismatika', 'Filologika', 'Keramologika', 'Seni Rupa', 'Teknologika'
     ];
-    
+
     const counts = {};
     standardCategories.forEach(cat => counts[cat] = 0);
     counts['Lainnya'] = 0;
@@ -445,7 +445,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
       // Check Klasifikasi
       let k = (item.klasifikasi || 'Lainnya').trim();
       if (k.toLowerCase() === 'etnografi') k = 'Etnografika';
-      
+
       const matchedCategory = standardCategories.find(c => c.toLowerCase() === k.toLowerCase());
       if (matchedCategory) {
         counts[matchedCategory]++;
@@ -476,7 +476,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
 router.get('/datasets', authenticateToken, async (req, res) => {
   try {
     const { klasifikasi, search, pengadaan, publikasi } = req.query;
-    
+
     const where = {};
 
     if (klasifikasi) {
@@ -486,7 +486,7 @@ router.get('/datasets', authenticateToken, async (req, res) => {
     if (pengadaan && pengadaan.toLowerCase() !== 'semua') {
       where.jenis_pengadaan = { equals: pengadaan, mode: 'insensitive' };
     }
-    
+
     if (publikasi && publikasi !== 'semua') {
       if (publikasi === 'publik') {
         where.is_public = true;
@@ -570,7 +570,7 @@ router.put('/datasets/:id', authenticateToken, async (req, res) => {
       no_registrasi,
       klasifikasi,
     };
-    
+
     if (deskripsi !== undefined) updateData.deskripsi = deskripsi;
     if (req.body.no_inventarisasi !== undefined) updateData.no_inventarisasi = req.body.no_inventarisasi;
     if (req.body.tanggal_registrasi !== undefined) updateData.tanggal_registrasi = req.body.tanggal_registrasi;
@@ -602,7 +602,7 @@ router.put('/datasets/:id', authenticateToken, async (req, res) => {
 
     if (gambar !== undefined) {
       updateData.gambar = gambar || null;
-      
+
       const oldGambar = existingItem.gambar;
       if (oldGambar && oldGambar !== gambar) {
         try {
@@ -639,7 +639,7 @@ router.put('/datasets/:id', authenticateToken, async (req, res) => {
 router.delete('/datasets/:id', authenticateToken, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    
+
     const existingItem = await prisma.collection.findUnique({ where: { id } });
     if (!existingItem) {
       return res.status(404).json({ error: 'Dataset tidak ditemukan.' });
@@ -692,7 +692,7 @@ router.patch('/datasets/:id/visibility', authenticateToken, async (req, res) => 
   try {
     const id = parseInt(req.params.id);
     const { is_public } = req.body;
-    
+
     const updatedItem = await prisma.collection.update({
       where: { id },
       data: { is_public }

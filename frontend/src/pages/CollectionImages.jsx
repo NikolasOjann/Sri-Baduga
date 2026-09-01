@@ -4,13 +4,13 @@ import PageTransition from '../animations/PageTransition';
 import { ArrowLeft, Maximize2, Loader, AlertCircle, Search } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 
-import bg1 from '../asset/Galery/Background-1.png';
-import bg4 from '../asset/Galery/Background-4.png';
-import bg6 from '../asset/Galery/Background-6.png';
-import bg7 from '../asset/Galery/Background-7.png';
-import bg8 from '../asset/Galery/Background-8.png';
-import bg9 from '../asset/Galery/Background-9.png';
-import l1Bg from '../asset/Galery/L1.jpg';
+import bg1 from '../asset/gallery/Background-1.png';
+import bg4 from '../asset/gallery/Background-4.png';
+import bg6 from '../asset/gallery/Background-6.png';
+import bg7 from '../asset/gallery/Background-7.png';
+import bg8 from '../asset/gallery/Background-8.png';
+import bg9 from '../asset/gallery/Background-9.png';
+import l1Bg from '../asset/gallery/L1.jpg';
 
 // Mapping id URL (/collection/:id) → nama klasifikasi untuk API
 const KATEGORI_MAP = {

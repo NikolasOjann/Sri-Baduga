@@ -4,10 +4,10 @@ import PageTransition from '../animations/PageTransition';
 import { ArrowLeft, Globe, MessageCircle, X } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTTS } from '../hooks/useTTS';
-import bgImage from '../asset/Galery/Background-12.png';
+import bgImage from '../asset/gallery/Background-12.png';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, Stage, PresentationControls } from '@react-three/drei';
-import modelUrl from '../glb/contoh.glb?url';
+import modelUrl from '../glb/Nyai.glb?url';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || ('http://' + window.location.hostname + ':3001');
 
@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div style={{ color: 'white', textAlign: 'center', marginTop: '2rem' }}>
           <p>Karakter 3D tidak ditemukan atau terjadi kesalahan.</p>
-          <p style={{ fontSize: '0.8rem', color: '#888' }}>Pastikan file berada di: src/glb/contoh.glb</p>
+          <p style={{ fontSize: '0.8rem', color: '#888' }}>Pastikan file berada di: src/glb/Nyai.glb</p>
         </div>
       );
     }
