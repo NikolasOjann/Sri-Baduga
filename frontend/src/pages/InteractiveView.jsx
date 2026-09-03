@@ -484,8 +484,9 @@ const InteractiveView = () => {
           </div>
 
           {/* Right Side: Description & Metadata */}
-          <div className="interactive-right" style={{ backgroundColor: 'transparent', display: 'flex', flexDirection: 'column', justifyContent: 'center', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
+          <div className="interactive-right" style={{ backgroundColor: 'transparent', display: 'flex', flexDirection: 'column', zIndex: 10, overflowY: 'auto', boxSizing: 'border-box' }}>
             <div className="interactive-card" style={{
+              margin: 'auto 0',
               backgroundColor: 'rgba(234, 214, 178, 0.7)',
               backdropFilter: 'blur(15px)',
               WebkitBackdropFilter: 'blur(15px)',

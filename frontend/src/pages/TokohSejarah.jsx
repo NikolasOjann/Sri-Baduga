@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import bgImage from '../asset/gallery/Background-gray black.png';
+import bgImage from '../asset/gallery/Background-7.png';
 // Default data fallback if no prop is provided
 const defaultTokoh = {
   nama: "Prabu Siliwangi",
@@ -183,47 +183,19 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
               </AnimatePresence>
             </div>
 
-            {/* Thumbnails */}
-            {tokoh.foto_gallery && tokoh.foto_gallery.length > 0 && (
-              <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem' }}>
-                <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
-                  {tokoh.foto_gallery.map((img, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveImage(img)}
-                      style={{
-                        width: '90px',
-                        height: '90px',
-                        borderRadius: '12px',
-                        border: activeImage === img ? '3px solid #B08D57' : '2px solid transparent',
-                        padding: 0,
-                        overflow: 'hidden',
-                        cursor: 'pointer',
-                        transition: 'all 0.3s',
-                        boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
-                      }}
-                    >
-                      <img src={img} alt={`${tokoh.nama} preview`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    </button>
-                  ))}
-                </div>
-                <span style={{ fontSize: '0.8rem', color: '#5A4D3A', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 500 }}>
-                  Foto • Lukisan • Peninggalan
-                </span>
-              </div>
-            )}
+
           </div>
 
           {/* RIGHT COLUMN */}
           <div className="tokoh-right">
             <div style={{
-              backgroundColor: 'rgba(245, 238, 220, 0.9)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
+              backgroundColor: 'rgba(234, 214, 178, 0.7)',
+              backdropFilter: 'blur(15px)',
+              WebkitBackdropFilter: 'blur(15px)',
               borderRadius: '24px',
-              border: '1px solid rgba(255,255,255,0.5)',
+              border: '1px solid rgba(255,255,255,0.6)',
               padding: '40px',
-              boxShadow: '0 15px 35px rgba(0,0,0,0.05)',
+              boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
               width: '100%',
               maxWidth: '700px'
             }}>
@@ -326,10 +298,13 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
                 }}>
                   {Object.entries(tokoh.stats).map(([key, value]) => (
                     <div key={key} style={{
-                      border: '1px solid rgba(176, 141, 87, 0.3)',
+                      backgroundColor: 'rgba(234, 214, 178, 0.7)',
+                      backdropFilter: 'blur(15px)',
+                      WebkitBackdropFilter: 'blur(15px)',
                       borderRadius: '12px',
                       padding: '1rem',
-                      backgroundColor: 'rgba(232, 220, 192, 0.4)'
+                      boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+                      border: '1px solid rgba(255,255,255,0.6)'
                     }}>
                       <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#5A4D3A', letterSpacing: '1px', marginBottom: '0.4rem', fontWeight: 600 }}>
                         {key}
