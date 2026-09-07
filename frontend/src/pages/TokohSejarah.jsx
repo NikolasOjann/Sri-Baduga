@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, MessageCircle } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Play, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import bgImage from '../asset/gallery/Background-7.png';
 // Default data fallback if no prop is provided
@@ -10,17 +10,13 @@ const defaultTokoh = {
   tahun: "1482 - 1521",
   quote: "Silih Asih, Silih Asuh, Silih Asah",
   deskripsi: "Prabu Siliwangi (Sri Baduga Maharaja) adalah seorang raja dari Kerajaan Sunda Galuh (Pajajaran) yang memerintah pada tahun 1482-1521 M. Di bawah kepemimpinannya, Kerajaan Pajajaran mengalami masa keemasan dan kemakmuran yang luar biasa.",
-  foto_utama: "/tokoh_img/Prabu-siliwangi.jpg",
-  foto_gallery: [
-    "/tokoh_img/Prabu-siliwangi.jpg",
-    "/tokoh_img/Prabu-siliwangi.jpg",
-    "/tokoh_img/Prabu-siliwangi.jpg"
-  ],
+  foto_utama: "/tokoh_img/Prabu.jpeg",
   stats: {
     masa: "39 Tahun",
     kerajaan: "Pajajaran",
     warisan: "12 Prasasti"
-  }
+  },
+  video: "https://www.youtube.com/embed/4O2F1aV2Q0o"
 };
 
 const TokohSejarah = ({ tokoh: propTokoh }) => {
@@ -29,6 +25,7 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
 
   const [activeImage, setActiveImage] = useState(tokoh.foto_utama);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
   // Update active image if tokoh changes
   useEffect(() => {
@@ -115,6 +112,21 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
             width: 100%;
           }
         }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.05);
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(176, 141, 87, 0.5);
+          border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(176, 141, 87, 0.8);
+        }
       `}</style>
 
       <div className="tokoh-page">
@@ -157,13 +169,15 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
             {/* Main Image */}
             <div style={{
               width: '100%',
-              height: '75vh',
-              minHeight: '600px',
+              height: 'auto',
               backgroundColor: '#E8DCC0',
               borderRadius: '24px',
               overflow: 'hidden',
               boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
-              position: 'relative'
+              position: 'relative',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}>
               <AnimatePresence mode="wait">
                 <motion.img
@@ -176,8 +190,9 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
                   transition={{ duration: 0.4 }}
                   style={{
                     width: '100%',
-                    height: '100%',
-                    objectFit: 'cover'
+                    height: 'auto',
+                    objectFit: 'contain',
+                    display: 'block'
                   }}
                 />
               </AnimatePresence>
@@ -257,35 +272,24 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
               )}
 
               {/* Description */}
-              <div style={{ marginBottom: '2rem' }}>
+              <div 
+                className="custom-scrollbar"
+                style={{ 
+                  marginBottom: '2rem',
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                  paddingRight: '10px'
+                }}
+              >
                 <p style={{
                   color: '#2D2D2D',
                   lineHeight: 1.8,
                   fontSize: '1.05rem',
                   margin: 0,
-                  display: '-webkit-box',
-                  WebkitLineClamp: isExpanded ? 'unset' : 4,
-                  WebkitBoxOrient: 'vertical',
-                  overflow: 'hidden'
+                  whiteSpace: 'pre-wrap'
                 }}>
                   {tokoh.deskripsi}
                 </p>
-                {tokoh.deskripsi.length > 200 && !isExpanded && (
-                  <button
-                    onClick={() => setIsExpanded(true)}
-                    style={{ background: 'none', border: 'none', color: '#B08D57', fontWeight: 600, padding: 0, marginTop: '0.5rem', cursor: 'pointer', fontSize: '0.95rem' }}
-                  >
-                    Baca selengkapnya
-                  </button>
-                )}
-                {isExpanded && (
-                  <button
-                    onClick={() => setIsExpanded(false)}
-                    style={{ background: 'none', border: 'none', color: '#B08D57', fontWeight: 600, padding: 0, marginTop: '0.5rem', cursor: 'pointer', fontSize: '0.95rem' }}
-                  >
-                    Tampilkan lebih sedikit
-                  </button>
-                )}
               </div>
 
               {/* Stats Grid */}
@@ -317,37 +321,147 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
                 </div>
               )}
 
-              {/* CTA Button */}
-              <button style={{
-                backgroundColor: '#7A8C6E',
-                color: 'white',
-                border: 'none',
-                padding: '14px 32px',
-                borderRadius: '30px',
-                fontSize: '1rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                boxShadow: '0 8px 20px rgba(122, 140, 110, 0.3)',
-                alignSelf: 'flex-start'
-              }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#6A7A60';
-                  e.currentTarget.style.transform = 'translateY(-2px)';
+              {/* Buttons Container */}
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                {/* CTA Button */}
+                <button style={{
+                  backgroundColor: '#7A8C6E',
+                  color: 'white',
+                  border: 'none',
+                  padding: '14px 32px',
+                  borderRadius: '30px',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.3s',
+                  boxShadow: '0 8px 20px rgba(122, 140, 110, 0.3)'
                 }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#7A8C6E';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                Jelajahi Peninggalan
-              </button>
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#6A7A60';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#7A8C6E';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  Jelajahi Peninggalan
+                </button>
+
+                {/* Video Button */}
+                <button
+                  onClick={() => setShowVideo(true)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: '#7A8C6E',
+                    border: '2px solid #7A8C6E',
+                    padding: '12px 24px',
+                    borderRadius: '30px',
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.3s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#7A8C6E';
+                    e.currentTarget.style.color = 'white';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#7A8C6E';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <Play size={20} />
+                  Tonton Video
+                </button>
+              </div>
 
             </div>
           </div>
         </div>
 
-
+        {/* Video Modal */}
+        <AnimatePresence>
+          {showVideo && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                zIndex: 100,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '2rem'
+              }}
+              onClick={() => setShowVideo(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  maxWidth: '900px',
+                  aspectRatio: '16/9',
+                  backgroundColor: '#000',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setShowVideo(false)}
+                  style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    right: '1rem',
+                    background: 'rgba(0, 0, 0, 0.5)',
+                    border: 'none',
+                    color: 'white',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                    zIndex: 10,
+                    transition: 'background 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(0, 0, 0, 0.5)'}
+                >
+                  <X size={24} />
+                </button>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src={tokoh.video || "https://www.youtube.com/embed/4O2F1aV2Q0o"}
+                  title="Video Player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ border: 'none' }}
+                ></iframe>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
       </div>
     </>
