@@ -19,6 +19,7 @@ import AdminLayout from './pages/Admin/AdminLayout';
 import Dashboard from './pages/Admin/Dashboard';
 import Datasets from './pages/Admin/Datasets';
 import EditDataset from './pages/Admin/EditDataset';
+import AdminTokoh from './pages/Admin/AdminTokoh';
 
 function App() {
   const location = useLocation();
@@ -45,6 +46,7 @@ function App() {
               <Route path="datasets" element={<Datasets />} />
               <Route path="datasets/create" element={<EditDataset />} />
               <Route path="datasets/edit/:id" element={<EditDataset />} />
+              <Route path="tokoh" element={<AdminTokoh />} />
             </Route>
           </Route>
           

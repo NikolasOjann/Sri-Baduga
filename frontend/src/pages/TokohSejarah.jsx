@@ -21,21 +21,62 @@ const defaultTokoh = {
 
 const TokohSejarah = ({ tokoh: propTokoh }) => {
   const navigate = useNavigate();
-  const tokoh = propTokoh || defaultTokoh;
-
-  const [activeImage, setActiveImage] = useState(tokoh.foto_utama);
+  
+  const [tokoh, setTokoh] = useState(propTokoh || null);
+  const [loading, setLoading] = useState(!propTokoh);
+  const [activeImage, setActiveImage] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
 
+  useEffect(() => {
+    if (!propTokoh) {
+      // Fetch dari API
+      fetch('http://localhost:3001/api/tokoh')
+        .then(res => res.json())
+        .then(data => {
+          if (data) {
+            setTokoh(data);
+          } else {
+            setTokoh(defaultTokoh);
+          }
+        })
+        .catch(err => {
+          console.error("Gagal mengambil tokoh:", err);
+          setTokoh(defaultTokoh);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [propTokoh]);
+
   // Update active image if tokoh changes
   useEffect(() => {
-    setActiveImage(tokoh.foto_utama);
-    setIsExpanded(false);
+    if (tokoh) {
+      setActiveImage(tokoh.foto_utama ? `http://localhost:3001${tokoh.foto_utama}` : defaultTokoh.foto_utama);
+      setIsExpanded(false);
+    }
   }, [tokoh]);
 
   // Handle open assistant
   const openAssistant = () => {
     window.dispatchEvent(new Event('open-assistant'));
+  };
+
+  // Helper function untuk mem-parsing URL Youtube biasa ke format embed
+  const getEmbedUrl = (url) => {
+    if (!url) return defaultTokoh.video;
+    
+    let videoId = "";
+    if (url.includes("youtube.com/watch?v=")) {
+      videoId = url.split("v=")[1].split("&")[0];
+    } else if (url.includes("youtu.be/")) {
+      videoId = url.split("youtu.be/")[1].split("?")[0];
+    } else if (url.includes("youtube.com/embed/")) {
+      return url; // Sudah format embed
+    }
+    
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
   };
 
   return (
@@ -129,6 +170,11 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
         }
       `}</style>
 
+      {loading ? (
+        <div className="tokoh-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', color: '#1A1A1A' }}>
+          <h2>Loading...</h2>
+        </div>
+      ) : (
       <div className="tokoh-page">
         {/* Top Left Back Button */}
         <div style={{ position: 'absolute', zIndex: 20, top: '20px', left: '20px' }}>
@@ -244,11 +290,9 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
                 }}>
                   {tokoh.tahun}
                 </span>
-                {tokoh.stats && tokoh.stats.kerajaan && (
-                  <span style={{ color: '#5A4D3A', fontWeight: 500, fontSize: '1rem' }}>
-                    {tokoh.stats.kerajaan}
-                  </span>
-                )}
+                <span style={{ color: '#5A4D3A', fontWeight: 500, fontSize: '1rem' }}>
+                  {tokoh.kerajaan}
+                </span>
               </div>
 
               {/* Quote */}
@@ -293,33 +337,67 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
               </div>
 
               {/* Stats Grid */}
-              {tokoh.stats && (
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                  gap: '1rem',
-                  marginBottom: '2.5rem'
-                }}>
-                  {Object.entries(tokoh.stats).map(([key, value]) => (
-                    <div key={key} style={{
-                      backgroundColor: 'rgba(234, 214, 178, 0.7)',
-                      backdropFilter: 'blur(15px)',
-                      WebkitBackdropFilter: 'blur(15px)',
-                      borderRadius: '12px',
-                      padding: '1rem',
-                      boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
-                      border: '1px solid rgba(255,255,255,0.6)'
-                    }}>
-                      <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#5A4D3A', letterSpacing: '1px', marginBottom: '0.4rem', fontWeight: 600 }}>
-                        {key}
-                      </div>
-                      <div style={{ fontSize: '1.05rem', color: '#1A1A1A', fontWeight: 600 }}>
-                        {value}
-                      </div>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                gap: '1rem',
+                marginBottom: '2.5rem'
+              }}>
+                {tokoh.masa && (
+                  <div style={{
+                    backgroundColor: 'rgba(234, 214, 178, 0.7)',
+                    backdropFilter: 'blur(15px)',
+                    WebkitBackdropFilter: 'blur(15px)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+                    border: '1px solid rgba(255,255,255,0.6)'
+                  }}>
+                    <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#5A4D3A', letterSpacing: '1px', marginBottom: '0.4rem', fontWeight: 600 }}>
+                      Masa Menjabat
                     </div>
-                  ))}
-                </div>
-              )}
+                    <div style={{ fontSize: '1.05rem', color: '#1A1A1A', fontWeight: 600 }}>
+                      {tokoh.masa}
+                    </div>
+                  </div>
+                )}
+                {tokoh.kerajaan && (
+                  <div style={{
+                    backgroundColor: 'rgba(234, 214, 178, 0.7)',
+                    backdropFilter: 'blur(15px)',
+                    WebkitBackdropFilter: 'blur(15px)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+                    border: '1px solid rgba(255,255,255,0.6)'
+                  }}>
+                    <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#5A4D3A', letterSpacing: '1px', marginBottom: '0.4rem', fontWeight: 600 }}>
+                      Kerajaan
+                    </div>
+                    <div style={{ fontSize: '1.05rem', color: '#1A1A1A', fontWeight: 600 }}>
+                      {tokoh.kerajaan}
+                    </div>
+                  </div>
+                )}
+                {tokoh.warisan && (
+                  <div style={{
+                    backgroundColor: 'rgba(234, 214, 178, 0.7)',
+                    backdropFilter: 'blur(15px)',
+                    WebkitBackdropFilter: 'blur(15px)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+                    border: '1px solid rgba(255,255,255,0.6)'
+                  }}>
+                    <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#5A4D3A', letterSpacing: '1px', marginBottom: '0.4rem', fontWeight: 600 }}>
+                      Warisan
+                    </div>
+                    <div style={{ fontSize: '1.05rem', color: '#1A1A1A', fontWeight: 600 }}>
+                      {tokoh.warisan}
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Buttons Container */}
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
@@ -451,7 +529,7 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
                 <iframe
                   width="100%"
                   height="100%"
-                  src={tokoh.video || "https://www.youtube.com/embed/4O2F1aV2Q0o"}
+                  src={getEmbedUrl(tokoh.video)}
                   title="Video Player"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -464,6 +542,7 @@ const TokohSejarah = ({ tokoh: propTokoh }) => {
         </AnimatePresence>
 
       </div>
+      )}
     </>
   );
 };

@@ -1,6 +1,9 @@
 import asyncio
 import io
+import logging
 import edge_tts
+
+logger = logging.getLogger(__name__)
 
 def get_voice_for_lang(lang: str) -> str:
     """Mengembalikan voice ID Microsoft Neural berdasarkan kode bahasa."""
@@ -10,10 +13,13 @@ def get_voice_for_lang(lang: str) -> str:
 
 async def _stream_audio_generator(text: str, voice: str):
     """Generator async untuk men-stream chunk audio MP3 secara real-time."""
-    communicate = edge_tts.Communicate(text, voice)
-    async for chunk in communicate.stream():
-        if chunk["type"] == "audio":
-            yield chunk["data"]
+    try:
+        communicate = edge_tts.Communicate(text, voice)
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                yield chunk["data"]
+    except Exception as e:
+        logger.warning(f"[TTS Service] Gagal stream audio Edge TTS: {e}")
 
 def stream_speech(text: str, lang: str = "id"):
     """

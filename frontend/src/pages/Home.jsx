@@ -39,7 +39,7 @@ const Home = () => {
           <img src={logo} alt="Logo Sri Baduga" style={{ height: '60px', objectFit: 'contain' }} />
         </div>
         <div style={{ display: 'flex', gap: '2rem', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase', fontFamily: 'Elms Sans, sans-serif' }}>
-          <Link to="/catalog" state={{ fromHome: true }} style={{ color: 'var(--color-text-muted)' }}>Koleksi</Link>
+          <Link to="/tokoh-sejarah" state={{ fromHome: true }} style={{ color: 'var(--color-text-muted)' }}>Tokoh Sejarah</Link>
         </div>
       </nav>
 

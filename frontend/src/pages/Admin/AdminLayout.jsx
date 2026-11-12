@@ -51,6 +51,14 @@ function AdminLayout() {
             }}>
               Kelola Data koleksi
             </Link>
+            <Link to="/1974-SriBaduga/dashboard/tokoh" style={{
+              display: 'block', padding: '10px 15px', borderRadius: '4px', textDecoration: 'none',
+              backgroundColor: isActive('/1974-SriBaduga/dashboard/tokoh') ? '#C4A46C' : 'transparent',
+              color: isActive('/1974-SriBaduga/dashboard/tokoh') ? 'white' : '#c2c7d0',
+              marginBottom: '5px'
+            }}>
+              Kelola Tokoh Sejarah
+            </Link>
           </nav>
         </div>
       </aside>

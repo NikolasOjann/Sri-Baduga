@@ -23,6 +23,8 @@ app.use('/models', express.static(path.join(__dirname, 'public', 'models')));
 app.use('/api/collections', require('./routes/collections'));
 app.use('/api/chat',        require('./routes/chat'));
 app.use('/api/admin',       require('./routes/admin'));
+app.use('/api/tokoh',       require('./routes/tokoh'));
+
 
 const httpCore = require('http');
 

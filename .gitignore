@@ -24,3 +24,10 @@ temp.json
 output.txt
 test.mp3
 *.zip
+
+# Ignore Blueprint & Private Documents
+blueprint-sistem-sima.svg
+*.docx
+*.doc
+*.pptx
+
